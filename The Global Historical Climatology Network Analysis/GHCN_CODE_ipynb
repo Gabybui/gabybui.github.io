@@ -1,0 +1,3825 @@
+{
+ "cells": [
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "# Processing"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "## Q1: Data sources\n",
+    "### (a) Data structure"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 1,
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      " |---daily\n",
+      " |-----1750.csv.gz\n",
+      " |-----1763.csv.gz\n",
+      " |-----1764.csv.gz\n",
+      " |-----1765.csv.gz\n",
+      " |-----1766.csv.gz\n",
+      " |-----1767.csv.gz\n",
+      " |-----1768.csv.gz\n",
+      " |-----1769.csv.gz\n",
+      " |-----1770.csv.gz\n",
+      " |-----1771.csv.gz\n",
+      " |-----1772.csv.gz\n",
+      " |-----1773.csv.gz\n",
+      " |-----1774.csv.gz\n",
+      " |-----1775.csv.gz\n",
+      " |-----1776.csv.gz\n",
+      " |-----1777.csv.gz\n",
+      " |-----1778.csv.gz\n",
+      " |-----1779.csv.gz\n",
+      " |-----1780.csv.gz\n",
+      " |-----1781.csv.gz\n",
+      " |-----1782.csv.gz\n",
+      " |-----1783.csv.gz\n",
+      " |-----1784.csv.gz\n",
+      " |-----1785.csv.gz\n",
+      " |-----1786.csv.gz\n",
+      " |-----1787.csv.gz\n",
+      " |-----1788.csv.gz\n",
+      " |-----1789.csv.gz\n",
+      " |-----1790.csv.gz\n",
+      " |-----1791.csv.gz\n",
+      " |-----1792.csv.gz\n",
+      " |-----1793.csv.gz\n",
+      " |-----1794.csv.gz\n",
+      " |-----1795.csv.gz\n",
+      " |-----1796.csv.gz\n",
+      " |-----1797.csv.gz\n",
+      " |-----1798.csv.gz\n",
+      " |-----1799.csv.gz\n",
+      " |-----1800.csv.gz\n",
+      " |-----1801.csv.gz\n",
+      " |-----1802.csv.gz\n",
+      " |-----1803.csv.gz\n",
+      " |-----1804.csv.gz\n",
+      " |-----1805.csv.gz\n",
+      " |-----1806.csv.gz\n",
+      " |-----1807.csv.gz\n",
+      " |-----1808.csv.gz\n",
+      " |-----1809.csv.gz\n",
+      " |-----1810.csv.gz\n",
+      " |-----1811.csv.gz\n",
+      " |-----1812.csv.gz\n",
+      " |-----1813.csv.gz\n",
+      " |-----1814.csv.gz\n",
+      " |-----1815.csv.gz\n",
+      " |-----1816.csv.gz\n",
+      " |-----1817.csv.gz\n",
+      " |-----1818.csv.gz\n",
+      " |-----1819.csv.gz\n",
+      " |-----1820.csv.gz\n",
+      " |-----1821.csv.gz\n",
+      " |-----1822.csv.gz\n",
+      " |-----1823.csv.gz\n",
+      " |-----1824.csv.gz\n",
+      " |-----1825.csv.gz\n",
+      " |-----1826.csv.gz\n",
+      " |-----1827.csv.gz\n",
+      " |-----1828.csv.gz\n",
+      " |-----1829.csv.gz\n",
+      " |-----1830.csv.gz\n",
+      " |-----1831.csv.gz\n",
+      " |-----1832.csv.gz\n",
+      " |-----1833.csv.gz\n",
+      " |-----1834.csv.gz\n",
+      " |-----1835.csv.gz\n",
+      " |-----1836.csv.gz\n",
+      " |-----1837.csv.gz\n",
+      " |-----1838.csv.gz\n",
+      " |-----1839.csv.gz\n",
+      " |-----1840.csv.gz\n",
+      " |-----1841.csv.gz\n",
+      " |-----1842.csv.gz\n",
+      " |-----1843.csv.gz\n",
+      " |-----1844.csv.gz\n",
+      " |-----1845.csv.gz\n",
+      " |-----1846.csv.gz\n",
+      " |-----1847.csv.gz\n",
+      " |-----1848.csv.gz\n",
+      " |-----1849.csv.gz\n",
+      " |-----1850.csv.gz\n",
+      " |-----1851.csv.gz\n",
+      " |-----1852.csv.gz\n",
+      " |-----1853.csv.gz\n",
+      " |-----1854.csv.gz\n",
+      " |-----1855.csv.gz\n",
+      " |-----1856.csv.gz\n",
+      " |-----1857.csv.gz\n",
+      " |-----1858.csv.gz\n",
+      " |-----1859.csv.gz\n",
+      " |-----1860.csv.gz\n",
+      " |-----1861.csv.gz\n",
+      " |-----1862.csv.gz\n",
+      " |-----1863.csv.gz\n",
+      " |-----1864.csv.gz\n",
+      " |-----1865.csv.gz\n",
+      " |-----1866.csv.gz\n",
+      " |-----1867.csv.gz\n",
+      " |-----1868.csv.gz\n",
+      " |-----1869.csv.gz\n",
+      " |-----1870.csv.gz\n",
+      " |-----1871.csv.gz\n",
+      " |-----1872.csv.gz\n",
+      " |-----1873.csv.gz\n",
+      " |-----1874.csv.gz\n",
+      " |-----1875.csv.gz\n",
+      " |-----1876.csv.gz\n",
+      " |-----1877.csv.gz\n",
+      " |-----1878.csv.gz\n",
+      " |-----1879.csv.gz\n",
+      " |-----1880.csv.gz\n",
+      " |-----1881.csv.gz\n",
+      " |-----1882.csv.gz\n",
+      " |-----1883.csv.gz\n",
+      " |-----1884.csv.gz\n",
+      " |-----1885.csv.gz\n",
+      " |-----1886.csv.gz\n",
+      " |-----1887.csv.gz\n",
+      " |-----1888.csv.gz\n",
+      " |-----1889.csv.gz\n",
+      " |-----1890.csv.gz\n",
+      " |-----1891.csv.gz\n",
+      " |-----1892.csv.gz\n",
+      " |-----1893.csv.gz\n",
+      " |-----1894.csv.gz\n",
+      " |-----1895.csv.gz\n",
+      " |-----1896.csv.gz\n",
+      " |-----1897.csv.gz\n",
+      " |-----1898.csv.gz\n",
+      " |-----1899.csv.gz\n",
+      " |-----1900.csv.gz\n",
+      " |-----1901.csv.gz\n",
+      " |-----1902.csv.gz\n",
+      " |-----1903.csv.gz\n",
+      " |-----1904.csv.gz\n",
+      " |-----1905.csv.gz\n",
+      " |-----1906.csv.gz\n",
+      " |-----1907.csv.gz\n",
+      " |-----1908.csv.gz\n",
+      " |-----1909.csv.gz\n",
+      " |-----1910.csv.gz\n",
+      " |-----1911.csv.gz\n",
+      " |-----1912.csv.gz\n",
+      " |-----1913.csv.gz\n",
+      " |-----1914.csv.gz\n",
+      " |-----1915.csv.gz\n",
+      " |-----1916.csv.gz\n",
+      " |-----1917.csv.gz\n",
+      " |-----1918.csv.gz\n",
+      " |-----1919.csv.gz\n",
+      " |-----1920.csv.gz\n",
+      " |-----1921.csv.gz\n",
+      " |-----1922.csv.gz\n",
+      " |-----1923.csv.gz\n",
+      " |-----1924.csv.gz\n",
+      " |-----1925.csv.gz\n",
+      " |-----1926.csv.gz\n",
+      " |-----1927.csv.gz\n",
+      " |-----1928.csv.gz\n",
+      " |-----1929.csv.gz\n",
+      " |-----1930.csv.gz\n",
+      " |-----1931.csv.gz\n",
+      " |-----1932.csv.gz\n",
+      " |-----1933.csv.gz\n",
+      " |-----1934.csv.gz\n",
+      " |-----1935.csv.gz\n",
+      " |-----1936.csv.gz\n",
+      " |-----1937.csv.gz\n",
+      " |-----1938.csv.gz\n",
+      " |-----1939.csv.gz\n",
+      " |-----1940.csv.gz\n",
+      " |-----1941.csv.gz\n",
+      " |-----1942.csv.gz\n",
+      " |-----1943.csv.gz\n",
+      " |-----1944.csv.gz\n",
+      " |-----1945.csv.gz\n",
+      " |-----1946.csv.gz\n",
+      " |-----1947.csv.gz\n",
+      " |-----1948.csv.gz\n",
+      " |-----1949.csv.gz\n",
+      " |-----1950.csv.gz\n",
+      " |-----1951.csv.gz\n",
+      " |-----1952.csv.gz\n",
+      " |-----1953.csv.gz\n",
+      " |-----1954.csv.gz\n",
+      " |-----1955.csv.gz\n",
+      " |-----1956.csv.gz\n",
+      " |-----1957.csv.gz\n",
+      " |-----1958.csv.gz\n",
+      " |-----1959.csv.gz\n",
+      " |-----1960.csv.gz\n",
+      " |-----1961.csv.gz\n",
+      " |-----1962.csv.gz\n",
+      " |-----1963.csv.gz\n",
+      " |-----1964.csv.gz\n",
+      " |-----1965.csv.gz\n",
+      " |-----1966.csv.gz\n",
+      " |-----1967.csv.gz\n",
+      " |-----1968.csv.gz\n",
+      " |-----1969.csv.gz\n",
+      " |-----1970.csv.gz\n",
+      " |-----1971.csv.gz\n",
+      " |-----1972.csv.gz\n",
+      " |-----1973.csv.gz\n",
+      " |-----1974.csv.gz\n",
+      " |-----1975.csv.gz\n",
+      " |-----1976.csv.gz\n",
+      " |-----1977.csv.gz\n",
+      " |-----1978.csv.gz\n",
+      " |-----1979.csv.gz\n",
+      " |-----1980.csv.gz\n",
+      " |-----1981.csv.gz\n",
+      " |-----1982.csv.gz\n",
+      " |-----1983.csv.gz\n",
+      " |-----1984.csv.gz\n",
+      " |-----1985.csv.gz\n",
+      " |-----1986.csv.gz\n",
+      " |-----1987.csv.gz\n",
+      " |-----1988.csv.gz\n",
+      " |-----1989.csv.gz\n",
+      " |-----1990.csv.gz\n",
+      " |-----1991.csv.gz\n",
+      " |-----1992.csv.gz\n",
+      " |-----1993.csv.gz\n",
+      " |-----1994.csv.gz\n",
+      " |-----1995.csv.gz\n",
+      " |-----1996.csv.gz\n",
+      " |-----1997.csv.gz\n",
+      " |-----1998.csv.gz\n",
+      " |-----1999.csv.gz\n",
+      " |-----2000.csv.gz\n",
+      " |-----2001.csv.gz\n",
+      " |-----2002.csv.gz\n",
+      " |-----2003.csv.gz\n",
+      " |-----2004.csv.gz\n",
+      " |-----2005.csv.gz\n",
+      " |-----2006.csv.gz\n",
+      " |-----2007.csv.gz\n",
+      " |-----2008.csv.gz\n",
+      " |-----2009.csv.gz\n",
+      " |-----2010.csv.gz\n",
+      " |-----2011.csv.gz\n",
+      " |-----2012.csv.gz\n",
+      " |-----2013.csv.gz\n",
+      " |-----2014.csv.gz\n",
+      " |-----2015.csv.gz\n",
+      " |-----2016.csv.gz\n",
+      " |-----2017.csv.gz\n",
+      " |-----2018.csv.gz\n",
+      " |-----2019.csv.gz\n",
+      " |-----2020.csv.gz\n",
+      " |-----2021.csv.gz\n",
+      " |-----2022.csv.gz\n",
+      " |-----2023.csv.gz\n",
+      " |---daily-uncompressed\n",
+      " |-----2022.csv\n",
+      " |---ghcnd-countries.txt\n",
+      " |---ghcnd-inventory.txt\n",
+      " |---ghcnd-states.txt\n",
+      " |---ghcnd-stations.txt\n"
+     ]
+    }
+   ],
+   "source": [
+    "!hdfs dfs -ls -R /data/ghcnd/ | awk '{print $8}' | sed -e 's/[^-][^\\/]*\\//--/g' -e 's/^/ /' -e 's/-/|/'"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "### (b) How many years are contained in 'daily'? and how data size change?"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 2,
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "263\r\n"
+     ]
+    }
+   ],
+   "source": [
+    "!hdfs dfs -ls /data/ghcnd/daily/ |wc -l"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 57,
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "63.6 K   509.1 K   /data/ghcnd/daily/1750.csv.gz\r\n",
+      "3.3 K    26.2 K    /data/ghcnd/daily/1763.csv.gz\r\n",
+      "3.2 K    26.0 K    /data/ghcnd/daily/1764.csv.gz\r\n",
+      "3.3 K    26.1 K    /data/ghcnd/daily/1765.csv.gz\r\n",
+      "3.3 K    26.1 K    /data/ghcnd/daily/1766.csv.gz\r\n",
+      "3.3 K    26.2 K    /data/ghcnd/daily/1767.csv.gz\r\n",
+      "3.2 K    26.0 K    /data/ghcnd/daily/1768.csv.gz\r\n",
+      "3.3 K    26.7 K    /data/ghcnd/daily/1769.csv.gz\r\n",
+      "3.3 K    26.2 K    /data/ghcnd/daily/1770.csv.gz\r\n",
+      "3.3 K    26.4 K    /data/ghcnd/daily/1771.csv.gz\r\n",
+      "3.3 K    26.7 K    /data/ghcnd/daily/1772.csv.gz\r\n",
+      "3.3 K    26.3 K    /data/ghcnd/daily/1773.csv.gz\r\n",
+      "3.3 K    26.5 K    /data/ghcnd/daily/1774.csv.gz\r\n",
+      "6.2 K    49.7 K    /data/ghcnd/daily/1775.csv.gz\r\n",
+      "6.3 K    50.2 K    /data/ghcnd/daily/1776.csv.gz\r\n",
+      "6.3 K    50.2 K    /data/ghcnd/daily/1777.csv.gz\r\n",
+      "6.1 K    48.8 K    /data/ghcnd/daily/1778.csv.gz\r\n",
+      "6 K      48 K      /data/ghcnd/daily/1779.csv.gz\r\n",
+      "6.1 K    48.8 K    /data/ghcnd/daily/1780.csv.gz\r\n",
+      "7.6 K    60.9 K    /data/ghcnd/daily/1781.csv.gz\r\n",
+      "7.6 K    61 K      /data/ghcnd/daily/1782.csv.gz\r\n",
+      "7.7 K    61.9 K    /data/ghcnd/daily/1783.csv.gz\r\n",
+      "7.8 K    62.1 K    /data/ghcnd/daily/1784.csv.gz\r\n",
+      "7.6 K    61.0 K    /data/ghcnd/daily/1785.csv.gz\r\n",
+      "7.7 K    61.6 K    /data/ghcnd/daily/1786.csv.gz\r\n",
+      "6.2 K    49.5 K    /data/ghcnd/daily/1787.csv.gz\r\n",
+      "6.2 K    50.0 K    /data/ghcnd/daily/1788.csv.gz\r\n",
+      "7.6 K    60.7 K    /data/ghcnd/daily/1789.csv.gz\r\n",
+      "7.6 K    60.8 K    /data/ghcnd/daily/1790.csv.gz\r\n",
+      "7.6 K    60.4 K    /data/ghcnd/daily/1791.csv.gz\r\n",
+      "7.6 K    61.0 K    /data/ghcnd/daily/1792.csv.gz\r\n",
+      "6.2 K    49.5 K    /data/ghcnd/daily/1793.csv.gz\r\n",
+      "7.6 K    60.7 K    /data/ghcnd/daily/1794.csv.gz\r\n",
+      "7.7 K    61.3 K    /data/ghcnd/daily/1795.csv.gz\r\n",
+      "7.6 K    61.1 K    /data/ghcnd/daily/1796.csv.gz\r\n",
+      "9.0 K    72.2 K    /data/ghcnd/daily/1797.csv.gz\r\n",
+      "9.1 K    72.6 K    /data/ghcnd/daily/1798.csv.gz\r\n",
+      "6.2 K    49.6 K    /data/ghcnd/daily/1799.csv.gz\r\n",
+      "7.6 K    60.8 K    /data/ghcnd/daily/1800.csv.gz\r\n",
+      "7.6 K    60.9 K    /data/ghcnd/daily/1801.csv.gz\r\n",
+      "9.0 K    71.8 K    /data/ghcnd/daily/1802.csv.gz\r\n",
+      "7.7 K    61.7 K    /data/ghcnd/daily/1803.csv.gz\r\n",
+      "8.5 K    68.2 K    /data/ghcnd/daily/1804.csv.gz\r\n",
+      "8.7 K    69.5 K    /data/ghcnd/daily/1805.csv.gz\r\n",
+      "8.4 K    67.2 K    /data/ghcnd/daily/1806.csv.gz\r\n",
+      "8.5 K    68.2 K    /data/ghcnd/daily/1807.csv.gz\r\n",
+      "8.7 K    69.8 K    /data/ghcnd/daily/1808.csv.gz\r\n",
+      "8.6 K    68.6 K    /data/ghcnd/daily/1809.csv.gz\r\n",
+      "8.6 K    69.0 K    /data/ghcnd/daily/1810.csv.gz\r\n",
+      "8.7 K    69.8 K    /data/ghcnd/daily/1811.csv.gz\r\n",
+      "8.8 K    70.3 K    /data/ghcnd/daily/1812.csv.gz\r\n",
+      "9.0 K    72.4 K    /data/ghcnd/daily/1813.csv.gz\r\n",
+      "10.6 K   84.6 K    /data/ghcnd/daily/1814.csv.gz\r\n",
+      "13.6 K   108.5 K   /data/ghcnd/daily/1815.csv.gz\r\n",
+      "13.5 K   108.3 K   /data/ghcnd/daily/1816.csv.gz\r\n",
+      "13.4 K   107.5 K   /data/ghcnd/daily/1817.csv.gz\r\n",
+      "13.4 K   107.5 K   /data/ghcnd/daily/1818.csv.gz\r\n",
+      "13.4 K   107.0 K   /data/ghcnd/daily/1819.csv.gz\r\n",
+      "13.7 K   109.4 K   /data/ghcnd/daily/1820.csv.gz\r\n",
+      "13.5 K   107.8 K   /data/ghcnd/daily/1821.csv.gz\r\n",
+      "13.7 K   109.8 K   /data/ghcnd/daily/1822.csv.gz\r\n",
+      "14.4 K   115.2 K   /data/ghcnd/daily/1823.csv.gz\r\n",
+      "17.6 K   140.9 K   /data/ghcnd/daily/1824.csv.gz\r\n",
+      "17.7 K   141.4 K   /data/ghcnd/daily/1825.csv.gz\r\n",
+      "18.0 K   143.8 K   /data/ghcnd/daily/1826.csv.gz\r\n",
+      "20.4 K   162.9 K   /data/ghcnd/daily/1827.csv.gz\r\n",
+      "20.5 K   163.9 K   /data/ghcnd/daily/1828.csv.gz\r\n",
+      "20.6 K   165.2 K   /data/ghcnd/daily/1829.csv.gz\r\n",
+      "20.8 K   166.5 K   /data/ghcnd/daily/1830.csv.gz\r\n",
+      "20.8 K   166.6 K   /data/ghcnd/daily/1831.csv.gz\r\n",
+      "21.9 K   175.3 K   /data/ghcnd/daily/1832.csv.gz\r\n",
+      "26.6 K   213.2 K   /data/ghcnd/daily/1833.csv.gz\r\n",
+      "26.5 K   211.7 K   /data/ghcnd/daily/1834.csv.gz\r\n",
+      "26.9 K   215.0 K   /data/ghcnd/daily/1835.csv.gz\r\n",
+      "29.1 K   232.9 K   /data/ghcnd/daily/1836.csv.gz\r\n",
+      "28.7 K   229.2 K   /data/ghcnd/daily/1837.csv.gz\r\n",
+      "31.0 K   247.7 K   /data/ghcnd/daily/1838.csv.gz\r\n",
+      "28.9 K   231.1 K   /data/ghcnd/daily/1839.csv.gz\r\n",
+      "35.1 K   281.2 K   /data/ghcnd/daily/1840.csv.gz\r\n",
+      "36.1 K   289.0 K   /data/ghcnd/daily/1841.csv.gz\r\n",
+      "38.5 K   308.1 K   /data/ghcnd/daily/1842.csv.gz\r\n",
+      "38.5 K   307.8 K   /data/ghcnd/daily/1843.csv.gz\r\n",
+      "42.3 K   338.4 K   /data/ghcnd/daily/1844.csv.gz\r\n",
+      "46.0 K   368.0 K   /data/ghcnd/daily/1845.csv.gz\r\n",
+      "43.6 K   348.8 K   /data/ghcnd/daily/1846.csv.gz\r\n",
+      "45.1 K   360.8 K   /data/ghcnd/daily/1847.csv.gz\r\n",
+      "44.0 K   351.9 K   /data/ghcnd/daily/1848.csv.gz\r\n",
+      "46.3 K   370.1 K   /data/ghcnd/daily/1849.csv.gz\r\n",
+      "46.4 K   371.5 K   /data/ghcnd/daily/1850.csv.gz\r\n",
+      "53.7 K   429.9 K   /data/ghcnd/daily/1851.csv.gz\r\n",
+      "57.5 K   459.9 K   /data/ghcnd/daily/1852.csv.gz\r\n",
+      "58.2 K   465.9 K   /data/ghcnd/daily/1853.csv.gz\r\n",
+      "57.9 K   463.0 K   /data/ghcnd/daily/1854.csv.gz\r\n",
+      "63.4 K   506.9 K   /data/ghcnd/daily/1855.csv.gz\r\n",
+      "74.5 K   596.2 K   /data/ghcnd/daily/1856.csv.gz\r\n",
+      "81.2 K   649.4 K   /data/ghcnd/daily/1857.csv.gz\r\n",
+      "112.9 K  902.9 K   /data/ghcnd/daily/1858.csv.gz\r\n",
+      "125.7 K  1005.5 K  /data/ghcnd/daily/1859.csv.gz\r\n",
+      "134.4 K  1.0 M     /data/ghcnd/daily/1860.csv.gz\r\n",
+      "139.7 K  1.1 M     /data/ghcnd/daily/1861.csv.gz\r\n",
+      "134.5 K  1.1 M     /data/ghcnd/daily/1862.csv.gz\r\n",
+      "151.3 K  1.2 M     /data/ghcnd/daily/1863.csv.gz\r\n",
+      "155.7 K  1.2 M     /data/ghcnd/daily/1864.csv.gz\r\n",
+      "156.6 K  1.2 M     /data/ghcnd/daily/1865.csv.gz\r\n",
+      "203.1 K  1.6 M     /data/ghcnd/daily/1866.csv.gz\r\n",
+      "243.4 K  1.9 M     /data/ghcnd/daily/1867.csv.gz\r\n",
+      "255.9 K  2.0 M     /data/ghcnd/daily/1868.csv.gz\r\n",
+      "296.1 K  2.3 M     /data/ghcnd/daily/1869.csv.gz\r\n",
+      "339.8 K  2.7 M     /data/ghcnd/daily/1870.csv.gz\r\n",
+      "446.4 K  3.5 M     /data/ghcnd/daily/1871.csv.gz\r\n",
+      "605.5 K  4.7 M     /data/ghcnd/daily/1872.csv.gz\r\n",
+      "677.8 K  5.3 M     /data/ghcnd/daily/1873.csv.gz\r\n",
+      "757.2 K  5.9 M     /data/ghcnd/daily/1874.csv.gz\r\n",
+      "821.9 K  6.4 M     /data/ghcnd/daily/1875.csv.gz\r\n",
+      "891.2 K  7.0 M     /data/ghcnd/daily/1876.csv.gz\r\n",
+      "993.6 K  7.8 M     /data/ghcnd/daily/1877.csv.gz\r\n",
+      "1.2 M    9.2 M     /data/ghcnd/daily/1878.csv.gz\r\n",
+      "1.3 M    10.6 M    /data/ghcnd/daily/1879.csv.gz\r\n",
+      "1.7 M    13.4 M    /data/ghcnd/daily/1880.csv.gz\r\n",
+      "2.0 M    15.9 M    /data/ghcnd/daily/1881.csv.gz\r\n",
+      "2.3 M    18.1 M    /data/ghcnd/daily/1882.csv.gz\r\n",
+      "2.5 M    20.0 M    /data/ghcnd/daily/1883.csv.gz\r\n",
+      "3.0 M    24.0 M    /data/ghcnd/daily/1884.csv.gz\r\n",
+      "3.4 M    27.2 M    /data/ghcnd/daily/1885.csv.gz\r\n",
+      "3.7 M    29.8 M    /data/ghcnd/daily/1886.csv.gz\r\n",
+      "4.2 M    33.5 M    /data/ghcnd/daily/1887.csv.gz\r\n",
+      "4.5 M    36.1 M    /data/ghcnd/daily/1888.csv.gz\r\n",
+      "4.9 M    39.2 M    /data/ghcnd/daily/1889.csv.gz\r\n",
+      "5.3 M    42.7 M    /data/ghcnd/daily/1890.csv.gz\r\n",
+      "5.6 M    44.8 M    /data/ghcnd/daily/1891.csv.gz\r\n",
+      "6.5 M    51.8 M    /data/ghcnd/daily/1892.csv.gz\r\n",
+      "11.9 M   95.4 M    /data/ghcnd/daily/1893.csv.gz\r\n",
+      "12.8 M   102.1 M   /data/ghcnd/daily/1894.csv.gz\r\n",
+      "13.8 M   110.2 M   /data/ghcnd/daily/1895.csv.gz\r\n",
+      "14.9 M   118.9 M   /data/ghcnd/daily/1896.csv.gz\r\n",
+      "16.0 M   128.4 M   /data/ghcnd/daily/1897.csv.gz\r\n",
+      "16.7 M   134.0 M   /data/ghcnd/daily/1898.csv.gz\r\n",
+      "17.4 M   139.2 M   /data/ghcnd/daily/1899.csv.gz\r\n",
+      "18.6 M   148.7 M   /data/ghcnd/daily/1900.csv.gz\r\n",
+      "23.6 M   189.1 M   /data/ghcnd/daily/1901.csv.gz\r\n",
+      "24.5 M   196.3 M   /data/ghcnd/daily/1902.csv.gz\r\n",
+      "25.0 M   200.4 M   /data/ghcnd/daily/1903.csv.gz\r\n",
+      "25.9 M   206.9 M   /data/ghcnd/daily/1904.csv.gz\r\n",
+      "27.2 M   217.6 M   /data/ghcnd/daily/1905.csv.gz\r\n",
+      "27.8 M   222.4 M   /data/ghcnd/daily/1906.csv.gz\r\n",
+      "28.5 M   228.0 M   /data/ghcnd/daily/1907.csv.gz\r\n",
+      "29.2 M   233.3 M   /data/ghcnd/daily/1908.csv.gz\r\n",
+      "30.7 M   245.7 M   /data/ghcnd/daily/1909.csv.gz\r\n",
+      "31.7 M   254.0 M   /data/ghcnd/daily/1910.csv.gz\r\n",
+      "32.9 M   263.1 M   /data/ghcnd/daily/1911.csv.gz\r\n",
+      "34.1 M   273.1 M   /data/ghcnd/daily/1912.csv.gz\r\n",
+      "35.0 M   280.4 M   /data/ghcnd/daily/1913.csv.gz\r\n",
+      "36.2 M   289.4 M   /data/ghcnd/daily/1914.csv.gz\r\n",
+      "37.3 M   298.2 M   /data/ghcnd/daily/1915.csv.gz\r\n",
+      "38.6 M   308.4 M   /data/ghcnd/daily/1916.csv.gz\r\n",
+      "38.8 M   310.1 M   /data/ghcnd/daily/1917.csv.gz\r\n",
+      "37.9 M   302.9 M   /data/ghcnd/daily/1918.csv.gz\r\n",
+      "37.4 M   299.4 M   /data/ghcnd/daily/1919.csv.gz\r\n",
+      "37.7 M   301.2 M   /data/ghcnd/daily/1920.csv.gz\r\n",
+      "37.9 M   303.2 M   /data/ghcnd/daily/1921.csv.gz\r\n",
+      "38.6 M   308.7 M   /data/ghcnd/daily/1922.csv.gz\r\n",
+      "39.3 M   314.3 M   /data/ghcnd/daily/1923.csv.gz\r\n",
+      "40.1 M   320.6 M   /data/ghcnd/daily/1924.csv.gz\r\n",
+      "40.3 M   322.7 M   /data/ghcnd/daily/1925.csv.gz\r\n",
+      "41.5 M   331.7 M   /data/ghcnd/daily/1926.csv.gz\r\n",
+      "42.2 M   337.6 M   /data/ghcnd/daily/1927.csv.gz\r\n",
+      "42.7 M   341.6 M   /data/ghcnd/daily/1928.csv.gz\r\n",
+      "43.6 M   348.9 M   /data/ghcnd/daily/1929.csv.gz\r\n",
+      "44.9 M   359.4 M   /data/ghcnd/daily/1930.csv.gz\r\n",
+      "46.4 M   371.3 M   /data/ghcnd/daily/1931.csv.gz\r\n",
+      "47.4 M   379.3 M   /data/ghcnd/daily/1932.csv.gz\r\n",
+      "47.8 M   382.8 M   /data/ghcnd/daily/1933.csv.gz\r\n",
+      "48.2 M   385.3 M   /data/ghcnd/daily/1934.csv.gz\r\n",
+      "49.1 M   392.6 M   /data/ghcnd/daily/1935.csv.gz\r\n",
+      "52.0 M   416.3 M   /data/ghcnd/daily/1936.csv.gz\r\n",
+      "53.3 M   426.6 M   /data/ghcnd/daily/1937.csv.gz\r\n",
+      "54.4 M   435.1 M   /data/ghcnd/daily/1938.csv.gz\r\n",
+      "56.0 M   448.3 M   /data/ghcnd/daily/1939.csv.gz\r\n",
+      "58.1 M   465.2 M   /data/ghcnd/daily/1940.csv.gz\r\n",
+      "59.9 M   479.5 M   /data/ghcnd/daily/1941.csv.gz\r\n",
+      "61.9 M   495.3 M   /data/ghcnd/daily/1942.csv.gz\r\n",
+      "62.7 M   501.4 M   /data/ghcnd/daily/1943.csv.gz\r\n",
+      "64.3 M   514.5 M   /data/ghcnd/daily/1944.csv.gz\r\n",
+      "66.6 M   532.7 M   /data/ghcnd/daily/1945.csv.gz\r\n",
+      "67.0 M   536.0 M   /data/ghcnd/daily/1946.csv.gz\r\n",
+      "68.6 M   549.2 M   /data/ghcnd/daily/1947.csv.gz\r\n",
+      "81.8 M   654.7 M   /data/ghcnd/daily/1948.csv.gz\r\n",
+      "93.7 M   749.3 M   /data/ghcnd/daily/1949.csv.gz\r\n",
+      "96.5 M   772.1 M   /data/ghcnd/daily/1950.csv.gz\r\n",
+      "99.5 M   796.0 M   /data/ghcnd/daily/1951.csv.gz\r\n",
+      "100.8 M  806.4 M   /data/ghcnd/daily/1952.csv.gz\r\n",
+      "102.2 M  817.5 M   /data/ghcnd/daily/1953.csv.gz\r\n",
+      "104.1 M  832.8 M   /data/ghcnd/daily/1954.csv.gz\r\n",
+      "106.3 M  850.5 M   /data/ghcnd/daily/1955.csv.gz\r\n",
+      "108.4 M  866.9 M   /data/ghcnd/daily/1956.csv.gz\r\n",
+      "110.9 M  886.9 M   /data/ghcnd/daily/1957.csv.gz\r\n",
+      "111.9 M  895.5 M   /data/ghcnd/daily/1958.csv.gz\r\n",
+      "114.2 M  913.4 M   /data/ghcnd/daily/1959.csv.gz\r\n",
+      "116.4 M  931.3 M   /data/ghcnd/daily/1960.csv.gz\r\n",
+      "120.1 M  961.0 M   /data/ghcnd/daily/1961.csv.gz\r\n",
+      "122.7 M  981.5 M   /data/ghcnd/daily/1962.csv.gz\r\n",
+      "125.5 M  1003.9 M  /data/ghcnd/daily/1963.csv.gz\r\n",
+      "126.4 M  1011.2 M  /data/ghcnd/daily/1964.csv.gz\r\n",
+      "130.5 M  1.0 G     /data/ghcnd/daily/1965.csv.gz\r\n",
+      "132.2 M  1.0 G     /data/ghcnd/daily/1966.csv.gz\r\n",
+      "133.5 M  1.0 G     /data/ghcnd/daily/1967.csv.gz\r\n",
+      "133.0 M  1.0 G     /data/ghcnd/daily/1968.csv.gz\r\n",
+      "134.7 M  1.1 G     /data/ghcnd/daily/1969.csv.gz\r\n",
+      "135.6 M  1.1 G     /data/ghcnd/daily/1970.csv.gz\r\n",
+      "130.6 M  1.0 G     /data/ghcnd/daily/1971.csv.gz\r\n",
+      "129.7 M  1.0 G     /data/ghcnd/daily/1972.csv.gz\r\n",
+      "135.8 M  1.1 G     /data/ghcnd/daily/1973.csv.gz\r\n",
+      "137.0 M  1.1 G     /data/ghcnd/daily/1974.csv.gz\r\n",
+      "136.5 M  1.1 G     /data/ghcnd/daily/1975.csv.gz\r\n",
+      "136.3 M  1.1 G     /data/ghcnd/daily/1976.csv.gz\r\n",
+      "136.1 M  1.1 G     /data/ghcnd/daily/1977.csv.gz\r\n",
+      "136.3 M  1.1 G     /data/ghcnd/daily/1978.csv.gz\r\n",
+      "136.5 M  1.1 G     /data/ghcnd/daily/1979.csv.gz\r\n",
+      "136.8 M  1.1 G     /data/ghcnd/daily/1980.csv.gz\r\n",
+      "139.6 M  1.1 G     /data/ghcnd/daily/1981.csv.gz\r\n",
+      "141.3 M  1.1 G     /data/ghcnd/daily/1982.csv.gz\r\n",
+      "142.6 M  1.1 G     /data/ghcnd/daily/1983.csv.gz\r\n",
+      "141.2 M  1.1 G     /data/ghcnd/daily/1984.csv.gz\r\n",
+      "139.7 M  1.1 G     /data/ghcnd/daily/1985.csv.gz\r\n",
+      "138.8 M  1.1 G     /data/ghcnd/daily/1986.csv.gz\r\n",
+      "138.9 M  1.1 G     /data/ghcnd/daily/1987.csv.gz\r\n",
+      "139.6 M  1.1 G     /data/ghcnd/daily/1988.csv.gz\r\n",
+      "140.0 M  1.1 G     /data/ghcnd/daily/1989.csv.gz\r\n",
+      "140.2 M  1.1 G     /data/ghcnd/daily/1990.csv.gz\r\n",
+      "140.8 M  1.1 G     /data/ghcnd/daily/1991.csv.gz\r\n",
+      "141.0 M  1.1 G     /data/ghcnd/daily/1992.csv.gz\r\n",
+      "139.9 M  1.1 G     /data/ghcnd/daily/1993.csv.gz\r\n",
+      "138.9 M  1.1 G     /data/ghcnd/daily/1994.csv.gz\r\n",
+      "138.6 M  1.1 G     /data/ghcnd/daily/1995.csv.gz\r\n",
+      "138.8 M  1.1 G     /data/ghcnd/daily/1996.csv.gz\r\n",
+      "137.7 M  1.1 G     /data/ghcnd/daily/1997.csv.gz\r\n",
+      "140.8 M  1.1 G     /data/ghcnd/daily/1998.csv.gz\r\n",
+      "143.4 M  1.1 G     /data/ghcnd/daily/1999.csv.gz\r\n",
+      "145.3 M  1.1 G     /data/ghcnd/daily/2000.csv.gz\r\n",
+      "147.6 M  1.2 G     /data/ghcnd/daily/2001.csv.gz\r\n",
+      "149.0 M  1.2 G     /data/ghcnd/daily/2002.csv.gz\r\n",
+      "152.4 M  1.2 G     /data/ghcnd/daily/2003.csv.gz\r\n",
+      "154.5 M  1.2 G     /data/ghcnd/daily/2004.csv.gz\r\n",
+      "151.5 M  1.2 G     /data/ghcnd/daily/2005.csv.gz\r\n",
+      "157.5 M  1.2 G     /data/ghcnd/daily/2006.csv.gz\r\n",
+      "160.2 M  1.3 G     /data/ghcnd/daily/2007.csv.gz\r\n",
+      "167.1 M  1.3 G     /data/ghcnd/daily/2008.csv.gz\r\n",
+      "169.8 M  1.3 G     /data/ghcnd/daily/2009.csv.gz\r\n",
+      "171.4 M  1.3 G     /data/ghcnd/daily/2010.csv.gz\r\n",
+      "162.6 M  1.3 G     /data/ghcnd/daily/2011.csv.gz\r\n",
+      "160.3 M  1.3 G     /data/ghcnd/daily/2012.csv.gz\r\n",
+      "155.8 M  1.2 G     /data/ghcnd/daily/2013.csv.gz\r\n",
+      "154.3 M  1.2 G     /data/ghcnd/daily/2014.csv.gz\r\n",
+      "156.7 M  1.2 G     /data/ghcnd/daily/2015.csv.gz\r\n",
+      "158.1 M  1.2 G     /data/ghcnd/daily/2016.csv.gz\r\n",
+      "157.7 M  1.2 G     /data/ghcnd/daily/2017.csv.gz\r\n",
+      "157.8 M  1.2 G     /data/ghcnd/daily/2018.csv.gz\r\n",
+      "156.6 M  1.2 G     /data/ghcnd/daily/2019.csv.gz\r\n",
+      "157.4 M  1.2 G     /data/ghcnd/daily/2020.csv.gz\r\n",
+      "155.3 M  1.2 G     /data/ghcnd/daily/2021.csv.gz\r\n",
+      "158.4 M  1.2 G     /data/ghcnd/daily/2022.csv.gz\r\n",
+      "26.2 M   210.0 M   /data/ghcnd/daily/2023.csv.gz\r\n"
+     ]
+    }
+   ],
+   "source": [
+    "!hdfs dfs -du -h /data/ghcnd/daily/"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 4,
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "63.6,K,509.1,K,/data/ghcnd/daily/1750.csv.gz\r\n",
+      "3.3,K,26.2,K,/data/ghcnd/daily/1763.csv.gz\r\n",
+      "3.2,K,26.0,K,/data/ghcnd/daily/1764.csv.gz\r\n",
+      "3.3,K,26.1,K,/data/ghcnd/daily/1765.csv.gz\r\n",
+      "3.3,K,26.1,K,/data/ghcnd/daily/1766.csv.gz\r\n",
+      "3.3,K,26.2,K,/data/ghcnd/daily/1767.csv.gz\r\n",
+      "3.2,K,26.0,K,/data/ghcnd/daily/1768.csv.gz\r\n",
+      "3.3,K,26.7,K,/data/ghcnd/daily/1769.csv.gz\r\n",
+      "3.3,K,26.2,K,/data/ghcnd/daily/1770.csv.gz\r\n",
+      "3.3,K,26.4,K,/data/ghcnd/daily/1771.csv.gz\r\n",
+      "3.3,K,26.7,K,/data/ghcnd/daily/1772.csv.gz\r\n",
+      "3.3,K,26.3,K,/data/ghcnd/daily/1773.csv.gz\r\n",
+      "3.3,K,26.5,K,/data/ghcnd/daily/1774.csv.gz\r\n",
+      "6.2,K,49.7,K,/data/ghcnd/daily/1775.csv.gz\r\n",
+      "6.3,K,50.2,K,/data/ghcnd/daily/1776.csv.gz\r\n",
+      "6.3,K,50.2,K,/data/ghcnd/daily/1777.csv.gz\r\n",
+      "6.1,K,48.8,K,/data/ghcnd/daily/1778.csv.gz\r\n",
+      "6,K,48,K,/data/ghcnd/daily/1779.csv.gz\r\n",
+      "6.1,K,48.8,K,/data/ghcnd/daily/1780.csv.gz\r\n",
+      "7.6,K,60.9,K,/data/ghcnd/daily/1781.csv.gz\r\n",
+      "7.6,K,61,K,/data/ghcnd/daily/1782.csv.gz\r\n",
+      "7.7,K,61.9,K,/data/ghcnd/daily/1783.csv.gz\r\n",
+      "7.8,K,62.1,K,/data/ghcnd/daily/1784.csv.gz\r\n",
+      "7.6,K,61.0,K,/data/ghcnd/daily/1785.csv.gz\r\n",
+      "7.7,K,61.6,K,/data/ghcnd/daily/1786.csv.gz\r\n",
+      "6.2,K,49.5,K,/data/ghcnd/daily/1787.csv.gz\r\n",
+      "6.2,K,50.0,K,/data/ghcnd/daily/1788.csv.gz\r\n",
+      "7.6,K,60.7,K,/data/ghcnd/daily/1789.csv.gz\r\n",
+      "7.6,K,60.8,K,/data/ghcnd/daily/1790.csv.gz\r\n",
+      "7.6,K,60.4,K,/data/ghcnd/daily/1791.csv.gz\r\n",
+      "7.6,K,61.0,K,/data/ghcnd/daily/1792.csv.gz\r\n",
+      "6.2,K,49.5,K,/data/ghcnd/daily/1793.csv.gz\r\n",
+      "7.6,K,60.7,K,/data/ghcnd/daily/1794.csv.gz\r\n",
+      "7.7,K,61.3,K,/data/ghcnd/daily/1795.csv.gz\r\n",
+      "7.6,K,61.1,K,/data/ghcnd/daily/1796.csv.gz\r\n",
+      "9.0,K,72.2,K,/data/ghcnd/daily/1797.csv.gz\r\n",
+      "9.1,K,72.6,K,/data/ghcnd/daily/1798.csv.gz\r\n",
+      "6.2,K,49.6,K,/data/ghcnd/daily/1799.csv.gz\r\n",
+      "7.6,K,60.8,K,/data/ghcnd/daily/1800.csv.gz\r\n",
+      "7.6,K,60.9,K,/data/ghcnd/daily/1801.csv.gz\r\n",
+      "9.0,K,71.8,K,/data/ghcnd/daily/1802.csv.gz\r\n",
+      "7.7,K,61.7,K,/data/ghcnd/daily/1803.csv.gz\r\n",
+      "8.5,K,68.2,K,/data/ghcnd/daily/1804.csv.gz\r\n",
+      "8.7,K,69.5,K,/data/ghcnd/daily/1805.csv.gz\r\n",
+      "8.4,K,67.2,K,/data/ghcnd/daily/1806.csv.gz\r\n",
+      "8.5,K,68.2,K,/data/ghcnd/daily/1807.csv.gz\r\n",
+      "8.7,K,69.8,K,/data/ghcnd/daily/1808.csv.gz\r\n",
+      "8.6,K,68.6,K,/data/ghcnd/daily/1809.csv.gz\r\n",
+      "8.6,K,69.0,K,/data/ghcnd/daily/1810.csv.gz\r\n",
+      "8.7,K,69.8,K,/data/ghcnd/daily/1811.csv.gz\r\n",
+      "8.8,K,70.3,K,/data/ghcnd/daily/1812.csv.gz\r\n",
+      "9.0,K,72.4,K,/data/ghcnd/daily/1813.csv.gz\r\n",
+      "10.6,K,84.6,K,/data/ghcnd/daily/1814.csv.gz\r\n",
+      "13.6,K,108.5,K,/data/ghcnd/daily/1815.csv.gz\r\n",
+      "13.5,K,108.3,K,/data/ghcnd/daily/1816.csv.gz\r\n",
+      "13.4,K,107.5,K,/data/ghcnd/daily/1817.csv.gz\r\n",
+      "13.4,K,107.5,K,/data/ghcnd/daily/1818.csv.gz\r\n",
+      "13.4,K,107.0,K,/data/ghcnd/daily/1819.csv.gz\r\n",
+      "13.7,K,109.4,K,/data/ghcnd/daily/1820.csv.gz\r\n",
+      "13.5,K,107.8,K,/data/ghcnd/daily/1821.csv.gz\r\n",
+      "13.7,K,109.8,K,/data/ghcnd/daily/1822.csv.gz\r\n",
+      "14.4,K,115.2,K,/data/ghcnd/daily/1823.csv.gz\r\n",
+      "17.6,K,140.9,K,/data/ghcnd/daily/1824.csv.gz\r\n",
+      "17.7,K,141.4,K,/data/ghcnd/daily/1825.csv.gz\r\n",
+      "18.0,K,143.8,K,/data/ghcnd/daily/1826.csv.gz\r\n",
+      "20.4,K,162.9,K,/data/ghcnd/daily/1827.csv.gz\r\n",
+      "20.5,K,163.9,K,/data/ghcnd/daily/1828.csv.gz\r\n",
+      "20.6,K,165.2,K,/data/ghcnd/daily/1829.csv.gz\r\n",
+      "20.8,K,166.5,K,/data/ghcnd/daily/1830.csv.gz\r\n",
+      "20.8,K,166.6,K,/data/ghcnd/daily/1831.csv.gz\r\n",
+      "21.9,K,175.3,K,/data/ghcnd/daily/1832.csv.gz\r\n",
+      "26.6,K,213.2,K,/data/ghcnd/daily/1833.csv.gz\r\n",
+      "26.5,K,211.7,K,/data/ghcnd/daily/1834.csv.gz\r\n",
+      "26.9,K,215.0,K,/data/ghcnd/daily/1835.csv.gz\r\n",
+      "29.1,K,232.9,K,/data/ghcnd/daily/1836.csv.gz\r\n",
+      "28.7,K,229.2,K,/data/ghcnd/daily/1837.csv.gz\r\n",
+      "31.0,K,247.7,K,/data/ghcnd/daily/1838.csv.gz\r\n",
+      "28.9,K,231.1,K,/data/ghcnd/daily/1839.csv.gz\r\n",
+      "35.1,K,281.2,K,/data/ghcnd/daily/1840.csv.gz\r\n",
+      "36.1,K,289.0,K,/data/ghcnd/daily/1841.csv.gz\r\n",
+      "38.5,K,308.1,K,/data/ghcnd/daily/1842.csv.gz\r\n",
+      "38.5,K,307.8,K,/data/ghcnd/daily/1843.csv.gz\r\n",
+      "42.3,K,338.4,K,/data/ghcnd/daily/1844.csv.gz\r\n",
+      "46.0,K,368.0,K,/data/ghcnd/daily/1845.csv.gz\r\n",
+      "43.6,K,348.8,K,/data/ghcnd/daily/1846.csv.gz\r\n",
+      "45.1,K,360.8,K,/data/ghcnd/daily/1847.csv.gz\r\n",
+      "44.0,K,351.9,K,/data/ghcnd/daily/1848.csv.gz\r\n",
+      "46.3,K,370.1,K,/data/ghcnd/daily/1849.csv.gz\r\n",
+      "46.4,K,371.5,K,/data/ghcnd/daily/1850.csv.gz\r\n",
+      "53.7,K,429.9,K,/data/ghcnd/daily/1851.csv.gz\r\n",
+      "57.5,K,459.9,K,/data/ghcnd/daily/1852.csv.gz\r\n",
+      "58.2,K,465.9,K,/data/ghcnd/daily/1853.csv.gz\r\n",
+      "57.9,K,463.0,K,/data/ghcnd/daily/1854.csv.gz\r\n",
+      "63.4,K,506.9,K,/data/ghcnd/daily/1855.csv.gz\r\n",
+      "74.5,K,596.2,K,/data/ghcnd/daily/1856.csv.gz\r\n",
+      "81.2,K,649.4,K,/data/ghcnd/daily/1857.csv.gz\r\n",
+      "112.9,K,902.9,K,/data/ghcnd/daily/1858.csv.gz\r\n",
+      "125.7,K,1005.5,K,/data/ghcnd/daily/1859.csv.gz\r\n",
+      "134.4,K,1.0,M,/data/ghcnd/daily/1860.csv.gz\r\n",
+      "139.7,K,1.1,M,/data/ghcnd/daily/1861.csv.gz\r\n",
+      "134.5,K,1.1,M,/data/ghcnd/daily/1862.csv.gz\r\n",
+      "151.3,K,1.2,M,/data/ghcnd/daily/1863.csv.gz\r\n",
+      "155.7,K,1.2,M,/data/ghcnd/daily/1864.csv.gz\r\n",
+      "156.6,K,1.2,M,/data/ghcnd/daily/1865.csv.gz\r\n",
+      "203.1,K,1.6,M,/data/ghcnd/daily/1866.csv.gz\r\n",
+      "243.4,K,1.9,M,/data/ghcnd/daily/1867.csv.gz\r\n",
+      "255.9,K,2.0,M,/data/ghcnd/daily/1868.csv.gz\r\n",
+      "296.1,K,2.3,M,/data/ghcnd/daily/1869.csv.gz\r\n",
+      "339.8,K,2.7,M,/data/ghcnd/daily/1870.csv.gz\r\n",
+      "446.4,K,3.5,M,/data/ghcnd/daily/1871.csv.gz\r\n",
+      "605.5,K,4.7,M,/data/ghcnd/daily/1872.csv.gz\r\n",
+      "677.8,K,5.3,M,/data/ghcnd/daily/1873.csv.gz\r\n",
+      "757.2,K,5.9,M,/data/ghcnd/daily/1874.csv.gz\r\n",
+      "821.9,K,6.4,M,/data/ghcnd/daily/1875.csv.gz\r\n",
+      "891.2,K,7.0,M,/data/ghcnd/daily/1876.csv.gz\r\n",
+      "993.6,K,7.8,M,/data/ghcnd/daily/1877.csv.gz\r\n",
+      "1.2,M,9.2,M,/data/ghcnd/daily/1878.csv.gz\r\n",
+      "1.3,M,10.6,M,/data/ghcnd/daily/1879.csv.gz\r\n",
+      "1.7,M,13.4,M,/data/ghcnd/daily/1880.csv.gz\r\n",
+      "2.0,M,15.9,M,/data/ghcnd/daily/1881.csv.gz\r\n",
+      "2.3,M,18.1,M,/data/ghcnd/daily/1882.csv.gz\r\n",
+      "2.5,M,20.0,M,/data/ghcnd/daily/1883.csv.gz\r\n",
+      "3.0,M,24.0,M,/data/ghcnd/daily/1884.csv.gz\r\n",
+      "3.4,M,27.2,M,/data/ghcnd/daily/1885.csv.gz\r\n",
+      "3.7,M,29.8,M,/data/ghcnd/daily/1886.csv.gz\r\n",
+      "4.2,M,33.5,M,/data/ghcnd/daily/1887.csv.gz\r\n",
+      "4.5,M,36.1,M,/data/ghcnd/daily/1888.csv.gz\r\n",
+      "4.9,M,39.2,M,/data/ghcnd/daily/1889.csv.gz\r\n",
+      "5.3,M,42.7,M,/data/ghcnd/daily/1890.csv.gz\r\n",
+      "5.6,M,44.8,M,/data/ghcnd/daily/1891.csv.gz\r\n",
+      "6.5,M,51.8,M,/data/ghcnd/daily/1892.csv.gz\r\n",
+      "11.9,M,95.4,M,/data/ghcnd/daily/1893.csv.gz\r\n",
+      "12.8,M,102.1,M,/data/ghcnd/daily/1894.csv.gz\r\n",
+      "13.8,M,110.2,M,/data/ghcnd/daily/1895.csv.gz\r\n",
+      "14.9,M,118.9,M,/data/ghcnd/daily/1896.csv.gz\r\n",
+      "16.0,M,128.4,M,/data/ghcnd/daily/1897.csv.gz\r\n",
+      "16.7,M,134.0,M,/data/ghcnd/daily/1898.csv.gz\r\n",
+      "17.4,M,139.2,M,/data/ghcnd/daily/1899.csv.gz\r\n",
+      "18.6,M,148.7,M,/data/ghcnd/daily/1900.csv.gz\r\n",
+      "23.6,M,189.1,M,/data/ghcnd/daily/1901.csv.gz\r\n",
+      "24.5,M,196.3,M,/data/ghcnd/daily/1902.csv.gz\r\n",
+      "25.0,M,200.4,M,/data/ghcnd/daily/1903.csv.gz\r\n",
+      "25.9,M,206.9,M,/data/ghcnd/daily/1904.csv.gz\r\n",
+      "27.2,M,217.6,M,/data/ghcnd/daily/1905.csv.gz\r\n",
+      "27.8,M,222.4,M,/data/ghcnd/daily/1906.csv.gz\r\n",
+      "28.5,M,228.0,M,/data/ghcnd/daily/1907.csv.gz\r\n",
+      "29.2,M,233.3,M,/data/ghcnd/daily/1908.csv.gz\r\n",
+      "30.7,M,245.7,M,/data/ghcnd/daily/1909.csv.gz\r\n",
+      "31.7,M,254.0,M,/data/ghcnd/daily/1910.csv.gz\r\n",
+      "32.9,M,263.1,M,/data/ghcnd/daily/1911.csv.gz\r\n",
+      "34.1,M,273.1,M,/data/ghcnd/daily/1912.csv.gz\r\n",
+      "35.0,M,280.4,M,/data/ghcnd/daily/1913.csv.gz\r\n",
+      "36.2,M,289.4,M,/data/ghcnd/daily/1914.csv.gz\r\n",
+      "37.3,M,298.2,M,/data/ghcnd/daily/1915.csv.gz\r\n",
+      "38.6,M,308.4,M,/data/ghcnd/daily/1916.csv.gz\r\n",
+      "38.8,M,310.1,M,/data/ghcnd/daily/1917.csv.gz\r\n",
+      "37.9,M,302.9,M,/data/ghcnd/daily/1918.csv.gz\r\n",
+      "37.4,M,299.4,M,/data/ghcnd/daily/1919.csv.gz\r\n",
+      "37.7,M,301.2,M,/data/ghcnd/daily/1920.csv.gz\r\n",
+      "37.9,M,303.2,M,/data/ghcnd/daily/1921.csv.gz\r\n",
+      "38.6,M,308.7,M,/data/ghcnd/daily/1922.csv.gz\r\n",
+      "39.3,M,314.3,M,/data/ghcnd/daily/1923.csv.gz\r\n",
+      "40.1,M,320.6,M,/data/ghcnd/daily/1924.csv.gz\r\n",
+      "40.3,M,322.7,M,/data/ghcnd/daily/1925.csv.gz\r\n",
+      "41.5,M,331.7,M,/data/ghcnd/daily/1926.csv.gz\r\n",
+      "42.2,M,337.6,M,/data/ghcnd/daily/1927.csv.gz\r\n",
+      "42.7,M,341.6,M,/data/ghcnd/daily/1928.csv.gz\r\n",
+      "43.6,M,348.9,M,/data/ghcnd/daily/1929.csv.gz\r\n",
+      "44.9,M,359.4,M,/data/ghcnd/daily/1930.csv.gz\r\n",
+      "46.4,M,371.3,M,/data/ghcnd/daily/1931.csv.gz\r\n",
+      "47.4,M,379.3,M,/data/ghcnd/daily/1932.csv.gz\r\n",
+      "47.8,M,382.8,M,/data/ghcnd/daily/1933.csv.gz\r\n",
+      "48.2,M,385.3,M,/data/ghcnd/daily/1934.csv.gz\r\n",
+      "49.1,M,392.6,M,/data/ghcnd/daily/1935.csv.gz\r\n",
+      "52.0,M,416.3,M,/data/ghcnd/daily/1936.csv.gz\r\n",
+      "53.3,M,426.6,M,/data/ghcnd/daily/1937.csv.gz\r\n",
+      "54.4,M,435.1,M,/data/ghcnd/daily/1938.csv.gz\r\n",
+      "56.0,M,448.3,M,/data/ghcnd/daily/1939.csv.gz\r\n",
+      "58.1,M,465.2,M,/data/ghcnd/daily/1940.csv.gz\r\n",
+      "59.9,M,479.5,M,/data/ghcnd/daily/1941.csv.gz\r\n",
+      "61.9,M,495.3,M,/data/ghcnd/daily/1942.csv.gz\r\n",
+      "62.7,M,501.4,M,/data/ghcnd/daily/1943.csv.gz\r\n",
+      "64.3,M,514.5,M,/data/ghcnd/daily/1944.csv.gz\r\n",
+      "66.6,M,532.7,M,/data/ghcnd/daily/1945.csv.gz\r\n",
+      "67.0,M,536.0,M,/data/ghcnd/daily/1946.csv.gz\r\n",
+      "68.6,M,549.2,M,/data/ghcnd/daily/1947.csv.gz\r\n",
+      "81.8,M,654.7,M,/data/ghcnd/daily/1948.csv.gz\r\n",
+      "93.7,M,749.3,M,/data/ghcnd/daily/1949.csv.gz\r\n",
+      "96.5,M,772.1,M,/data/ghcnd/daily/1950.csv.gz\r\n",
+      "99.5,M,796.0,M,/data/ghcnd/daily/1951.csv.gz\r\n",
+      "100.8,M,806.4,M,/data/ghcnd/daily/1952.csv.gz\r\n",
+      "102.2,M,817.5,M,/data/ghcnd/daily/1953.csv.gz\r\n",
+      "104.1,M,832.8,M,/data/ghcnd/daily/1954.csv.gz\r\n",
+      "106.3,M,850.5,M,/data/ghcnd/daily/1955.csv.gz\r\n",
+      "108.4,M,866.9,M,/data/ghcnd/daily/1956.csv.gz\r\n",
+      "110.9,M,886.9,M,/data/ghcnd/daily/1957.csv.gz\r\n",
+      "111.9,M,895.5,M,/data/ghcnd/daily/1958.csv.gz\r\n",
+      "114.2,M,913.4,M,/data/ghcnd/daily/1959.csv.gz\r\n",
+      "116.4,M,931.3,M,/data/ghcnd/daily/1960.csv.gz\r\n",
+      "120.1,M,961.0,M,/data/ghcnd/daily/1961.csv.gz\r\n",
+      "122.7,M,981.5,M,/data/ghcnd/daily/1962.csv.gz\r\n",
+      "125.5,M,1003.9,M,/data/ghcnd/daily/1963.csv.gz\r\n",
+      "126.4,M,1011.2,M,/data/ghcnd/daily/1964.csv.gz\r\n",
+      "130.5,M,1.0,G,/data/ghcnd/daily/1965.csv.gz\r\n",
+      "132.2,M,1.0,G,/data/ghcnd/daily/1966.csv.gz\r\n",
+      "133.5,M,1.0,G,/data/ghcnd/daily/1967.csv.gz\r\n",
+      "133.0,M,1.0,G,/data/ghcnd/daily/1968.csv.gz\r\n",
+      "134.7,M,1.1,G,/data/ghcnd/daily/1969.csv.gz\r\n",
+      "135.6,M,1.1,G,/data/ghcnd/daily/1970.csv.gz\r\n",
+      "130.6,M,1.0,G,/data/ghcnd/daily/1971.csv.gz\r\n",
+      "129.7,M,1.0,G,/data/ghcnd/daily/1972.csv.gz\r\n",
+      "135.8,M,1.1,G,/data/ghcnd/daily/1973.csv.gz\r\n",
+      "137.0,M,1.1,G,/data/ghcnd/daily/1974.csv.gz\r\n",
+      "136.5,M,1.1,G,/data/ghcnd/daily/1975.csv.gz\r\n",
+      "136.3,M,1.1,G,/data/ghcnd/daily/1976.csv.gz\r\n",
+      "136.1,M,1.1,G,/data/ghcnd/daily/1977.csv.gz\r\n",
+      "136.3,M,1.1,G,/data/ghcnd/daily/1978.csv.gz\r\n",
+      "136.5,M,1.1,G,/data/ghcnd/daily/1979.csv.gz\r\n",
+      "136.8,M,1.1,G,/data/ghcnd/daily/1980.csv.gz\r\n",
+      "139.6,M,1.1,G,/data/ghcnd/daily/1981.csv.gz\r\n",
+      "141.3,M,1.1,G,/data/ghcnd/daily/1982.csv.gz\r\n",
+      "142.6,M,1.1,G,/data/ghcnd/daily/1983.csv.gz\r\n",
+      "141.2,M,1.1,G,/data/ghcnd/daily/1984.csv.gz\r\n",
+      "139.7,M,1.1,G,/data/ghcnd/daily/1985.csv.gz\r\n",
+      "138.8,M,1.1,G,/data/ghcnd/daily/1986.csv.gz\r\n",
+      "138.9,M,1.1,G,/data/ghcnd/daily/1987.csv.gz\r\n",
+      "139.6,M,1.1,G,/data/ghcnd/daily/1988.csv.gz\r\n",
+      "140.0,M,1.1,G,/data/ghcnd/daily/1989.csv.gz\r\n",
+      "140.2,M,1.1,G,/data/ghcnd/daily/1990.csv.gz\r\n",
+      "140.8,M,1.1,G,/data/ghcnd/daily/1991.csv.gz\r\n",
+      "141.0,M,1.1,G,/data/ghcnd/daily/1992.csv.gz\r\n",
+      "139.9,M,1.1,G,/data/ghcnd/daily/1993.csv.gz\r\n",
+      "138.9,M,1.1,G,/data/ghcnd/daily/1994.csv.gz\r\n",
+      "138.6,M,1.1,G,/data/ghcnd/daily/1995.csv.gz\r\n",
+      "138.8,M,1.1,G,/data/ghcnd/daily/1996.csv.gz\r\n",
+      "137.7,M,1.1,G,/data/ghcnd/daily/1997.csv.gz\r\n",
+      "140.8,M,1.1,G,/data/ghcnd/daily/1998.csv.gz\r\n",
+      "143.4,M,1.1,G,/data/ghcnd/daily/1999.csv.gz\r\n",
+      "145.3,M,1.1,G,/data/ghcnd/daily/2000.csv.gz\r\n",
+      "147.6,M,1.2,G,/data/ghcnd/daily/2001.csv.gz\r\n",
+      "149.0,M,1.2,G,/data/ghcnd/daily/2002.csv.gz\r\n",
+      "152.4,M,1.2,G,/data/ghcnd/daily/2003.csv.gz\r\n",
+      "154.5,M,1.2,G,/data/ghcnd/daily/2004.csv.gz\r\n",
+      "151.5,M,1.2,G,/data/ghcnd/daily/2005.csv.gz\r\n",
+      "157.5,M,1.2,G,/data/ghcnd/daily/2006.csv.gz\r\n",
+      "160.2,M,1.3,G,/data/ghcnd/daily/2007.csv.gz\r\n",
+      "167.1,M,1.3,G,/data/ghcnd/daily/2008.csv.gz\r\n",
+      "169.8,M,1.3,G,/data/ghcnd/daily/2009.csv.gz\r\n",
+      "171.4,M,1.3,G,/data/ghcnd/daily/2010.csv.gz\r\n",
+      "162.6,M,1.3,G,/data/ghcnd/daily/2011.csv.gz\r\n",
+      "160.3,M,1.3,G,/data/ghcnd/daily/2012.csv.gz\r\n",
+      "155.8,M,1.2,G,/data/ghcnd/daily/2013.csv.gz\r\n",
+      "154.3,M,1.2,G,/data/ghcnd/daily/2014.csv.gz\r\n",
+      "156.7,M,1.2,G,/data/ghcnd/daily/2015.csv.gz\r\n",
+      "158.1,M,1.2,G,/data/ghcnd/daily/2016.csv.gz\r\n",
+      "157.7,M,1.2,G,/data/ghcnd/daily/2017.csv.gz\r\n",
+      "157.8,M,1.2,G,/data/ghcnd/daily/2018.csv.gz\r\n",
+      "156.6,M,1.2,G,/data/ghcnd/daily/2019.csv.gz\r\n",
+      "157.4,M,1.2,G,/data/ghcnd/daily/2020.csv.gz\r\n",
+      "155.3,M,1.2,G,/data/ghcnd/daily/2021.csv.gz\r\n",
+      "158.4,M,1.2,G,/data/ghcnd/daily/2022.csv.gz\r\n",
+      "26.2,M,210.0,M,/data/ghcnd/daily/2023.csv.gz\r\n"
+     ]
+    }
+   ],
+   "source": [
+    "!hdfs dfs -du -h /data/ghcnd/daily/ | awk '{print $1 \",\" $2 \",\" $3 \",\" $4 \",\" $5}'"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 72,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "!hdfs dfs -du -h /data/ghcnd/daily/ | awk '{print $1 \",\" $2 \",\" $3 \",\" $4 \",\" $5}'  > data_size_change.csv"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "### (c) Total size of data and size of 'daily':"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 6,
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "13.5 G  103.0 G  /data/ghcnd\n",
+      "12.2 G  97.6 G  /data/ghcnd/daily\n"
+     ]
+    }
+   ],
+   "source": [
+    "!hdfs dfs -du -s -h /data/ghcnd/         \n",
+    "!hdfs dfs -du -s -h /data/ghcnd/daily  "
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 7,
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "12.2 G  97.6 G   /data/ghcnd/daily\r\n",
+      "1.3 G   5.0 G    /data/ghcnd/daily-uncompressed\r\n",
+      "3.6 K   28.6 K   /data/ghcnd/ghcnd-countries.txt\r\n",
+      "32.4 M  259.0 M  /data/ghcnd/ghcnd-inventory.txt\r\n",
+      "1.1 K   8.5 K    /data/ghcnd/ghcnd-states.txt\r\n",
+      "10.2 M  81.5 M   /data/ghcnd/ghcnd-stations.txt\r\n"
+     ]
+    }
+   ],
+   "source": [
+    "!hdfs dfs -du -h /data/ghcnd/"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "## Q2\n",
+    "Start pyspark shell with 2 executors, 1 core per executor, 1 GB of executor memory, and 1 GB of master memory. You will now explore each data source briefly to ensure that the descriptions are accurate and that the data is as expected."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 58,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/html": [
+       "<style>pre { white-space: pre !important; }table.dataframe td { white-space: nowrap !important; }table.dataframe thead th:first-child, table.dataframe tbody th { display: none; }</style>"
+      ],
+      "text/plain": [
+       "<IPython.core.display.HTML object>"
+      ]
+     },
+     "metadata": {},
+     "output_type": "display_data"
+    },
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "Help on function start_spark in module __main__:\n",
+      "\n",
+      "start_spark(executor_instances=4, executor_cores=2, worker_memory=4, master_memory=4)\n",
+      "    Start a new Spark session and define globals for SparkSession (spark) and SparkContext (sc).\n",
+      "    \n",
+      "    Args:\n",
+      "        executor_instances (int): number of executors (default: 2)\n",
+      "        executor_cores (int): number of cores per executor (default: 1)\n",
+      "        worker_memory (float): worker memory (default: 1)\n",
+      "        master_memory (float): master memory (default: 1)\n",
+      "\n",
+      "Help on function stop_spark in module __main__:\n",
+      "\n",
+      "stop_spark()\n",
+      "    Stop the active Spark session and delete globals for SparkSession (spark) and SparkContext (sc).\n",
+      "\n",
+      "Help on function display_spark in module __main__:\n",
+      "\n",
+      "display_spark()\n",
+      "    Display the status of the active Spark session if one is currently running.\n",
+      "\n",
+      "Help on function show_as_html in module __main__:\n",
+      "\n",
+      "show_as_html(df, n=20)\n",
+      "    Leverage existing pandas jupyter integration to show a spark dataframe as html.\n",
+      "    \n",
+      "    Args:\n",
+      "        n (int): number of rows to show (default: 20)\n",
+      "\n"
+     ]
+    }
+   ],
+   "source": [
+    "# Run this cell to import pyspark and to define start_spark() and stop_spark()\n",
+    "\n",
+    "import findspark\n",
+    "\n",
+    "findspark.init()\n",
+    "\n",
+    "import getpass\n",
+    "import pandas as pd\n",
+    "import pyspark\n",
+    "import random\n",
+    "import re\n",
+    "\n",
+    "from IPython.display import display, HTML\n",
+    "from pyspark import SparkContext\n",
+    "from pyspark.sql import SparkSession\n",
+    "\n",
+    "\n",
+    "# Functions used below\n",
+    "\n",
+    "def username():\n",
+    "    \"\"\"Get username with any domain information removed.\n",
+    "    \"\"\"\n",
+    "\n",
+    "    return re.sub('@.*', '', getpass.getuser())\n",
+    "\n",
+    "\n",
+    "def dict_to_html(d):\n",
+    "    \"\"\"Convert a Python dictionary into a two column table for display.\n",
+    "    \"\"\"\n",
+    "\n",
+    "    html = []\n",
+    "\n",
+    "    html.append(f'<table width=\"100%\" style=\"width:100%; font-family: monospace;\">')\n",
+    "    for k, v in d.items():\n",
+    "        html.append(f'<tr><td style=\"text-align:left;\">{k}</td><td>{v}</td></tr>')\n",
+    "    html.append(f'</table>')\n",
+    "\n",
+    "    return ''.join(html)\n",
+    "\n",
+    "\n",
+    "def show_as_html(df, n=20):\n",
+    "    \"\"\"Leverage existing pandas jupyter integration to show a spark dataframe as html.\n",
+    "    \n",
+    "    Args:\n",
+    "        n (int): number of rows to show (default: 20)\n",
+    "    \"\"\"\n",
+    "\n",
+    "    display(df.limit(n).toPandas())\n",
+    "\n",
+    "    \n",
+    "def display_spark():\n",
+    "    \"\"\"Display the status of the active Spark session if one is currently running.\n",
+    "    \"\"\"\n",
+    "    \n",
+    "    if 'spark' in globals() and 'sc' in globals():\n",
+    "\n",
+    "        name = sc.getConf().get(\"spark.app.name\")\n",
+    "        \n",
+    "        html = [\n",
+    "            f'<p><b>Spark</b></p>',\n",
+    "            f'<p>The spark session is <b><span style=\"color:green\">active</span></b>, look for <code>{name}</code> under the running applications section in the Spark UI.</p>',\n",
+    "            f'<ul>',\n",
+    "            f'<li><a href=\"http://mathmadslinux2p.canterbury.ac.nz:8080/\" target=\"_blank\">Spark UI</a></li>',\n",
+    "            f'<li><a href=\"{sc.uiWebUrl}\" target=\"_blank\">Spark Application UI</a></li>',\n",
+    "            f'</ul>',\n",
+    "            f'<p><b>Config</b></p>',\n",
+    "            dict_to_html(dict(sc.getConf().getAll())),\n",
+    "            f'<p><b>Notes</b></p>',\n",
+    "            f'<ul>',\n",
+    "            f'<li>The spark session <code>spark</code> and spark context <code>sc</code> global variables have been defined by <code>start_spark()</code>.</li>',\n",
+    "            f'<li>Please run <code>stop_spark()</code> before closing the notebook or restarting the kernel or kill <code>{name}</code> by hand using the link in the Spark UI.</li>',\n",
+    "            f'</ul>',\n",
+    "        ]\n",
+    "        display(HTML(''.join(html)))\n",
+    "        \n",
+    "    else:\n",
+    "        \n",
+    "        html = [\n",
+    "            f'<p><b>Spark</b></p>',\n",
+    "            f'<p>The spark session is <b><span style=\"color:red\">stopped</span></b>, confirm that <code>{username() + \" (jupyter)\"}</code> is under the completed applications section in the Spark UI.</p>',\n",
+    "            f'<ul>',\n",
+    "            f'<li><a href=\"http://mathmadslinux2p.canterbury.ac.nz:8080/\" target=\"_blank\">Spark UI</a></li>',\n",
+    "            f'</ul>',\n",
+    "        ]\n",
+    "        display(HTML(''.join(html)))\n",
+    "\n",
+    "\n",
+    "# Functions to start and stop spark\n",
+    "\n",
+    "def start_spark(executor_instances=2, executor_cores=1, worker_memory=1, master_memory=1):\n",
+    "    \"\"\"Start a new Spark session and define globals for SparkSession (spark) and SparkContext (sc).\n",
+    "    \n",
+    "    Args:\n",
+    "        executor_instances (int): number of executors (default: 2)\n",
+    "        executor_cores (int): number of cores per executor (default: 1)\n",
+    "        worker_memory (float): worker memory (default: 1)\n",
+    "        master_memory (float): master memory (default: 1)\n",
+    "    \"\"\"\n",
+    "\n",
+    "    global spark\n",
+    "    global sc\n",
+    "\n",
+    "    user = username()\n",
+    "    \n",
+    "    cores = executor_instances * executor_cores\n",
+    "    partitions = cores * 4\n",
+    "    port = 4000 + random.randint(1, 999)\n",
+    "\n",
+    "    spark = (\n",
+    "        SparkSession.builder\n",
+    "        .master(\"spark://masternode2:7077\")\n",
+    "        .config(\"spark.driver.extraJavaOptions\", f\"-Dderby.system.home=/tmp/{user}/spark/\")\n",
+    "        .config(\"spark.dynamicAllocation.enabled\", \"false\")\n",
+    "        .config(\"spark.executor.instances\", str(executor_instances))\n",
+    "        .config(\"spark.executor.cores\", str(executor_cores))\n",
+    "        .config(\"spark.cores.max\", str(cores))\n",
+    "        .config(\"spark.executor.memory\", f\"{worker_memory}g\")\n",
+    "        .config(\"spark.driver.memory\", f\"{master_memory}g\")\n",
+    "        .config(\"spark.driver.maxResultSize\", \"0\")\n",
+    "        .config(\"spark.sql.shuffle.partitions\", str(partitions))\n",
+    "        .config(\"spark.ui.port\", str(port))\n",
+    "        .appName(user + \" (jupyter)\")\n",
+    "        .getOrCreate()\n",
+    "    )\n",
+    "    sc = SparkContext.getOrCreate()\n",
+    "    \n",
+    "    display_spark()\n",
+    "\n",
+    "    \n",
+    "def stop_spark():\n",
+    "    \"\"\"Stop the active Spark session and delete globals for SparkSession (spark) and SparkContext (sc).\n",
+    "    \"\"\"\n",
+    "\n",
+    "    global spark\n",
+    "    global sc\n",
+    "\n",
+    "    if 'spark' in globals() and 'sc' in globals():\n",
+    "\n",
+    "        spark.stop()\n",
+    "\n",
+    "        del spark\n",
+    "        del sc\n",
+    "\n",
+    "    display_spark()\n",
+    "\n",
+    "\n",
+    "# Make css changes to improve spark output readability\n",
+    "\n",
+    "html = [\n",
+    "    '<style>',\n",
+    "    'pre { white-space: pre !important; }',\n",
+    "    'table.dataframe td { white-space: nowrap !important; }',\n",
+    "    'table.dataframe thead th:first-child, table.dataframe tbody th { display: none; }',\n",
+    "    '</style>',\n",
+    "]\n",
+    "display(HTML(''.join(html)))\n",
+    "\n",
+    "\n",
+    "# Print function docstrings\n",
+    "\n",
+    "help(start_spark)\n",
+    "help(stop_spark)\n",
+    "help(display_spark)\n",
+    "help(show_as_html)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 67,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/html": [
+       "<p><b>Spark</b></p><p>The spark session is <b><span style=\"color:green\">active</span></b>, look for <code>gbu43 (jupyter)</code> under the running applications section in the Spark UI.</p><ul><li><a href=\"http://mathmadslinux2p.canterbury.ac.nz:8080/\" target=\"_blank\">Spark UI</a></li><li><a href=\"http://mathmadslinux2p.canterbury.ac.nz:4408\" target=\"_blank\">Spark Application UI</a></li></ul><p><b>Config</b></p><table width=\"100%\" style=\"width:100%; font-family: monospace;\"><tr><td style=\"text-align:left;\">spark.sql.shuffle.partitions</td><td>64</td></tr><tr><td style=\"text-align:left;\">spark.driver.port</td><td>41289</td></tr><tr><td style=\"text-align:left;\">spark.ui.port</td><td>4408</td></tr><tr><td style=\"text-align:left;\">spark.executor.instances</td><td>4</td></tr><tr><td style=\"text-align:left;\">spark.dynamicAllocation.enabled</td><td>false</td></tr><tr><td style=\"text-align:left;\">spark.app.startTime</td><td>1682379434815</td></tr><tr><td style=\"text-align:left;\">spark.driver.extraJavaOptions</td><td>-Dderby.system.home=/tmp/gbu43/spark/</td></tr><tr><td style=\"text-align:left;\">spark.app.id</td><td>app-20230425113714-0659</td></tr><tr><td style=\"text-align:left;\">spark.master</td><td>spark://masternode2:7077</td></tr><tr><td style=\"text-align:left;\">spark.cores.max</td><td>16</td></tr><tr><td style=\"text-align:left;\">spark.sql.warehouse.dir</td><td>file:/users/home/gbu43/Assignment1/spark-warehouse</td></tr><tr><td style=\"text-align:left;\">spark.executor.id</td><td>driver</td></tr><tr><td style=\"text-align:left;\">spark.driver.host</td><td>mathmadslinux2p.canterbury.ac.nz</td></tr><tr><td style=\"text-align:left;\">spark.executor.cores</td><td>4</td></tr><tr><td style=\"text-align:left;\">spark.rdd.compress</td><td>True</td></tr><tr><td style=\"text-align:left;\">spark.driver.memory</td><td>8g</td></tr><tr><td style=\"text-align:left;\">spark.serializer.objectStreamReset</td><td>100</td></tr><tr><td style=\"text-align:left;\">spark.driver.maxResultSize</td><td>0</td></tr><tr><td style=\"text-align:left;\">spark.executor.memory</td><td>8g</td></tr><tr><td style=\"text-align:left;\">spark.submit.pyFiles</td><td></td></tr><tr><td style=\"text-align:left;\">spark.submit.deployMode</td><td>client</td></tr><tr><td style=\"text-align:left;\">spark.app.name</td><td>gbu43 (jupyter)</td></tr><tr><td style=\"text-align:left;\">spark.ui.showConsoleProgress</td><td>true</td></tr></table><p><b>Notes</b></p><ul><li>The spark session <code>spark</code> and spark context <code>sc</code> global variables have been defined by <code>start_spark()</code>.</li><li>Please run <code>stop_spark()</code> before closing the notebook or restarting the kernel or kill <code>gbu43 (jupyter)</code> by hand using the link in the Spark UI.</li></ul>"
+      ],
+      "text/plain": [
+       "<IPython.core.display.HTML object>"
+      ]
+     },
+     "metadata": {},
+     "output_type": "display_data"
+    }
+   ],
+   "source": [
+    "start_spark(executor_instances=4, executor_cores=4, worker_memory=8, master_memory=8)"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "### (a & b) Define a schema for daily and load 1000 rows into Spark:"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 60,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# Write your imports and code here or insert cells below\n",
+    "\n",
+    "from pyspark.sql import Row, DataFrame, Window, functions as F  # common way to avoid namespace conflicts, min != F.min :)\n",
+    "from pyspark.sql.types import *"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 61,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "DataFrame[ID: string, Date: string, Element: string, Value: double, MeasurementFlag: string, QualityFlag: string, SourceFlag: string, ObservationTime: string]"
+      ]
+     },
+     "execution_count": 61,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "# Dataframes for Daily\n",
+    "\n",
+    "dailySchema = StructType([\n",
+    "    StructField(\"ID\", StringType(), True),\n",
+    "    StructField(\"Date\", StringType(), True),\n",
+    "    StructField(\"Element\", StringType(), True),\n",
+    "    StructField(\"Value\", DoubleType(), True),\n",
+    "    StructField(\"MeasurementFlag\", StringType(), True),\n",
+    "     StructField(\"QualityFlag\", StringType(), True),\n",
+    "    StructField(\"SourceFlag\", StringType(), True),\n",
+    "    StructField(\"ObservationTime\", StringType(), True)\n",
+    "])\n",
+    "daily = (spark.read.format('csv')\n",
+    "             .option('header', False)\n",
+    "             .option('inferSchema', False)\n",
+    "             .schema(dailySchema)\n",
+    "             .load('hdfs:///data/ghcnd/daily/2023.csv.gz')\n",
+    "            ).limit(1000)\n",
+    "\n",
+    "daily.cache()\n",
+    "daily.show(10)"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "### (c) load 'stations', 'states', 'countries', 'inventory' into Spark. How many rows in each metadata table? how many stations do not have a WMO ID?"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 13,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# Dataframes for Stations\n",
+    "\n",
+    "stationsSchema = StructType([\n",
+    "    StructField(\"Station_ID\", StringType(), True),\n",
+    "    StructField(\"Latitude\", DoubleType(), True),\n",
+    "    StructField(\"Longitude\", DoubleType(), True),\n",
+    "    StructField(\"Elevation\", DoubleType(), True),\n",
+    "    StructField(\"State\", StringType(), True),\n",
+    "     StructField(\"Name\", StringType(), True),\n",
+    "    StructField(\"GSN_Flag\", StringType(), True),\n",
+    "    StructField(\"HCN_CRN_Flag\", StringType(), True),\n",
+    "    StructField(\"WMO_ID\", StringType(), True)\n",
+    "])\n",
+    "stations_one_col= (\n",
+    "    spark.read.format(\"text\")\n",
+    "    .load(\"hdfs:///data/ghcnd/ghcnd-stations.txt\")\n",
+    ")\n",
+    "stations = stations_one_col.select(\n",
+    "    F.trim(F.substring(F.col('value'),1,11-1+1)).alias('Station_ID').cast(stationsSchema['Station_ID'].dataType),\n",
+    "    F.trim(F.substring(F.col('value'),13, 20-13+1)).alias('Latitude').cast(stationsSchema['Latitude'].dataType),\n",
+    "    F.trim(F.substring(F.col('value'),22, 30-22+1)).alias('Longitude').cast(stationsSchema['Longitude'].dataType),\n",
+    "    F.trim(F.substring(F.col('value'),32,37-32+1)).alias('Elevation').cast(stationsSchema['Elevation'].dataType),\n",
+    "    F.trim(F.substring(F.col('value'),39, 40-39+1)).alias('State').cast(stationsSchema['State'].dataType),\n",
+    "    F.trim(F.substring(F.col('value'),42, 71-42+1)).alias('Name').cast(stationsSchema['Name'].dataType),\n",
+    "    F.trim(F.substring(F.col('value'),73,75-73+1)).alias('GSN_Flag').cast(stationsSchema['GSN_Flag'].dataType),\n",
+    "    F.trim(F.substring(F.col('value'),77,79-77+1)).alias('HCN_CRN_Flag').cast(stationsSchema['HCN_CRN_Flag'].dataType),\n",
+    "    F.trim(F.substring(F.col('value'),81,85-81+1)).alias('WMO_ID').cast(stationsSchema['WMO_ID'].dataType)\n",
+    ")\n",
+    "\n",
+    "stations.show(10)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 62,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# Dataframes for Countries\n",
+    "\n",
+    "CountriesSchema = StructType([\n",
+    "    StructField(\"Country_Code\", StringType(), True),\n",
+    "    StructField(\"Country_Name\", StringType(), True)\n",
+    "])\n",
+    "countries_one_col= (\n",
+    "    spark.read.format(\"text\")\n",
+    "    .load(\"hdfs:///data/ghcnd/ghcnd-countries.txt\")\n",
+    ")\n",
+    "countries = countries_one_col.select(\n",
+    "    F.trim(F.substring(F.col('value'),1,2-1+1)).alias('Country_Code').cast(CountriesSchema['Country_Code'].dataType),\n",
+    "    F.trim(F.substring(F.col('value'),4,64-4+1)).alias('Country_Name').cast(CountriesSchema['Country_Name'].dataType)\n",
+    ")\n",
+    "countries.show(10)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 27,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# Dataframes for States\n",
+    "\n",
+    "StatesSchema = StructType([\n",
+    "    StructField(\"StateCode\", StringType(), True),\n",
+    "    StructField(\"StateName\", StringType(), True)\n",
+    "])\n",
+    "states_one_col= (\n",
+    "    spark.read.format(\"text\")\n",
+    "    .load(\"hdfs:///data/ghcnd/ghcnd-states.txt\")\n",
+    ")\n",
+    "states = states_one_col.select(\n",
+    "    F.trim(F.substring(F.col('value'),1,2-1+1)).alias('StateCode').cast(StatesSchema['StateCode'].dataType),\n",
+    "    F.trim(F.substring(F.col('value'),4,50-4+1)).alias('StateName').cast(StatesSchema['StateName'].dataType)\n",
+    ")\n",
+    "states.show(10)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 22,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# Dataframes for Inventory\n",
+    "\n",
+    "InventorySchema = StructType([\n",
+    "    StructField(\"Inventory_ID\", StringType(), True),\n",
+    "    StructField(\"Latitude\", DoubleType(), True),\n",
+    "    StructField(\"Longitude\", DoubleType(), True),\n",
+    "    StructField(\"Element\", StringType(), True),\n",
+    "    StructField(\"FirstYear\", IntegerType(), True),\n",
+    "     StructField(\"LastYear\", IntegerType(), True)\n",
+    "])\n",
+    "inventory_one_col= (\n",
+    "    spark.read.format(\"text\")\n",
+    "    .load(\"hdfs:///data/ghcnd/ghcnd-inventory.txt\")\n",
+    ")\n",
+    "\n",
+    "inventory = inventory_one_col.select(\n",
+    "    F.trim(F.substring(F.col('value'),1,11-1+1)).alias('Inventory_ID').cast(InventorySchema['Inventory_ID'].dataType),\n",
+    "    F.trim(F.substring(F.col('value'),13,20-13+1)).alias('Latitude').cast(InventorySchema['Latitude'].dataType),\n",
+    "    F.trim(F.substring(F.col('value'),22,30-22+1)).alias('Longitude').cast(InventorySchema['Longitude'].dataType),\n",
+    "    F.trim(F.substring(F.col('value'),32,35-32+1)).alias('Element').cast(InventorySchema['Element'].dataType),\n",
+    "    F.trim(F.substring(F.col('value'),37,40-37+1)).alias('FirstYear').cast(InventorySchema['FirstYear'].dataType),\n",
+    "    F.trim(F.substring(F.col('value'),42,45-42+1)).alias('LastYear').cast(InventorySchema['LastYear'].dataType)\n",
+    ")\n",
+    "inventory.show(10)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 25,
+   "metadata": {
+    "scrolled": true
+   },
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "124247"
+      ]
+     },
+     "execution_count": 25,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "# number of stations\n",
+    "stations.count()\n",
+    "#124,247"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 26,
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "+-------------------+\n",
+      "|Station_ID_Distinct|\n",
+      "+-------------------+\n",
+      "|             124247|\n",
+      "+-------------------+\n",
+      "\n"
+     ]
+    }
+   ],
+   "source": [
+    "#Check if any duplicate of stations rows\n",
+    "stations.select(F.countDistinct(F.col(\"Station_ID\")).alias(\"Station_ID_Distinct\")).show()"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 27,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "74"
+      ]
+     },
+     "execution_count": 27,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "# number of states\n",
+    "states.count()\n",
+    "#74"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 65,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "219"
+      ]
+     },
+     "execution_count": 65,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "#number of countries\n",
+    "countries.count()\n",
+    "#number of countries is 219 countries"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 29,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "737925"
+      ]
+     },
+     "execution_count": 29,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "#number of inventory\n",
+    "inventory.count()\n",
+    "#737,925"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 30,
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "+--------------------+\n",
+      "|Iventory_Distinct_ID|\n",
+      "+--------------------+\n",
+      "|              124239|\n",
+      "+--------------------+\n",
+      "\n"
+     ]
+    }
+   ],
+   "source": [
+    "#unique number of inventory ID which represent for unique station ID in the table\n",
+    "inventory.select(F.countDistinct(F.col(\"Inventory_ID\")).alias(\"Iventory_Distinct_ID\")).show()"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 31,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "116297"
+      ]
+     },
+     "execution_count": 31,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "#stations do not possess a WMO ID\n",
+    "stations.filter(F.col(\"WMO_ID\")==\"\").count()\n",
+    "#116,297"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "## Q3. Joining the metadata tables into a single table "
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 32,
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "hdfs:///data/ghcnd/\n",
+      "hdfs:///user/gbu43/outputs/ghcnd\n"
+     ]
+    }
+   ],
+   "source": [
+    "# Locate the paths for the data sources and the output.\n",
+    "name = \"gbu43\"\n",
+    "\n",
+    "data_path = f\"hdfs:///data/ghcnd/\"\n",
+    "outputs_path = f\"hdfs:///user/{name}/outputs/ghcnd\"\n",
+    "\n",
+    "print(data_path)\n",
+    "print(outputs_path)"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "### (a) Extract the two character country code from each station code in stations and store the output as a new column"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 34,
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "+-----------+--------+---------+---------+-----+--------------------+--------+------------+------+------------+\n",
+      "| Station_ID|Latitude|Longitude|Elevation|State|                Name|GSN_Flag|HCN_CRN_Flag|WMO_ID|Country_Code|\n",
+      "+-----------+--------+---------+---------+-----+--------------------+--------+------------+------+------------+\n",
+      "|ACW00011604| 17.1167| -61.7833|     10.1|     |ST JOHNS COOLIDGE...|        |            |      |          AC|\n",
+      "|ACW00011647| 17.1333| -61.7833|     19.2|     |            ST JOHNS|        |            |      |          AC|\n",
+      "|AE000041196|  25.333|   55.517|     34.0|     | SHARJAH INTER. AIRP|     GSN|            | 41196|          AE|\n",
+      "|AEM00041194|  25.255|   55.364|     10.4|     |          DUBAI INTL|        |            | 41194|          AE|\n",
+      "|AEM00041217|  24.433|   54.651|     26.8|     |      ABU DHABI INTL|        |            | 41217|          AE|\n",
+      "+-----------+--------+---------+---------+-----+--------------------+--------+------------+------+------------+\n",
+      "only showing top 5 rows\n",
+      "\n"
+     ]
+    }
+   ],
+   "source": [
+    "# Extract the first two characters of Station_ID in stations and store the output as a new column Country_Code\n",
+    "# using the withColumn command.\n",
+    "stations = stations.withColumn(\"Country_Code\", F.substring(F.col(\"Station_ID\"), 1, 2))\n",
+    "stations.show(5)"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "### (b) LEFT JOIN stations with countries"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 35,
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "+------------+-----------+--------+---------+---------+-----+---------------------+--------+------------+------+--------------------+\n",
+      "|Country_Code|Station_ID |Latitude|Longitude|Elevation|State|Name                 |GSN_Flag|HCN_CRN_Flag|WMO_ID|Country_Name        |\n",
+      "+------------+-----------+--------+---------+---------+-----+---------------------+--------+------------+------+--------------------+\n",
+      "|AC          |ACW00011604|17.1167 |-61.7833 |10.1     |     |ST JOHNS COOLIDGE FLD|        |            |      |Antigua and Barbuda |\n",
+      "|AC          |ACW00011647|17.1333 |-61.7833 |19.2     |     |ST JOHNS             |        |            |      |Antigua and Barbuda |\n",
+      "|AE          |AE000041196|25.333  |55.517   |34.0     |     |SHARJAH INTER. AIRP  |GSN     |            |41196 |United Arab Emirates|\n",
+      "|AE          |AEM00041194|25.255  |55.364   |10.4     |     |DUBAI INTL           |        |            |41194 |United Arab Emirates|\n",
+      "|AE          |AEM00041217|24.433  |54.651   |26.8     |     |ABU DHABI INTL       |        |            |41217 |United Arab Emirates|\n",
+      "|AE          |AEM00041218|24.262  |55.609   |264.9    |     |AL AIN INTL          |        |            |41218 |United Arab Emirates|\n",
+      "|AF          |AF000040930|35.317  |69.017   |3366.0   |     |NORTH-SALANG         |GSN     |            |40930 |Afghanistan         |\n",
+      "|AF          |AFM00040938|34.21   |62.228   |977.2    |     |HERAT                |        |            |40938 |Afghanistan         |\n",
+      "|AF          |AFM00040948|34.566  |69.212   |1791.3   |     |KABUL INTL           |        |            |40948 |Afghanistan         |\n",
+      "|AF          |AFM00040990|31.5    |65.85    |1010.0   |     |KANDAHAR AIRPORT     |        |            |40990 |Afghanistan         |\n",
+      "+------------+-----------+--------+---------+---------+-----+---------------------+--------+------------+------+--------------------+\n",
+      "only showing top 10 rows\n",
+      "\n"
+     ]
+    }
+   ],
+   "source": [
+    "#LEFT JOIN between 'stations' and 'countries' using the 'Country_Code' key.\n",
+    "stations = stations.join(countries, \"Country_Code\", how = \"left\")\n",
+    "stations.show(10, truncate = False)"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "### (c) LEFT JOIN stations and states"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 37,
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "+------------+-----------+--------+---------+---------+-----+--------------------+--------+------------+------+--------------------+---------+---------+\n",
+      "|Country_Code| Station_ID|Latitude|Longitude|Elevation|State|                Name|GSN_Flag|HCN_CRN_Flag|WMO_ID|        Country_Name|StateCode|StateName|\n",
+      "+------------+-----------+--------+---------+---------+-----+--------------------+--------+------------+------+--------------------+---------+---------+\n",
+      "|          AC|ACW00011604| 17.1167| -61.7833|     10.1|     |ST JOHNS COOLIDGE...|        |            |      | Antigua and Barbuda|     null|     null|\n",
+      "|          AC|ACW00011647| 17.1333| -61.7833|     19.2|     |            ST JOHNS|        |            |      | Antigua and Barbuda|     null|     null|\n",
+      "|          AE|AE000041196|  25.333|   55.517|     34.0|     | SHARJAH INTER. AIRP|     GSN|            | 41196|United Arab Emirates|     null|     null|\n",
+      "|          AE|AEM00041194|  25.255|   55.364|     10.4|     |          DUBAI INTL|        |            | 41194|United Arab Emirates|     null|     null|\n",
+      "|          AE|AEM00041217|  24.433|   54.651|     26.8|     |      ABU DHABI INTL|        |            | 41217|United Arab Emirates|     null|     null|\n",
+      "|          AE|AEM00041218|  24.262|   55.609|    264.9|     |         AL AIN INTL|        |            | 41218|United Arab Emirates|     null|     null|\n",
+      "|          AF|AF000040930|  35.317|   69.017|   3366.0|     |        NORTH-SALANG|     GSN|            | 40930|         Afghanistan|     null|     null|\n",
+      "|          AF|AFM00040938|   34.21|   62.228|    977.2|     |               HERAT|        |            | 40938|         Afghanistan|     null|     null|\n",
+      "|          AF|AFM00040948|  34.566|   69.212|   1791.3|     |          KABUL INTL|        |            | 40948|         Afghanistan|     null|     null|\n",
+      "|          AF|AFM00040990|    31.5|    65.85|   1010.0|     |    KANDAHAR AIRPORT|        |            | 40990|         Afghanistan|     null|     null|\n",
+      "+------------+-----------+--------+---------+---------+-----+--------------------+--------+------------+------+--------------------+---------+---------+\n",
+      "only showing top 10 rows\n",
+      "\n"
+     ]
+    }
+   ],
+   "source": [
+    "# Perform a LEFT JOIN between 'stations' and 'states' where stations.State == states.StateCode:\n",
+    "stations = stations.join(states, stations.State == states.StateCode, how = \"left\")\n",
+    "stations.show(10)"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "### (d) what is the first and last year each station was active and collected any element at all? How many different elements has each station collected overall?\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 39,
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "+-------+--------------------+\n",
+      "|Element|Number_Stations_Used|\n",
+      "+-------+--------------------+\n",
+      "|   PRCP|              122229|\n",
+      "|   SNOW|               75563|\n",
+      "|   MDPR|               67146|\n",
+      "|   SNWD|               64130|\n",
+      "|   DAPR|               59876|\n",
+      "|   TMAX|               40369|\n",
+      "|   TMIN|               40267|\n",
+      "|   WESD|               24400|\n",
+      "|   WESF|               23604|\n",
+      "|   WT01|               17056|\n",
+      "+-------+--------------------+\n",
+      "only showing top 10 rows\n",
+      "\n"
+     ]
+    }
+   ],
+   "source": [
+    "# groupBy() by elements and aggregate the number of stations using each specific element:\n",
+    "inventory_element_summary = (\n",
+    "    inventory\n",
+    "    .groupBy([\"Element\"])   \n",
+    "    .agg(\n",
+    "        F.count(F.col(\"Element\")).cast(IntegerType()).alias(\"Number_Stations_Used\")\n",
+    "    )\n",
+    "    .sort([F.col(\"Number_Stations_Used\").desc()])\n",
+    ")\n",
+    "inventory_element_summary.show(10)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 40,
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "+-------+--------------------+\n",
+      "|Element|Number_Stations_Used|\n",
+      "+-------+--------------------+\n",
+      "|   PRCP|              122229|\n",
+      "|   SNOW|               75563|\n",
+      "|   SNWD|               64130|\n",
+      "|   TMAX|               40369|\n",
+      "|   TMIN|               40267|\n",
+      "+-------+--------------------+\n",
+      "\n"
+     ]
+    }
+   ],
+   "source": [
+    "# filter 5 core elements from the result:\n",
+    "core_element = [\"PRCP\", \"SNOW\", \"SNWD\", \"TMAX\", \"TMIN\"]\n",
+    "inventory_element_summary.filter(F.col(\"Element\").isin(core_element)).show()"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 41,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "144"
+      ]
+     },
+     "execution_count": 41,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "# Count the total number of elements:\n",
+    "inventory_element_summary.count()\n",
+    "#144 distinct elements "
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 42,
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "+------------+---------+--------+-------------+\n",
+      "|Inventory_ID|FirstYear|LastYear|Total_Element|\n",
+      "+------------+---------+--------+-------------+\n",
+      "| AQC00914873|     1955|    1967|           12|\n",
+      "| ASN00006011|     1945|    2023|           11|\n",
+      "| ASN00007031|     1918|    2022|            4|\n",
+      "| ASN00009111|     1963|    2023|           10|\n",
+      "| ASN00009850|     1989|    2023|            4|\n",
+      "+------------+---------+--------+-------------+\n",
+      "only showing top 5 rows\n",
+      "\n"
+     ]
+    }
+   ],
+   "source": [
+    "# groupBy() by inventory_ID and aggregate first year, last year, count distinct element:\n",
+    "inventory_stations_summary = (\n",
+    "    inventory\n",
+    "    .groupBy([\"Inventory_ID\"])\n",
+    "    .agg(\n",
+    "        F.min(F.col(\"FirstYear\")).cast(IntegerType()).alias(\"FirstYear\"),\n",
+    "        F.max(F.col(\"LastYear\")).cast(IntegerType()).alias(\"LastYear\"),\n",
+    "        F.countDistinct(F.col(\"Element\")).cast(IntegerType()).alias(\"Total_Element\"),\n",
+    "        )\n",
+    ")\n",
+    "inventory_stations_summary.show(5)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 43,
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "+------------+---------+--------+-------------+\n",
+      "|Inventory_ID|FirstYear|LastYear|Total_Element|\n",
+      "+------------+---------+--------+-------------+\n",
+      "| USW00013880|     1937|    2023|           70|\n",
+      "| USW00014607|     1939|    2023|           70|\n",
+      "| USW00023066|     1900|    2023|           67|\n",
+      "| USW00013958|     1938|    2023|           66|\n",
+      "| USW00093817|     1948|    2023|           65|\n",
+      "+------------+---------+--------+-------------+\n",
+      "only showing top 5 rows\n",
+      "\n"
+     ]
+    }
+   ],
+   "source": [
+    "# Sort the inventory_stations_summary table with descending order of Total_Element:\n",
+    "inventory_stations_summary.sort(F.col(\"Total_Element\").desc()).show(5)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 44,
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "+------------+------------+\n",
+      "|Inventory_ID|Core_Element|\n",
+      "+------------+------------+\n",
+      "| US1COEP0384|           2|\n",
+      "| US1COLP0031|           3|\n",
+      "| US1COME0018|           3|\n",
+      "| US1COME0157|           3|\n",
+      "| US1COSM0004|           3|\n",
+      "+------------+------------+\n",
+      "only showing top 5 rows\n",
+      "\n"
+     ]
+    }
+   ],
+   "source": [
+    "# total core elements each station collected:\n",
+    "core_element = [\"PRCP\", \"SNOW\", \"SNWD\", \"TMAX\", \"TMIN\"]\n",
+    "core_inventory = inventory.filter(inventory.Element.isin(core_element))\n",
+    "core_inventory = (\n",
+    "    core_inventory\n",
+    "    .groupBy([\"Inventory_ID\"])\n",
+    "    .agg(\n",
+    "        F.countDistinct(F.col(\"Element\")).cast(IntegerType()).alias(\"Core_Element\")\n",
+    "    )\n",
+    ")\n",
+    "core_inventory.show(5)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 45,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# join inventory_stations_summary and core_inventory\n",
+    "inventory_stations_summary = (\n",
+    "    inventory_stations_summary\n",
+    "    .join(core_inventory, \"Inventory_ID\", how = \"left\")\n",
+    ")"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 46,
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "+------------+---------+--------+-------------+------------+\n",
+      "|Inventory_ID|FirstYear|LastYear|Total_Element|Core_Element|\n",
+      "+------------+---------+--------+-------------+------------+\n",
+      "| USW00014607|     1939|    2023|           70|           5|\n",
+      "| USW00013880|     1937|    2023|           70|           5|\n",
+      "| USW00023066|     1900|    2023|           67|           5|\n",
+      "| USW00013958|     1938|    2023|           66|           5|\n",
+      "| USW00093817|     1948|    2023|           65|           5|\n",
+      "+------------+---------+--------+-------------+------------+\n",
+      "only showing top 5 rows\n",
+      "\n"
+     ]
+    }
+   ],
+   "source": [
+    "# show the result in descending order\n",
+    "inventory_stations_summary.sort(F.col(\"Total_Element\").desc()).show(5)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 47,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# Add \"Other_Element\" column into the inventory_stations_summary table:\n",
+    "inventory_stations_summary = (\n",
+    "    inventory_stations_summary\n",
+    "    .fillna({'Core_Element': 0}) #To fill the NULL values of core_element to 0\n",
+    "    .withColumn(\"Other_Element\", F.col(\"Total_Element\") - F.col(\"Core_Element\"))\n",
+    ")\n",
+    "# Sort the inventory_stations_summary table with descending order of Total_Element and core_Element:\n",
+    "inventory_stations_summary.sort(inventory_stations_summary.Total_Element.desc(), inventory_stations_summary.Core_Element.desc()).show(5)\n",
+    "# Sort the inventory_stations_summary table with ascending order of Total_Element:\n",
+    "inventory_stations_summary.sort(F.col(\"Total_Element\").asc()).show(10)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 50,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "20449"
+      ]
+     },
+     "execution_count": 50,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "# Count how many stations which have collected all 5 core elements:\n",
+    "inventory_stations_summary.filter(F.col(\"Core_Element\") == 5).count()\n",
+    "#20,449"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 51,
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "+------------+---------+--------+-------------+------------+-------------+--------+---------+-------+---------+--------+\n",
+      "|Inventory_ID|FirstYear|LastYear|Total_Element|Core_Element|Other_Element|Latitude|Longitude|Element|FirstYear|LastYear|\n",
+      "+------------+---------+--------+-------------+------------+-------------+--------+---------+-------+---------+--------+\n",
+      "| AR000000002|     1981|    2000|            1|           1|            0|  -29.82|   -57.42|   PRCP|     1981|    2000|\n",
+      "| ASN00001003|     1909|    1940|            1|           1|            0|-14.1331| 126.7158|   PRCP|     1909|    1940|\n",
+      "| ASN00002033|     1920|    1965|            1|           1|            0|   -17.8|    128.3|   PRCP|     1920|    1965|\n",
+      "| ASN00003047|     1929|    1940|            1|           1|            0|   -18.4|    123.1|   PRCP|     1929|    1940|\n",
+      "| ASN00004087|     1984|    1986|            1|           1|            0|-21.2333|   117.05|   PRCP|     1984|    1986|\n",
+      "| ASN00006047|     1914|    1993|            1|           1|            0| -25.405| 115.2267|   PRCP|     1914|    1993|\n",
+      "| ASN00006077|     1918|    1928|            1|           1|            0|   -25.3|    115.6|   PRCP|     1918|    1928|\n",
+      "| ASN00007039|     1898|    1963|            1|           1|            0|   -27.6|    117.9|   PRCP|     1898|    1963|\n",
+      "| ASN00007166|     1911|    1916|            1|           1|            0|  -28.35|   116.55|   PRCP|     1911|    1916|\n",
+      "| ASN00008165|     1940|    1950|            1|           1|            0|   -30.9|    116.4|   PRCP|     1940|    1950|\n",
+      "+------------+---------+--------+-------------+------------+-------------+--------+---------+-------+---------+--------+\n",
+      "only showing top 10 rows\n",
+      "\n"
+     ]
+    },
+    {
+     "data": {
+      "text/plain": [
+       "16272"
+      ]
+     },
+     "execution_count": 51,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "# filt all stations which have \"PRCP\" recorded\n",
+    "inventory_prcp = inventory.filter(F.col(\"Element\")==\"PRCP\")\n",
+    "# filt all stations which only have one recorded\n",
+    "inventory_stations_summary_prcp = inventory_stations_summary.filter(F.col(\"Total_Element\")== 1)\n",
+    "# inner join the inventory_prcp and inventory_stations_summary_prcp:\n",
+    "inventory_only_prcp = (\n",
+    "    inventory_stations_summary_prcp\n",
+    "    .join(inventory_prcp, \"Inventory_ID\", how = \"inner\")\n",
+    ")\n",
+    "inventory_only_prcp.show(10)\n",
+    "# count total number of stations having only one element 'PRCP' and no other element:\n",
+    "inventory_only_prcp.count()\n",
+    "# 16272"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "### (e) LEFT JOIN stations and your output from part (d)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 52,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# Create the final metadata stations_enriched\n",
+    "stations_enriched = (\n",
+    "    stations\n",
+    "    .join(inventory_stations_summary, stations.Station_ID == inventory_stations_summary.Inventory_ID, how = \"left\")\n",
+    "    .drop(\"State\", \"Inventory_ID\") # drop the duplicated columns\n",
+    "    .fillna({'StateCode': '', 'StateName': ''}) #Fill missing value with \"\"\n",
+    ")\n",
+    "stations_enriched.show(5)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 54,
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "root\n",
+      " |-- Country_Code: string (nullable = true)\n",
+      " |-- Station_ID: string (nullable = true)\n",
+      " |-- Latitude: double (nullable = true)\n",
+      " |-- Longitude: double (nullable = true)\n",
+      " |-- Elevation: double (nullable = true)\n",
+      " |-- Name: string (nullable = true)\n",
+      " |-- GSN_Flag: string (nullable = true)\n",
+      " |-- HCN_CRN_Flag: string (nullable = true)\n",
+      " |-- WMO_ID: string (nullable = true)\n",
+      " |-- Country_Name: string (nullable = true)\n",
+      " |-- StateCode: string (nullable = false)\n",
+      " |-- StateName: string (nullable = false)\n",
+      " |-- FirstYear: integer (nullable = true)\n",
+      " |-- LastYear: integer (nullable = true)\n",
+      " |-- Total_Element: integer (nullable = true)\n",
+      " |-- Core_Element: integer (nullable = true)\n",
+      " |-- Other_Element: integer (nullable = true)\n",
+      "\n"
+     ]
+    }
+   ],
+   "source": [
+    "stations_enriched.printSchema()"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 55,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "#write to HDFS in csv \n",
+    "stations_enriched.write.option(\"header\",True).mode(\"overwrite\").csv(\"hdfs:///user/gbu43/outputs/ghcnd/stations_enriched.csv\")\n"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "### (f) left join 'daily' with stations_enriched"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 56,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "#Load 1000 rows of daily data\n",
+    "subset_daily = (\n",
+    "    spark.read.format(\"com.databricks.spark.csv\")\n",
+    "    .option(\"header\", \"false\")\n",
+    "    .option(\"inferSchema\", \"false\")\n",
+    "    .schema(dailySchema)\n",
+    "    .load(\"hdfs:///data/ghcnd/daily/\")\n",
+    ").limit(1000)\n",
+    "subset_daily.show(5)\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 58,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "#Left join daily and station_enriched\n",
+    "subset_daily_station_enriched = (\n",
+    "    daily\n",
+    "    .join(stations_enriched, daily.ID == stations_enriched.Station_ID, how = \"left\")\n",
+    ")\n",
+    "subset_daily_station_enriched.show(10)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 60,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "0"
+      ]
+     },
+     "execution_count": 60,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "# check if any station in the subset daily is not in the station at all:\n",
+    "subset_daily_station_enriched.filter(F.col(\"Station_ID\").isNull()).count()\n",
+    "#0"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "# Analysis\n",
+    "## Q1: Explore the stations_enriched\n",
+    "### (a) How many stations are there in total? How many stations were active in 2022?\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 38,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "#loading enriched stations data\n",
+    "stations_enriched = (\n",
+    "    spark.read.format('com.databricks.spark.csv')\n",
+    "    .option('header', True)\n",
+    "    .option('inferSchema', True)\n",
+    "    .load('hdfs:///user/gbu43/outputs/ghcnd/stations_enriched.csv')\n",
+    ")"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 69,
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "+------------+-----------+--------+---------+---------+--------------------+--------+------------+------+------------+---------+---------+---------+--------+-------------+------------+-------------+\n",
+      "|Country_Code| Station_ID|Latitude|Longitude|Elevation|                Name|GSN_Flag|HCN_CRN_Flag|WMO_ID|Country_Name|StateCode|StateName|FirstYear|LastYear|Total_Element|Core_Element|Other_Element|\n",
+      "+------------+-----------+--------+---------+---------+--------------------+--------+------------+------+------------+---------+---------+---------+--------+-------------+------------+-------------+\n",
+      "|          AF|AFM00040990|    31.5|    65.85|   1010.0|    KANDAHAR AIRPORT|    null|        null| 40990| Afghanistan|     null|     null|     1973|    2020|            5|           4|            1|\n",
+      "|          AG|AGE00147718|   34.85|     5.72|    125.0|              BISKRA|    null|        null| 60525|     Algeria|     null|     null|     1880|    2023|            4|           3|            1|\n",
+      "|          AG|AGM00060417|  36.383|    3.883|    560.0|              BOUIRA|    null|        null| 60417|     Algeria|     null|     null|     1995|    2022|            5|           4|            1|\n",
+      "|          AG|AGM00060421|  35.867|    7.117|    891.0|      OUM EL BOUAGHI|    null|        null| 60421|     Algeria|     null|     null|     1985|    2023|            5|           4|            1|\n",
+      "|          AG|AGM00060531|  35.017|    -1.45|    248.1|              ZENATA|    null|        null| 60531|     Algeria|     null|     null|     1981|    2023|            5|           4|            1|\n",
+      "|          AJ|AJ000037895|  39.983|    46.75|    828.0|           KHANKANDY|    null|        null| 37895|  Azerbaijan|     null|     null|     1936|    1991|            5|           4|            1|\n",
+      "|          AM|AM000037782|    40.4|     44.3|   1893.0|AMBERD (KOSHABULAKH)|    null|        null| 37782|     Armenia|     null|     null|     1919|    1992|            1|           1|            0|\n",
+      "|          AM|AM000037791|    40.4|   44.683|   1800.0|              FANTAN|    null|        null| 37791|     Armenia|     null|     null|     1936|    1992|            5|           4|            1|\n",
+      "|          AO|AO000066447| -15.833|    20.35|   1088.0|             MAVINGA|     GSN|        null| 66447|      Angola|     null|     null|     1957|    1975|            4|           3|            1|\n",
+      "|          AR|AR000087828|   -43.2|  -65.266|     43.0|         TRELEW AERO|     GSN|        null| 87828|   Argentina|     null|     null|     1956|    2023|            5|           4|            1|\n",
+      "+------------+-----------+--------+---------+---------+--------------------+--------+------------+------+------------+---------+---------+---------+--------+-------------+------------+-------------+\n",
+      "only showing top 10 rows\n",
+      "\n"
+     ]
+    }
+   ],
+   "source": [
+    "stations_enriched.show(10)\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 70,
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "root\n",
+      " |-- Country_Code: string (nullable = true)\n",
+      " |-- Station_ID: string (nullable = true)\n",
+      " |-- Latitude: double (nullable = true)\n",
+      " |-- Longitude: double (nullable = true)\n",
+      " |-- Elevation: double (nullable = true)\n",
+      " |-- Name: string (nullable = true)\n",
+      " |-- GSN_Flag: string (nullable = true)\n",
+      " |-- HCN_CRN_Flag: string (nullable = true)\n",
+      " |-- WMO_ID: integer (nullable = true)\n",
+      " |-- Country_Name: string (nullable = true)\n",
+      " |-- StateCode: string (nullable = true)\n",
+      " |-- StateName: string (nullable = true)\n",
+      " |-- FirstYear: integer (nullable = true)\n",
+      " |-- LastYear: integer (nullable = true)\n",
+      " |-- Total_Element: integer (nullable = true)\n",
+      " |-- Core_Element: integer (nullable = true)\n",
+      " |-- Other_Element: integer (nullable = true)\n",
+      "\n"
+     ]
+    }
+   ],
+   "source": [
+    "stations_enriched.printSchema()"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 71,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "# correct type for WMO_ID\n",
+    "stations_enriched = (\n",
+    "    stations_enriched\n",
+    "    .withColumn(\"WMO_ID\", F.col(\"WMO_ID\").cast(StringType()))\n",
+    ")"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 72,
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "+--------------+\n",
+      "|Stations_Count|\n",
+      "+--------------+\n",
+      "|        124247|\n",
+      "+--------------+\n",
+      "\n"
+     ]
+    }
+   ],
+   "source": [
+    "stations_enriched.select(F.countDistinct(\"Station_ID\").alias(\"Stations_Count\")).show()\n",
+    "# 124,247"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 73,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "41467"
+      ]
+     },
+     "execution_count": 73,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "#How many stations were active in 2022\n",
+    "stations_enriched.filter((F.col(\"FirstYear\") <= 2022) & (F.col(\"LastYear\") >= 2022)).count()\n",
+    "# 41,467 stations"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 74,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "991"
+      ]
+     },
+     "execution_count": 74,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "# How many stations are in GSN\n",
+    "stations_enriched.filter(F.col(\"GSN_Flag\") == \"GSN\").count()\n",
+    "# 991"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 75,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "1218"
+      ]
+     },
+     "execution_count": 75,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "# How many stations are in HCN\n",
+    "stations_enriched.filter(F.col(\"HCN_CRN_Flag\") == \"HCN\").count()\n",
+    "# 1218"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 76,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "234"
+      ]
+     },
+     "execution_count": 76,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "# How many stations are in CRN\n",
+    "stations_enriched.filter(F.col(\"HCN_CRN_Flag\") == \"CRN\").count()\n",
+    "# 234"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 77,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "15"
+      ]
+     },
+     "execution_count": 77,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "# Station has more than 1 network\n",
+    "stations_enriched.where(((F.col(\"GSN_Flag\") == \"GSN\") & (F.col(\"HCN_CRN_Flag\") == \"HCN\")) | ((F.col(\"GSN_Flag\") == \"GSN\") & (F.col(\"HCN_CRN_Flag\") == \"CRN\"))).count()\n",
+    "# 15"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 78,
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "+------------+-----------+--------+---------+---------+------------------------------+--------+------------+------+-------------+---------+--------------+---------+--------+-------------+------------+-------------+\n",
+      "|Country_Code|Station_ID |Latitude|Longitude|Elevation|Name                          |GSN_Flag|HCN_CRN_Flag|WMO_ID|Country_Name |StateCode|StateName     |FirstYear|LastYear|Total_Element|Core_Element|Other_Element|\n",
+      "+------------+-----------+--------+---------+---------+------------------------------+--------+------------+------+-------------+---------+--------------+---------+--------+-------------+------------+-------------+\n",
+      "|US          |USW00013782|32.775  |-79.9239 |3.0      |DWTN CHARLESTON               |GSN     |HCN         |72208 |United States|SC       |SOUTH CAROLINA|1893     |2023    |26           |5           |21           |\n",
+      "|US          |USW00024128|40.9017 |-117.8081|1310.6   |WINNEMUCCA AP                 |GSN     |HCN         |72583 |United States|NV       |NEVADA        |1877     |2023    |52           |5           |47           |\n",
+      "|US          |USW00023044|31.8122 |-106.3775|1202.1   |EL PASO INTL AP               |GSN     |HCN         |72270 |United States|TX       |TEXAS         |1938     |2023    |54           |5           |49           |\n",
+      "|US          |USW00093729|35.2325 |-75.6222 |3.7      |CAPE HATTERAS - BILLY MITCHELL|GSN     |HCN         |72304 |United States|NC       |NORTH CAROLINA|1957     |2023    |50           |5           |45           |\n",
+      "|US          |USW00003870|34.8833 |-82.2197 |325.8    |GREER                         |GSN     |HCN         |72312 |United States|SC       |SOUTH CAROLINA|1962     |2023    |52           |5           |47           |\n",
+      "|US          |USW00023051|36.4483 |-103.1536|1514.6   |CLAYTON MUNI AIR PK           |GSN     |HCN         |72360 |United States|NM       |NEW MEXICO    |1896     |2023    |49           |5           |44           |\n",
+      "|US          |USW00094008|48.2064 |-106.6247|726.6    |GLASGOW                       |GSN     |HCN         |72768 |United States|MT       |MONTANA       |1942     |2023    |52           |5           |47           |\n",
+      "|US          |USW00012921|29.5442 |-98.4839 |243.5    |SAN ANTONIO INTL AP           |GSN     |HCN         |72253 |United States|TX       |TEXAS         |1946     |2023    |52           |5           |47           |\n",
+      "|US          |USW00014922|44.8853 |-93.2314 |254.5    |MINNEAPOLIS-ST PAUL INTL AP   |GSN     |HCN         |72658 |United States|MN       |MINNESOTA     |1938     |2023    |57           |5           |52           |\n",
+      "|US          |USW00014771|43.1111 |-76.1039 |125.0    |SYRACUSE HANCOCK INTL AP      |GSN     |HCN         |72519 |United States|NY       |NEW YORK      |1938     |2023    |53           |5           |48           |\n",
+      "|US          |USW00024144|46.6044 |-111.9892|1178.1   |HELENA AP ASOS                |GSN     |HCN         |72772 |United States|MT       |MONTANA       |1938     |2023    |54           |5           |49           |\n",
+      "|US          |USW00014742|44.4683 |-73.15   |101.2    |BURLINGTON INTL AP            |GSN     |HCN         |72617 |United States|VT       |VERMONT       |1940     |2023    |54           |5           |49           |\n",
+      "|US          |USW00024213|40.8097 |-124.1603|6.1      |EUREKA WFO WOODLEY IS         |GSN     |HCN         |72594 |United States|CA       |CALIFORNIA    |1941     |2023    |41           |5           |36           |\n",
+      "|US          |USW00012836|24.5569 |-81.7553 |0.3      |KEY W INTL AP                 |GSN     |HCN         |72201 |United States|FL       |FLORIDA       |1948     |2023    |54           |5           |49           |\n",
+      "|US          |USW00093193|36.78   |-119.7203|101.8    |FRESNO YOSEMITE INTL          |GSN     |HCN         |72389 |United States|CA       |CALIFORNIA    |1941     |2023    |54           |5           |49           |\n",
+      "+------------+-----------+--------+---------+---------+------------------------------+--------+------------+------+-------------+---------+--------------+---------+--------+-------------+------------+-------------+\n",
+      "\n"
+     ]
+    }
+   ],
+   "source": [
+    "# show all these 15 stations\n",
+    "stations_enriched.where(((F.col(\"GSN_Flag\") == \"GSN\") & (F.col(\"HCN_CRN_Flag\") == \"HCN\")) | ((F.col(\"GSN_Flag\") == \"GSN\") & (F.col(\"HCN_CRN_Flag\") == \"CRN\"))).show(truncate = False)"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "### (b) Count the total number of stations in each country, and store the output in countries using the withColumn command."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 39,
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "+------------+--------------+\n",
+      "|Country_Code|Total_Stations|\n",
+      "+------------+--------------+\n",
+      "|          US|         70627|\n",
+      "|          AS|         17088|\n",
+      "|          CA|          9146|\n",
+      "|          BR|          5989|\n",
+      "|          MX|          5249|\n",
+      "+------------+--------------+\n",
+      "only showing top 5 rows\n",
+      "\n",
+      "+------------+-------------+--------------+\n",
+      "|Country_Code| Country_Name|Total_Stations|\n",
+      "+------------+-------------+--------------+\n",
+      "|          US|United States|         70627|\n",
+      "|          AS|    Australia|         17088|\n",
+      "|          CA|       Canada|          9146|\n",
+      "|          BR|       Brazil|          5989|\n",
+      "|          MX|       Mexico|          5249|\n",
+      "|          IN|        India|          3807|\n",
+      "|          SW|       Sweden|          1721|\n",
+      "|          SF| South Africa|          1166|\n",
+      "|          GM|      Germany|          1123|\n",
+      "|          RS|       Russia|          1123|\n",
+      "+------------+-------------+--------------+\n",
+      "only showing top 10 rows\n",
+      "\n"
+     ]
+    }
+   ],
+   "source": [
+    "#Count the total stations for each country\n",
+    "stations_per_country = (\n",
+    "    stations_enriched\n",
+    "    .groupBy(F.col(\"Country_Code\"))\n",
+    "    .agg(\n",
+    "        F.count(\"Station_ID\").alias(\"Total_Stations\")\n",
+    "    )\n",
+    ")\n",
+    "stations_per_country.sort(F.col(\"Total_Stations\").desc()).show(5)\n",
+    "countries_w_stations = countries.join(stations_per_country, \"Country_Code\", \"left\")\n",
+    "countries_w_stations.sort(F.col(\"Total_Stations\").desc()).show(10)\n",
+    "# save to hdfs output directory\n",
+    "countries_w_stations.write.option(\"header\",True).mode(\"overwrite\").csv(\"hdfs:///user/gbu43/outputs/ghcnd/countries_w_stations.csv\")"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 40,
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "+---------+--------------+\n",
+      "|StateCode|Total_Stations|\n",
+      "+---------+--------------+\n",
+      "|     null|         44029|\n",
+      "|       TX|          5957|\n",
+      "|       CO|          4570|\n",
+      "|       CA|          3024|\n",
+      "|       NC|          2553|\n",
+      "+---------+--------------+\n",
+      "only showing top 5 rows\n",
+      "\n",
+      "+---------+--------------+--------------+\n",
+      "|StateCode|     StateName|Total_Stations|\n",
+      "+---------+--------------+--------------+\n",
+      "|       TX|         TEXAS|          5957|\n",
+      "|       CO|      COLORADO|          4570|\n",
+      "|       CA|    CALIFORNIA|          3024|\n",
+      "|       NC|NORTH CAROLINA|          2553|\n",
+      "|       NE|      NEBRASKA|          2313|\n",
+      "|       NM|    NEW MEXICO|          2203|\n",
+      "|       KS|        KANSAS|          2123|\n",
+      "|       FL|       FLORIDA|          2099|\n",
+      "|       IL|      ILLINOIS|          2078|\n",
+      "|       MN|     MINNESOTA|          2012|\n",
+      "+---------+--------------+--------------+\n",
+      "only showing top 10 rows\n",
+      "\n"
+     ]
+    }
+   ],
+   "source": [
+    "#Count the total stations for each state\n",
+    "stations_per_state = (\n",
+    "    stations_enriched\n",
+    "    .groupBy(F.col(\"StateCode\"))\n",
+    "    .agg(\n",
+    "        F.count(\"Station_ID\").alias(\"Total_Stations\")\n",
+    "    )\n",
+    ")\n",
+    "stations_per_state.sort(F.col(\"Total_Stations\").desc()).show(5)\n",
+    "states_w_stations = states.join(stations_per_state, \"StateCode\", \"left\")\n",
+    "states_w_stations.sort(F.col(\"Total_Stations\").desc()).show(10)\n",
+    "# save to hdfs output directory\n",
+    "states_w_stations.write.option(\"header\",True).mode(\"overwrite\").csv(\"hdfs:///user/gbu43/outputs/ghcnd/states_w_stations.csv\")"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "### (c) How many stations are there in the Southern Hemisphere only? Some of the countries in the database are territories of the United States as indicated by the name of the country. How many stations are there in total in the territories of the United States around the world, excluding the United States itself?\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 81,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "25337"
+      ]
+     },
+     "execution_count": 81,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "# total number of stations in the Southern hemisphere:\n",
+    "stations_enriched.filter(F.col(\"Latitude\") < 0).count()\n",
+    "# 25,337"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 83,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "374"
+      ]
+     },
+     "execution_count": 83,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "#count total number of stations belong to US territories:\n",
+    "stations_enriched.filter(F.col(\"Country_Name\").contains(\"United States\")).filter(F.col(\"Country_Code\") != \"US\").count()\n",
+    "# 374"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 84,
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "+------------+----------------------------------------+--------------+\n",
+      "|Country_Code|Country_Name                            |Total_Stations|\n",
+      "+------------+----------------------------------------+--------------+\n",
+      "|RQ          |Puerto Rico [United States]             |233           |\n",
+      "|VQ          |Virgin Islands [United States]          |68            |\n",
+      "|GQ          |Guam [United States]                    |30            |\n",
+      "|AQ          |American Samoa [United States]          |21            |\n",
+      "|CQ          |Northern Mariana Islands [United States]|11            |\n",
+      "|JQ          |Johnston Atoll [United States]          |4             |\n",
+      "|LQ          |Palmyra Atoll [United States]           |3             |\n",
+      "|MQ          |Midway Islands [United States}          |3             |\n",
+      "|WQ          |Wake Island [United States]             |1             |\n",
+      "+------------+----------------------------------------+--------------+\n",
+      "\n"
+     ]
+    }
+   ],
+   "source": [
+    "#show the detail:\n",
+    "US_w_stations = countries_w_stations.filter(F.col(\"Country_Name\").contains(\"United States\"))\n",
+    "US_territories_w_stations = US_w_stations.filter(F.col(\"Country_Code\") != \"US\") #exclude US itself\n",
+    "US_territories_w_stations.sort(F.col(\"Total_Stations\").desc()).show(truncate = False)"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    " \n",
+    "## Q2:\n",
+    "### (a) Write a Spark function that computes the geographical distance between two stations using their latitude and longitude as arguments\n",
+    "\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 85,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "#Build a function to calculate the shortest distance between two points on a spherical object:\n",
+    "from math import radians, cos, sin, asin, sqrt\n",
+    "def haversine(lon1, lat1, lon2, lat2):\n",
+    "    \"\"\"uses the Haversine formula to compute the shortest distance\n",
+    "    between two geographic locations, given their latitude and longitude coordinates.\"\"\"\n",
+    "# Transform to radians\n",
+    "    lon1, lat1, lon2, lat2 = map(radians, [lon1, lat1, lon2, lat2])\n",
+    "    lon_distance = lon2 - lon1\n",
+    "    lat_distance = lat2 - lat1\n",
+    " # calculate Haversine distance\n",
+    "    a = sin(lat_distance / 2)**2 + cos(lat1) * cos(lat2) * sin(lon_distance / 2)**2\n",
+    "    angle = 2 * asin(sqrt(a))\n",
+    "    radius = 6371 # in km\n",
+    "    distance = angle * radius\n",
+    "    return abs(round(distance,3))\n",
+    "\n",
+    "#Haversine function\n",
+    "geo_distance = F.udf(haversine)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 86,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "4"
+      ]
+     },
+     "execution_count": 86,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "#select stations in United Arab Emirates to test\n",
+    "ae_stations = stations_enriched.where(F.col(\"country_code\") == \"AE\").select(\"Station_ID\",\"Name\",\"latitude\", \"longitude\")\n",
+    "ae_stations.count()"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 87,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "16"
+      ]
+     },
+     "execution_count": 87,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "#crossjoin 2 stations\n",
+    "ae_stt_pairs = ae_stations.crossJoin(ae_stations).toDF(\"station_id_1\",\"name_1\",\"latitude_1\",\"longitude_1\",\"station_id_2\",\"name_2\",\"latitude_2\",\"longitude_2\")\n",
+    "#check the number of pairs\n",
+    "ae_stt_pairs.count()"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 88,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "6"
+      ]
+     },
+     "execution_count": 88,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "#remove duplicates to get unique pairs\n",
+    "ae_stt_pairs = ae_stt_pairs.filter(F.col(\"station_id_1\") < F.col(\"station_id_2\")) \n",
+    "#check the number of unique pairs\n",
+    "ae_stt_pairs.count() "
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 89,
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "+------------+-------------------+----------+-----------+------------+--------------+----------+-----------+--------+\n",
+      "|station_id_1|             name_1|latitude_1|longitude_1|station_id_2|        name_2|latitude_2|longitude_2|distance|\n",
+      "+------------+-------------------+----------+-----------+------------+--------------+----------+-----------+--------+\n",
+      "| AE000041196|SHARJAH INTER. AIRP|    25.333|     55.517| AEM00041218|   AL AIN INTL|    24.262|     55.609|  68.117|\n",
+      "| AE000041196|SHARJAH INTER. AIRP|    25.333|     55.517| AEM00041194|    DUBAI INTL|    25.255|     55.364|   17.71|\n",
+      "| AE000041196|SHARJAH INTER. AIRP|    25.333|     55.517| AEM00041217|ABU DHABI INTL|    24.433|     54.651| 112.041|\n",
+      "| AEM00041194|         DUBAI INTL|    25.255|     55.364| AEM00041218|   AL AIN INTL|    24.262|     55.609|  68.235|\n",
+      "| AEM00041194|         DUBAI INTL|    25.255|     55.364| AEM00041217|ABU DHABI INTL|    24.433|     54.651|  95.041|\n",
+      "| AEM00041217|     ABU DHABI INTL|    24.433|     54.651| AEM00041218|   AL AIN INTL|    24.262|     55.609| 107.078|\n",
+      "+------------+-------------------+----------+-----------+------------+--------------+----------+-----------+--------+\n",
+      "\n"
+     ]
+    },
+    {
+     "data": {
+      "text/plain": [
+       "6"
+      ]
+     },
+     "execution_count": 89,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "#apply geo_distance function\n",
+    "ae_stt_distances = ae_stt_pairs.withColumn(\"distance\",geo_distance(F.col(\"latitude_1\"),F.col(\"longitude_1\"),F.col(\"latitude_2\"), F.col(\"longitude_2\")).cast(DoubleType()))\n",
+    "ae_stt_distances.show() "
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "### (b) Apply this function to compute the pairwise distances between all stations in New Zealand, and save the result to your output directory. What two stations are geographically the greatest distance apart in New Zealand?"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 90,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "15"
+      ]
+     },
+     "execution_count": 90,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "#select stations in New Zealand\n",
+    "nz_stations = stations_enriched.where(F.col(\"country_code\") == \"NZ\").select(\"Station_ID\",\"Name\",\"latitude\", \"longitude\")\n",
+    "nz_stations.count()"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 91,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "225"
+      ]
+     },
+     "execution_count": 91,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "nz_stt_pairs = nz_stations.crossJoin(nz_stations).toDF(\"station_id_1\",\"name_1\",\"latitude_1\",\"longitude_1\",\"station_id_2\",\"name_2\",\"latitude_2\",\"longitude_2\")\n",
+    "#check the number of pairs\n",
+    "nz_stt_pairs.count()"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 92,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "105"
+      ]
+     },
+     "execution_count": 92,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "nz_stt_pairs = nz_stt_pairs.filter(F.col(\"station_id_1\") < F.col(\"station_id_2\"))#remove duplicates (A,A) and (B,A) to get unique pairs\n",
+    "#check the number of unique pairs after filtering\n",
+    "nz_stt_pairs.count() "
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 93,
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "+------------+-------------------+----------+-----------+------------+-------------------+----------+-----------+--------+\n",
+      "|station_id_1|             name_1|latitude_1|longitude_1|station_id_2|             name_2|latitude_2|longitude_2|distance|\n",
+      "+------------+-------------------+----------+-----------+------------+-------------------+----------+-----------+--------+\n",
+      "| NZ000093994| RAOUL ISL/KERMADEC|    -29.25|   -177.917| NZ000939450|CAMPBELL ISLAND AWS|    -52.55|    169.167|2950.702|\n",
+      "| NZ000093994| RAOUL ISL/KERMADEC|    -29.25|   -177.917| NZM00093929| ENDERBY ISLAND AWS|   -50.483|      166.3|2925.826|\n",
+      "| NZ000093844|INVERCARGILL AIRPOR|   -46.417|    168.333| NZ000093994| RAOUL ISL/KERMADEC|    -29.25|   -177.917|2436.815|\n",
+      "| NZ000093994| RAOUL ISL/KERMADEC|    -29.25|   -177.917| NZ000937470|         TARA HILLS|   -44.517|      169.9|2166.083|\n",
+      "| NZ000939870|CHATHAM ISLANDS AWS|    -43.95|   -176.567| NZM00093929| ENDERBY ISLAND AWS|   -50.483|      166.3|2036.883|\n",
+      "| NZ000093012|            KAITAIA|     -35.1|    173.267| NZ000939450|CAMPBELL ISLAND AWS|    -52.55|    169.167| 1970.45|\n",
+      "| NZ000093994| RAOUL ISL/KERMADEC|    -29.25|   -177.917| NZ000936150| HOKITIKA AERODROME|   -42.717|    170.983|1936.617|\n",
+      "| NZ000093994| RAOUL ISL/KERMADEC|    -29.25|   -177.917| NZM00093781|  CHRISTCHURCH INTL|   -43.489|    172.532|1903.509|\n",
+      "| NZ000093012|            KAITAIA|     -35.1|    173.267| NZM00093929| ENDERBY ISLAND AWS|   -50.483|      166.3|1851.912|\n",
+      "| NZ000939450|CAMPBELL ISLAND AWS|    -52.55|    169.167| NZ000939870|CHATHAM ISLANDS AWS|    -43.95|   -176.567|1849.932|\n",
+      "+------------+-------------------+----------+-----------+------------+-------------------+----------+-----------+--------+\n",
+      "only showing top 10 rows\n",
+      "\n"
+     ]
+    },
+    {
+     "data": {
+      "text/plain": [
+       "105"
+      ]
+     },
+     "execution_count": 93,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "#apply geo_dist function\n",
+    "nz_stt_distances = nz_stt_pairs.withColumn(\"distance\",geo_distance(F.col(\"latitude_1\"),F.col(\"longitude_1\"),F.col(\"latitude_2\"), F.col(\"longitude_2\")).cast(DoubleType()))\n",
+    "nz_stt_distances.sort(F.col('distance').desc()).show(10)\n",
+    "#check the number of rows\n",
+    "nz_stt_distances.count()"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 94,
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "+------------+------------------+----------+-----------+------------+-------------------+----------+-----------+--------+\n",
+      "|station_id_1|            name_1|latitude_1|longitude_1|station_id_2|             name_2|latitude_2|longitude_2|distance|\n",
+      "+------------+------------------+----------+-----------+------------+-------------------+----------+-----------+--------+\n",
+      "| NZ000093994|RAOUL ISL/KERMADEC|    -29.25|   -177.917| NZ000939450|CAMPBELL ISLAND AWS|    -52.55|    169.167|2950.702|\n",
+      "+------------+------------------+----------+-----------+------------+-------------------+----------+-----------+--------+\n",
+      "only showing top 1 row\n",
+      "\n"
+     ]
+    }
+   ],
+   "source": [
+    "nz_stt_distances.sort(F.col('distance').desc()).show(1)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 95,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "#write to HDFS in csv \n",
+    "nz_stt_distances.write.option(\"header\",True).mode(\"overwrite\").csv(\"hdfs:///user/gbu43/outputs/ghcnd/nz_stt_distances.csv\")"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "## Q2:\n",
+    "### (a) Recall the hdfs commands that you used to explore the data in Processing Q1\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 96,
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "Found 6 items\n",
+      "drwxr-xr-x   - gbu43 gbu43          0 2023-04-21 20:15 /user/gbu43/outputs/ghcnd/avg_prcp_country_year.csv\n",
+      "drwxr-xr-x   - gbu43 gbu43          0 2023-04-21 18:24 /user/gbu43/outputs/ghcnd/countries_w_stations.csv\n",
+      "drwxr-xr-x   - gbu43 gbu43          0 2023-04-21 19:46 /user/gbu43/outputs/ghcnd/daily_TMINMAX_nz.csv\n",
+      "drwxr-xr-x   - gbu43 gbu43          0 2023-04-21 18:26 /user/gbu43/outputs/ghcnd/nz_stt_distances.csv\n",
+      "drwxr-xr-x   - gbu43 gbu43          0 2023-04-21 18:25 /user/gbu43/outputs/ghcnd/states_w_stations.csv\n",
+      "drwxr-xr-x   - gbu43 gbu43          0 2023-04-21 18:24 /user/gbu43/outputs/ghcnd/stations_enriched.csv\n"
+     ]
+    }
+   ],
+   "source": [
+    "!hdfs dfs -ls /user/gbu43/outputs/ghcnd/"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 97,
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "649196    2596784   /user/gbu43/outputs/ghcnd/avg_prcp_country_year.csv\r\n",
+      "4134      16536     /user/gbu43/outputs/ghcnd/countries_w_stations.csv\r\n",
+      "21860649  87442596  /user/gbu43/outputs/ghcnd/daily_TMINMAX_nz.csv\r\n",
+      "10802     43208     /user/gbu43/outputs/ghcnd/nz_stt_distances.csv\r\n",
+      "1400      5600      /user/gbu43/outputs/ghcnd/states_w_stations.csv\r\n",
+      "12323360  49293440  /user/gbu43/outputs/ghcnd/stations_enriched.csv\r\n"
+     ]
+    }
+   ],
+   "source": [
+    "!hdfs dfs -du /user/gbu43/outputs/ghcnd/"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 98,
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "134217728\r\n"
+     ]
+    }
+   ],
+   "source": [
+    "# the default block size\n",
+    "!hdfs getconf -confKey \"dfs.blocksize\"\n",
+    "#134,217,728 bytes"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 99,
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "Connecting to namenode via http://masternode2:9870/fsck?ugi=gbu43&files=1&blocks=1&path=%2Fdata%2Fghcnd%2Fdaily%2F2023.csv.gz\r\n",
+      "FSCK started by gbu43 (auth:SIMPLE) from /192.168.40.11 for path /data/ghcnd/daily/2023.csv.gz at Fri Apr 21 20:36:49 NZST 2023\r\n",
+      "\r\n",
+      "/data/ghcnd/daily/2023.csv.gz 27521531 bytes, replicated: replication=8, 1 block(s):  OK\r\n",
+      "0. BP-700027894-132.181.129.68-1626517177804:blk_1073824428_83608 len=27521531 Live_repl=8\r\n",
+      "\r\n",
+      "\r\n",
+      "Status: HEALTHY\r\n",
+      " Number of data-nodes:\t32\r\n",
+      " Number of racks:\t\t1\r\n",
+      " Total dirs:\t\t\t0\r\n",
+      " Total symlinks:\t\t0\r\n",
+      "\r\n",
+      "Replicated Blocks:\r\n",
+      " Total size:\t27521531 B\r\n",
+      " Total files:\t1\r\n",
+      " Total blocks (validated):\t1 (avg. block size 27521531 B)\r\n",
+      " Minimally replicated blocks:\t1 (100.0 %)\r\n",
+      " Over-replicated blocks:\t0 (0.0 %)\r\n",
+      " Under-replicated blocks:\t0 (0.0 %)\r\n",
+      " Mis-replicated blocks:\t\t0 (0.0 %)\r\n",
+      " Default replication factor:\t4\r\n",
+      " Average block replication:\t8.0\r\n",
+      " Missing blocks:\t\t0\r\n",
+      " Corrupt blocks:\t\t0\r\n",
+      " Missing replicas:\t\t0 (0.0 %)\r\n",
+      " Blocks queued for replication:\t0\r\n",
+      "\r\n",
+      "Erasure Coded Block Groups:\r\n",
+      " Total size:\t0 B\r\n",
+      " Total files:\t0\r\n",
+      " Total block groups (validated):\t0\r\n",
+      " Minimally erasure-coded block groups:\t0\r\n",
+      " Over-erasure-coded block groups:\t0\r\n",
+      " Under-erasure-coded block groups:\t0\r\n",
+      " Unsatisfactory placement block groups:\t0\r\n",
+      " Average block group size:\t0.0\r\n",
+      " Missing block groups:\t\t0\r\n",
+      " Corrupt block groups:\t\t0\r\n",
+      " Missing internal blocks:\t0\r\n",
+      " Blocks queued for replication:\t0\r\n",
+      "FSCK ended at Fri Apr 21 20:36:49 NZST 2023 in 1 milliseconds\r\n",
+      "\r\n",
+      "\r\n",
+      "The filesystem under path '/data/ghcnd/daily/2023.csv.gz' is HEALTHY\r\n"
+     ]
+    }
+   ],
+   "source": [
+    "# calculating individual block sizes\n",
+    "!hdfs fsck /data/ghcnd/daily/2023.csv.gz -files -blocks\n",
+    "#Year 2023: total 1 block total size 27521531 bytes, block 0: 27521531 bytes"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 100,
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "Connecting to namenode via http://masternode2:9870/fsck?ugi=gbu43&files=1&blocks=1&path=%2Fdata%2Fghcnd%2Fdaily%2F2022.csv.gz\n",
+      "FSCK started by gbu43 (auth:SIMPLE) from /192.168.40.11 for path /data/ghcnd/daily/2022.csv.gz at Fri Apr 21 20:36:52 NZST 2023\n",
+      "\n",
+      "/data/ghcnd/daily/2022.csv.gz 166075423 bytes, replicated: replication=8, 2 block(s):  OK\n",
+      "0. BP-700027894-132.181.129.68-1626517177804:blk_1073824426_83606 len=134217728 Live_repl=8\n",
+      "1. BP-700027894-132.181.129.68-1626517177804:blk_1073824427_83607 len=31857695 Live_repl=8\n",
+      "\n",
+      "\n",
+      "Status: HEALTHY\n",
+      " Number of data-nodes:\t32\n",
+      " Number of racks:\t\t1\n",
+      " Total dirs:\t\t\t0\n",
+      " Total symlinks:\t\t0\n",
+      "\n",
+      "Replicated Blocks:\n",
+      " Total size:\t166075423 B\n",
+      " Total files:\t1\n",
+      " Total blocks (validated):\t2 (avg. block size 83037711 B)\n",
+      " Minimally replicated blocks:\t2 (100.0 %)\n",
+      " Over-replicated blocks:\t0 (0.0 %)\n",
+      " Under-replicated blocks:\t0 (0.0 %)\n",
+      " Mis-replicated blocks:\t\t0 (0.0 %)\n",
+      " Default replication factor:\t4\n",
+      " Average block replication:\t8.0\n",
+      " Missing blocks:\t\t0\n",
+      " Corrupt blocks:\t\t0\n",
+      " Missing replicas:\t\t0 (0.0 %)\n",
+      " Blocks queued for replication:\t0\n",
+      "\n",
+      "Erasure Coded Block Groups:\n",
+      " Total size:\t0 B\n",
+      " Total files:\t0\n",
+      " Total block groups (validated):\t0\n",
+      " Minimally erasure-coded block groups:\t0\n",
+      " Over-erasure-coded block groups:\t0\n",
+      " Under-erasure-coded block groups:\t0\n",
+      " Unsatisfactory placement block groups:\t0\n",
+      " Average block group size:\t0.0\n",
+      " Missing block groups:\t\t0\n",
+      " Corrupt block groups:\t\t0\n",
+      " Missing internal blocks:\t0\n",
+      " Blocks queued for replication:\t0\n",
+      "FSCK ended at Fri Apr 21 20:36:52 NZST 2023 in 0 milliseconds\n",
+      "\n",
+      "\n",
+      "The filesystem under path '/data/ghcnd/daily/2022.csv.gz' is HEALTHY\n"
+     ]
+    }
+   ],
+   "source": [
+    "#Year 2022: total 2 block total siz\n",
+    "!hdfs fsck /data/ghcnd/daily/2022.csv.gz -files -blocks\n",
+    "#166075423 bytes, block 0: 134,217,728 bytes, block 1: 31,857,695 bytes."
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "### (b) Load and count the number of observations in 2022 and then separately in 2023"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 12,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "dailySchema = StructType([\n",
+    "    StructField(\"Daily_ID\", StringType(), True),\n",
+    "    StructField(\"Date\", StringType(), True),\n",
+    "    StructField(\"Element\", StringType(), True),\n",
+    "    StructField(\"Value\", IntegerType(), True),\n",
+    "    StructField(\"Mflag\", StringType(), True),\n",
+    "    StructField(\"Qflag\", StringType(), True),\n",
+    "    StructField(\"Sflag\", StringType(), True),\n",
+    "    StructField(\"Observation_Time\", StringType(), True)\n",
+    "])"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 13,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "37375779"
+      ]
+     },
+     "execution_count": 13,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    " # load and count number of observations in daily 2022\n",
+    "daily_2022 = (\n",
+    "    spark.read.format(\"com.databricks.spark.csv\")\n",
+    "    .option(\"header\", \"false\")\n",
+    "    .option(\"inferSchema\", \"false\")\n",
+    "    .schema(dailySchema)\n",
+    "    .load(\"hdfs:///data/ghcnd/daily/2022.csv.gz\"))\n",
+    "daily_2022.count()   # year 2022 : 37375779 observations"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 126,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "6031842"
+      ]
+     },
+     "execution_count": 126,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "# load and count number of observations in daily 2023\n",
+    "daily_2023 = (\n",
+    "    spark.read.format(\"com.databricks.spark.csv\")\n",
+    "    .option(\"header\", \"false\")\n",
+    "    .option(\"inferSchema\", \"false\")\n",
+    "    .schema(dailySchema)\n",
+    "    .load(\"hdfs:///data/ghcnd/daily/2023.csv.gz\"))\n",
+    "daily_2023.count()   # year 2023 : 6031842 observations"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "### (c) Load and count the number of observations from 2014 to 2023 (inclusive)."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 137,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "337279894"
+      ]
+     },
+     "execution_count": 137,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "# Load and count the number of observations in daily from 2014 to 2023\n",
+    "daily_2014to2023 = (\n",
+    "    spark.read.format(\"com.databricks.spark.csv\")\n",
+    "    .option(\"header\", \"false\")\n",
+    "    .option(\"inferSchema\", \"false\")\n",
+    "    .schema(dailySchema)\n",
+    "    .load(\"hdfs:///data/ghcnd/daily/20{14,15,16,17,18,19,20,21,22,23}.csv.gz\"))\n",
+    "daily_2014to2023.count() # 10 years (from 2014 to 2023): 337,279,894 observations in 9 partritions\n"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "## Q4:\n",
+    "### (a) Count the number of rows in daily.\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 59,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "3064620240"
+      ]
+     },
+     "execution_count": 59,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "#Load all daily data\n",
+    "daily = (\n",
+    "    spark.read.format(\"com.databricks.spark.csv\")\n",
+    "    .option(\"header\", \"false\")\n",
+    "    .option(\"inferSchema\", \"false\")\n",
+    "    .schema(dailySchema)\n",
+    "    .load(\"hdfs:///data/ghcnd/daily/\"))\n",
+    "daily.count()   # total : 3,064,620,240 observations"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "### (b) Filter daily using the filter command to obtain the subset of observations containing the five core elements described in inventory. How many observations are there for each of the five core elements? Which element has the most observations?"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 44,
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "+-----------+--------+-------+-----+-----+-----+-----+----------------+\n",
+      "|   Daily_ID|    Date|Element|Value|Mflag|Qflag|Sflag|Observation_Time|\n",
+      "+-----------+--------+-------+-----+-----+-----+-----+----------------+\n",
+      "|AE000041196|20100101|   TMAX|  259| null| null|    S|            null|\n",
+      "|AE000041196|20100101|   TMIN|  120| null| null|    S|            null|\n",
+      "|AEM00041194|20100101|   TMAX|  250| null| null|    S|            null|\n",
+      "|AEM00041194|20100101|   TMIN|  168| null| null|    S|            null|\n",
+      "|AEM00041194|20100101|   PRCP|    0| null| null|    S|            null|\n",
+      "+-----------+--------+-------+-----+-----+-----+-----+----------------+\n",
+      "only showing top 5 rows\n",
+      "\n"
+     ]
+    }
+   ],
+   "source": [
+    "#Observations each core\n",
+    "daily_cores = daily.where(F.col(\"Element\").isin([\"PRCP\",\"SNOW\",\"SNWD\",\"TMAX\",\"TMIN\"]))\n",
+    "daily_cores.show(5)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 45,
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "+-------+----------+\n",
+      "|Element|     count|\n",
+      "+-------+----------+\n",
+      "|   SNOW| 348203650|\n",
+      "|   SNWD| 294454702|\n",
+      "|   TMIN| 450155708|\n",
+      "|   PRCP|1057396673|\n",
+      "|   TMAX| 451364119|\n",
+      "+-------+----------+\n",
+      "\n"
+     ]
+    }
+   ],
+   "source": [
+    "daily_core_total = daily_cores.groupBy(F.col(\"Element\")).count()\n",
+    "daily_core_total.show() #SNWD: 294454702; SNOW: 348203650; TMIN: 450155708; PRCP: 1057396673; TMAX: 451364119;"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "### (c) Determine how many observations of TMIN do not have a corresponding observation of TMAX. How many unique stations contributed to these observations.?"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 46,
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "+-----------+--------+-------+-----+-----+-----+-----+----------------+\n",
+      "|   Daily_ID|    Date|Element|Value|Mflag|Qflag|Sflag|Observation_Time|\n",
+      "+-----------+--------+-------+-----+-----+-----+-----+----------------+\n",
+      "|AE000041196|20100101|   TMAX|  259| null| null|    S|            null|\n",
+      "|AE000041196|20100101|   TMIN|  120| null| null|    S|            null|\n",
+      "|AEM00041194|20100101|   TMAX|  250| null| null|    S|            null|\n",
+      "|AEM00041194|20100101|   TMIN|  168| null| null|    S|            null|\n",
+      "|AEM00041217|20100101|   TMAX|  250| null| null|    S|            null|\n",
+      "+-----------+--------+-------+-----+-----+-----+-----+----------------+\n",
+      "only showing top 5 rows\n",
+      "\n"
+     ]
+    }
+   ],
+   "source": [
+    "daily_temps = daily_cores.filter(F.col(\"Element\").isin([\"TMIN\",\"TMAX\"]))\n",
+    "daily_temps.show(5)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 47,
+   "metadata": {
+    "scrolled": true
+   },
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "+-----------+--------+----------------+\n",
+      "|   Daily_Id|    Date|Temp_Element_Set|\n",
+      "+-----------+--------+----------------+\n",
+      "|ACW00011604|19490314|    [TMAX, TMIN]|\n",
+      "|ACW00011604|19490316|    [TMAX, TMIN]|\n",
+      "|ACW00011604|19490401|    [TMAX, TMIN]|\n",
+      "|ACW00011604|19490409|    [TMAX, TMIN]|\n",
+      "|ACW00011604|19490506|    [TMAX, TMIN]|\n",
+      "+-----------+--------+----------------+\n",
+      "only showing top 5 rows\n",
+      "\n"
+     ]
+    }
+   ],
+   "source": [
+    "daily_temps = (\n",
+    "    daily_temps\n",
+    "    .groupBy(\"Daily_Id\", \"Date\")\n",
+    "    .agg(\n",
+    "        F.collect_set(\"Element\").alias(\"Temp_Element_Set\")\n",
+    "    )\n",
+    ")\n",
+    "daily_temps.show(5)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 48,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "9118440"
+      ]
+     },
+     "execution_count": 48,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "# how many observations of TMIN do not have a corresponding observation of TMAX.\n",
+    "daily_temps = (daily_temps\n",
+    "                .withColumn(\"TMIN\",F.array_contains(F.col(\"Temp_Element_Set\"),\"TMIN\").alias(\"TMIN\"))\n",
+    "                .withColumn(\"TMAX\",F.array_contains(F.col(\"Temp_Element_Set\"),\"TMAX\").alias(\"TMAX\"))\n",
+    "              )\n",
+    "daily_temps.where((F.col(\"TMIN\")==\"true\") & (F.col(\"TMAX\")==\"false\")).count()\n",
+    "# result: 9118440\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 49,
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "+---------------+\n",
+      "|count(Daily_Id)|\n",
+      "+---------------+\n",
+      "|          27876|\n",
+      "+---------------+\n",
+      "\n"
+     ]
+    }
+   ],
+   "source": [
+    "#Distinct stations contributed to these observations?\n",
+    "daily_temps.where((F.col(\"TMIN\")==\"true\") & (F.col(\"TMAX\")==\"false\")).agg(F.countDistinct(\"Daily_Id\")).show()\n",
+    "#27,876\n"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "### (d) Filter daily to obtain all observations of TMIN and TMAX for all stations in New Zealand, and save the result to your output directory. How many observations are there, and how many years are covered by the observations?"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 50,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "478712"
+      ]
+     },
+     "execution_count": 50,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "# How many observations of TMIN and TMAX for all stations in New Zealand\n",
+    "daily_TMINMAX = daily_cores.filter(F.col(\"Element\").isin([\"TMIN\",\"TMAX\"]))\n",
+    "daily_TMINMAX_nz = daily_TMINMAX.filter(F.substring(F.col(\"daily_id\"),1,2)==\"NZ\") #Stations in NZ\n",
+    "daily_TMINMAX_nz.count()\n",
+    "#478,712\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 113,
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "+-----------+\n",
+      "|count(Year)|\n",
+      "+-----------+\n",
+      "|         84|\n",
+      "+-----------+\n",
+      "\n"
+     ]
+    }
+   ],
+   "source": [
+    "# how many years are covered by the observations\n",
+    "daily_TMINMAX_nz = daily_TMINMAX_nz.withColumn(\"Year\", F.substring(F.col(\"Date\"),1,4).cast(IntegerType()))\n",
+    "daily_TMINMAX_nz.agg(F.countDistinct(F.col(\"Year\"))).show() \n",
+    "#result: 84"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 15,
+   "metadata": {},
+   "outputs": [
+    {
+     "ename": "NameError",
+     "evalue": "name 'daily_TMINMAX_nz' is not defined",
+     "output_type": "error",
+     "traceback": [
+      "\u001b[0;31m---------------------------------------------------------------------------\u001b[0m",
+      "\u001b[0;31mNameError\u001b[0m                                 Traceback (most recent call last)",
+      "\u001b[0;32m<ipython-input-15-04bd694a5190>\u001b[0m in \u001b[0;36m<module>\u001b[0;34m()\u001b[0m\n\u001b[1;32m      1\u001b[0m \u001b[0;31m# save output to HDFS\u001b[0m\u001b[0;34m\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0;32m----> 2\u001b[0;31m \u001b[0mdaily_TMINMAX_nz\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0mwrite\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0moption\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0;34m\"header\"\u001b[0m\u001b[0;34m,\u001b[0m\u001b[0;32mFalse\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0mmode\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0;34m\"overwrite\"\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m.\u001b[0m\u001b[0mcsv\u001b[0m\u001b[0;34m(\u001b[0m\u001b[0;34m\"hdfs:///user/gbu43/outputs/ghcnd/daily_TMINMAX_nz.csv\"\u001b[0m\u001b[0;34m)\u001b[0m\u001b[0;34m\u001b[0m\u001b[0m\n\u001b[0m",
+      "\u001b[0;31mNameError\u001b[0m: name 'daily_TMINMAX_nz' is not defined"
+     ]
+    }
+   ],
+   "source": [
+    "# save output to HDFS\n",
+    "daily_TMINMAX_nz.write.option(\"header\",False).mode(\"overwrite\").csv(\"hdfs:///user/gbu43/outputs/ghcnd/daily_TMINMAX_nz.csv\")\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 142,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "#copy to local home directory\n",
+    "!hdfs dfs -copyToLocal /user/gbu43/outputs/ghcnd/daily_TMINMAX_nz.csv ~/daily_TMINMAX_nz"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 1,
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "ls: `/user/gbu43/outputs/ghcnd/daily_TMINMAX_nz.csv.gz': No such file or directory\n",
+      "0\n"
+     ]
+    }
+   ],
+   "source": [
+    "#check counting number of files:\n",
+    "!hdfs dfs -ls /user/gbu43/outputs/ghcnd/daily_TMINMAX_nz.csv.gz | wc -l\n",
+    "# 84"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 16,
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "478795\r\n"
+     ]
+    }
+   ],
+   "source": [
+    "# Count number of rows in daily_TMINMAX_nz.csv\n",
+    "!hdfs dfs -cat /user/gbu43/outputs/ghcnd/daily_TMINMAX_nz.csv/*.csv | wc -l\n",
+    "# 478712"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "### (e) Group the precipitation observations by year and country. \n",
+    "#### Compute the average rainfall in each year for each country, and save this result to your output directory.\n",
+    "#### Which country has the highest average rainfall in a single year across the entire dataset? Is this result sensible? Is this result consistent with your previous analysis?"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 51,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "#Get the precipitation observations \n",
+    "daily_prcp = daily_cores.filter(F.col(\"Element\")== \"PRCP\")\n",
+    "daily_prcp = (daily_prcp\n",
+    "                .withColumn(\"Year\",F.substring(F.col(\"Date\"),1,4).cast(IntegerType()))\n",
+    "                .withColumn(\"Country_Code\",F.substring(F.col(\"daily_id\"),1,2))\n",
+    "              )\n",
+    "# Calculate the average rainfall group by year and country\n",
+    "country_prcp_avg = daily_prcp.groupBy(\"year\",\"Country_Code\").avg(\"Value\")"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 119,
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "+----+------------+------------------+\n",
+      "|year|Country_Code|        avg(Value)|\n",
+      "+----+------------+------------------+\n",
+      "|2010|          FM| 86.54939680469514|\n",
+      "|2010|          HR| 38.18105304364846|\n",
+      "|2010|          ID| 182.6843657817109|\n",
+      "|2012|          GG|  37.6198347107438|\n",
+      "|2012|          NL|25.610908809173317|\n",
+      "+----+------------+------------------+\n",
+      "only showing top 5 rows\n",
+      "\n"
+     ]
+    }
+   ],
+   "source": [
+    "country_prcp_avg.show(5)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 53,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "country_prcp_avg = country_prcp_avg.join(F.broadcast(countries), \"Country_Code\", how = \"inner\") # get the country name\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 54,
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "+------------+----+------------------+------------------+\n",
+      "|Country_Code|year|        avg(Value)|      Country_Name|\n",
+      "+------------+----+------------------+------------------+\n",
+      "|          EK|2000|            4361.0| Equatorial Guinea|\n",
+      "|          DR|1975|            3414.0|Dominican Republic|\n",
+      "|          LA|1974|            2480.5|              Laos|\n",
+      "|          BH|1978| 2244.714285714286|            Belize|\n",
+      "|          NN|1979|            1967.0|      Sint Maarten|\n",
+      "|          CS|1974|            1820.0|        Costa Rica|\n",
+      "|          BH|1979|1755.5454545454545|            Belize|\n",
+      "|          NS|1973|            1710.0|          Suriname|\n",
+      "|          UC|1978|1675.0384615384614|           Curacao|\n",
+      "|          BH|1977|1541.7142857142858|            Belize|\n",
+      "+------------+----+------------------+------------------+\n",
+      "only showing top 10 rows\n",
+      "\n"
+     ]
+    }
+   ],
+   "source": [
+    "country_prcp_avg.sort(F.col(\"avg(Value)\").desc()).show(10) #showing descending order\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "#write result to HDFS\n",
+    "country_prcp_avg.write.option(\"header\",True).mode(\"overwrite\").csv(\"hdfs:///user/gbu43/outputs/ghcnd/avg_prcp_country_year.csv\")"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "#copy to local home directory\n",
+    "!hdfs dfs -copyToLocal /user/gbu43/outputs/ghcnd/avg_prcp_country_year.csv ~/avg_prcp_country_year"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 55,
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "+------------+----+-------------------+-------------------+\n",
+      "|Country_Code|year|         avg(Value)|       Country_Name|\n",
+      "+------------+----+-------------------+-------------------+\n",
+      "|          UK|1874|-1.0767123287671232|     United Kingdom|\n",
+      "|          GV|1998|                0.0|             Guinea|\n",
+      "|          GA|2003|                0.0|        Gambia, The|\n",
+      "|          EC|1946|                0.0|            Ecuador|\n",
+      "|          LA|1971|                0.0|               Laos|\n",
+      "|          KZ|2015|                0.0|         Kazakhstan|\n",
+      "|          MC|1984|                0.0|        Macau S.A.R|\n",
+      "|          TD|1973|                0.0|Trinidad and Tobago|\n",
+      "|          MV|2002|                0.0|           Maldives|\n",
+      "|          CV|1975|                0.0|         Cape Verde|\n",
+      "+------------+----+-------------------+-------------------+\n",
+      "only showing top 10 rows\n",
+      "\n"
+     ]
+    }
+   ],
+   "source": [
+    "# Examine the highest average rainfall from the previous question:\n",
+    "stations_enriched.filter(stations_enriched.Country_Code == \"EK\").show(truncate=False) # result in 2 stations: EKM00064820\" and \"EKM00064810\"\n",
+    "inventory.filter(inventory.Inventory_ID.isin([\"EKM00064820\", \"EKM00064810\"])).show()\n",
+    "daily.filter((daily.Daily_ID == \"EKM00064810\") & (daily.Element == \"PRCP\")).show()\n",
+    "daily.filter((daily.Daily_ID == \"EKM00064820\") & (daily.Element == \"PRCP\") & daily.Date.startswith(\"2000\")).show()"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 71,
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "+------------+-----------+--------+---------+---------+------------------+--------+------------+------+------------+---------+---------+---------+--------+-------------+------------+-------------+\n",
+      "|Country_Code|Station_ID |Latitude|Longitude|Elevation|Name              |GSN_Flag|HCN_CRN_Flag|WMO_ID|Country_Name|StateCode|StateName|FirstYear|LastYear|Total_Element|Core_Element|Other_Element|\n",
+      "+------------+-----------+--------+---------+---------+------------------+--------+------------+------+------------+---------+---------+---------+--------+-------------+------------+-------------+\n",
+      "|LA          |LAM00048930|19.897  |102.161  |291.1    |LUANG PHABANG INTL|        |            |48930 |Laos        |         |         |1951     |2023    |4            |3           |1            |\n",
+      "|LA          |LAM00048946|17.383  |104.65   |52.0     |THAKHEK           |        |            |48946 |Laos        |         |         |1981     |2023    |4            |3           |1            |\n",
+      "|LA          |LAW00041071|15.1333 |105.7833 |102.1    |PAKSE L-11        |        |            |      |Laos        |         |         |1966     |1970    |9            |5           |4            |\n",
+      "|LA          |LAM00048948|16.667  |105.0    |185.0    |SENO              |        |            |48948 |Laos        |         |         |1950     |2023    |4            |3           |1            |\n",
+      "|LA          |LAM00048955|15.117  |105.167  |102.0    |PAKSE             |        |            |48955 |Laos        |         |         |1950     |2019    |4            |3           |1            |\n",
+      "|LA          |LAM00048938|19.233  |101.733  |326.0    |SAYABOURY         |        |            |48938 |Laos        |         |         |1973     |2023    |4            |3           |1            |\n",
+      "|LA          |LAW00041062|19.9    |103.1333 |1311.2   |PHU CUM LS-50     |        |            |      |Laos        |         |         |1967     |1968    |9            |5           |4            |\n",
+      "|LA          |LAW00041060|14.8    |106.8167 |125.3    |ATTOPEU L 10      |        |            |      |Laos        |         |         |1966     |1968    |9            |5           |4            |\n",
+      "|LA          |LAW00041077|16.6833 |105.55   |158.2    |MUONG PHALANE L 61|        |            |      |Laos        |         |         |1966     |1967    |9            |5           |4            |\n",
+      "|LA          |LAM00048940|17.988  |102.563  |171.9    |WATTAY INTL       |        |            |48940 |Laos        |         |         |1950     |2023    |4            |3           |1            |\n",
+      "|LA          |LAW00041075|19.1667 |102.9    |1524.0   |BAN-SAN-TON       |        |            |      |Laos        |         |         |1968     |1970    |9            |5           |4            |\n",
+      "|LA          |LAW00041051|17.9833 |102.5667 |170.1    |VIENTIANE         |        |            |      |Laos        |         |         |1966     |1971    |10           |5           |5            |\n",
+      "|LA          |LAW00041061|19.9    |102.1667 |284.1    |LUANG PRABANG L 54|        |            |      |Laos        |         |         |1966     |1970    |10           |5           |5            |\n",
+      "|LA          |LAW00041076|15.6833 |106.4167 |168.2    |SARAVANE L-44     |        |            |      |Laos        |         |         |1966     |1968    |9            |5           |4            |\n",
+      "|LA          |LAW00041074|16.55   |104.7667 |155.1    |SAVANNAKHET L-39  |        |            |48947 |Laos        |         |         |1968     |2023    |10           |5           |5            |\n",
+      "+------------+-----------+--------+---------+---------+------------------+--------+------------+------+------------+---------+---------+---------+--------+-------------+------------+-------------+\n",
+      "\n"
+     ]
+    }
+   ],
+   "source": [
+    "# examine the daily data of country Sierra Leone with highest average rainfall in 2022 \n",
+    "stations_enriched.filter(stations_enriched.Country_Code == \"SL\").show(truncate=False)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 69,
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "+-----------+--------+-------+-----+-----+-----+-----+----------------+\n",
+      "|   Daily_ID|    Date|Element|Value|Mflag|Qflag|Sflag|Observation_Time|\n",
+      "+-----------+--------+-------+-----+-----+-----+-----+----------------+\n",
+      "|SL000061856|20220918|   PRCP| 2390| null| null|    S|            null|\n",
+      "|SL000061856|20220919|   PRCP|    0| null| null|    S|            null|\n",
+      "+-----------+--------+-------+-----+-----+-----+-----+----------------+\n",
+      "\n"
+     ]
+    }
+   ],
+   "source": [
+    "daily.filter((daily.Daily_ID == \"SL000061856\") & (daily.Element == \"PRCP\") & daily.Date.startswith(\"2022\")).show()"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 70,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/html": [
+       "<p><b>Spark</b></p><p>The spark session is <b><span style=\"color:red\">stopped</span></b>, confirm that <code>gbu43 (jupyter)</code> is under the completed applications section in the Spark UI.</p><ul><li><a href=\"http://mathmadslinux2p.canterbury.ac.nz:8080/\" target=\"_blank\">Spark UI</a></li></ul>"
+      ],
+      "text/plain": [
+       "<IPython.core.display.HTML object>"
+      ]
+     },
+     "metadata": {},
+     "output_type": "display_data"
+    }
+   ],
+   "source": [
+    "stop_spark()"
+   ]
+  }
+ ],
+ "metadata": {
+  "kernelspec": {
+   "display_name": "Python 3",
+   "language": "python",
+   "name": "python3"
+  },
+  "language_info": {
+   "codemirror_mode": {
+    "name": "ipython",
+    "version": 3
+   },
+   "file_extension": ".py",
+   "mimetype": "text/x-python",
+   "name": "python",
+   "nbconvert_exporter": "python",
+   "pygments_lexer": "ipython3",
+   "version": "3.7.0"
+  }
+ },
+ "nbformat": 4,
+ "nbformat_minor": 2
+}

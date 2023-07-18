@@ -1,0 +1,3 @@
+This repository contains Python code for generating plots of the TMIN and TMAX elements for 15 stations in New Zealand from 1940 to 2023. The code utilizes all the CSV files in the same directory, with the 'nz_daily_temp.csv' file being the product of concatenation of all the CSV files.
+
+To run the code, simply open the 'main.py' file in an IDE, install all necessary packages and click the 'Run' button. The resulting plots will be displayed in separate windows. The first set of plots shows the individual TMIN and TMAX for each of the 15 stations. The second set of plots displays the overall TMIN and TMAX for all stations in New Zealand.
