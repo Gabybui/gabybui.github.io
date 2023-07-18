@@ -1,0 +1,504 @@
+---
+title: "Data Mining - Assignment 1 "
+author: "Giang Bui"
+date: "2022-09-01"
+output: word_document
+---
+##Question 1:
+
+#(a) Logistic function
+
+(1) Equation for the probability of receiving a GPA >= 7:
+P(x) = exp(-16 + 1.6 * X_1 + 0.23 * X_2)/(1 + exp(-16 + 1.6 * X_1 + 0.23 * X_2))
+
+(2) The equation for the log-odds of receiving a GPA ≥ 7 as a function of the model variables:
+log(P(x)/(1-P(x))) = -16 + 1.6 * X_1 + 0.23 * X_2
+
+β_1 = 1.6: for every 1 extra hour studying per week, the student’s GPA log odds (P(x)/(1-P(x)) increases 1,6 unit.
+β_2 = 0.23: when the number of classes a student attends increases by 1, the student’s GPA log odds (P(x)/(1-P(x)) increases 0.23 unit.
+
+#(b) Estimate probability of a student getting a GPA value >= 7 in STAT318 when X_1 = 5 and X_2 = 34
+x_1 = 5
+x_2 = 34
+We plug variables in the formula below:
+P(x) = exp(-16 + 1.6 * x_1 + 0.23 * x_2)/(1 + exp(-16 + 1.6 * x_1 + 0.23 * x_2))
+
+```{r}
+x_1 = 5
+x_2 = 34
+prob_1 = exp(-16 + 1.6 * x_1 + 0.23 * x_2)/(1 + exp(-16 + 1.6 * x_1 + 0.23 * x_2))
+prob_1
+```
+
+According to R calculation, P(x) = 0.4551
+The probability of a student getting a GPA value ≥ 7 in STAT318 if they study 5 hours per week and attend 34 classes is 45.51%
+
+#(c) P(x) = 0.5, x_2 = 18, x_1 = ?
+We plug in the variable into formula log(P(x)/(1 - P(x)) = -16 + 1.6 * x_1 + 0.23 * x_2
+
+```{r}
+prob_2 = 0.5
+x_2 = 18
+x_1 = (log(prob_2/(1 - prob_2)) - (-16 + 0.23 * x_2) )/1.6
+x_1
+```
+
+According to the result of R calculation, the student needs to study 7.41 hours per week while attending 18 classes per week to have a 50% chance of getting a GPA value more than 7 in STAT318.
+
+
+##Question 2: 
+
+One advantage of a flexible model versus a less flexible one is that the higher flexible models fit observed data closer and create less bias, which are suitable when coping with a large training data set.
+One disadvantage of highly flexible models is that they cannot generalize well as the fitted version may change enormously from one sample to another sample, which we call “data overfitting” phenomenon.
+There are several conditions a less flexible approach might be preferred. Firstly, when we concern more about making inference, and less concern about prediction. Secondly, when we do not have a large size of data set. Thirdly, when data variance is high, which only can be generalised by less flexible approach. Finally, when the problem is simple, a simple approach is more preferable.
+
+##Question 3: 
+
+#(a) The code for plotting π_0 * f_0(x) and π_1 * f_1(x) in the same figure:
+
+```{r}
+x = seq(-4,5,length=100)
+plot(x,
+     0.6*dnorm(x),
+     pch=21,
+     col="navy",
+     cex=0.6,
+     lwd = 4,
+     type="l",
+     xlab = "x",
+     ylab = "π_k*f_k",
+     main = "Conditional Densities Multiplied By Prior Probabilities")
+points(x,
+       0.4*dnorm(x,1, 0.707106781187),
+       pch=21,
+       col="deeppink3",
+       cex=0.6,
+       lwd = 4,
+       type="l")
+legend("topright",
+       legend = c("Class 0", "Class 1"),
+       col = c("navy","deeppink3"),
+       lwd = 4,
+       text.col = "black",
+       horiz = FALSE)
+```
+#(b)Find the Bayes decision boundary:
+π_0 * f_0(x) = π_1 * f_1(x)
+<=> 0.6 * 1 / sqrt(2π * 1) * exp((-x^2) / 2) = 0.4 * 1 / sqrt(2π * 0.5)* exp((-(x-1)^2 / (2x0.5)
+<=> (1/2)x^2 - 2x + 1 -ln(2 * sqrt(2)/3) = 0
+A quadratic formula function in R is created to calculate the roots as below with three parameter a,b,c. And then we plug a = 1/2, b = -2, c = 1 -ln(2 * sqrt(2)/3) to the function to find the roots of function.
+
+```{r}
+# Create quadratic formula function:
+
+quadraticFunction <- function(a,b,c){
+  discriminant = b^2 - 4*a*c
+  if(discriminant < 0){
+    print("There is no real numbered roots")
+  }
+  else if (discriminant == 0){
+    print("There is one root. The root is:")
+    print(-c/b)
+  }
+  
+  else{
+    print("There are two roots. The roots are:")
+    print(-b+sqrt(discriminant)/(2*a))
+    print(-b-sqrt(discriminant)/(2*a))
+  }
+}
+
+quadraticFunction(1/2, -2, 1-log(2*sqrt(2)/3))
+
+```
+As the result, x1 = 3.371939 and x2 = 0.6280609 are two linear decision boundaries.
+We plot the boundaries on the graph with the code below:
+
+```{r}
+x = seq(-4,5,length=100)
+plot(x,
+     0.6*dnorm(x),
+     pch=21,
+     col="navy",
+     cex=0.6,
+     lwd = 4,
+     type="l",
+     xlab = "x",
+     ylab = "π_k*f_k",
+     main = "Conditional Densities Multiplied By Prior Probabilities")
+points(x,
+       0.4*dnorm(x,1, 0.707106781187),
+       pch=21,
+       col="deeppink3",
+       cex=0.6,
+       lwd = 4,
+       type="l")
+points(c(3.371939,3.371939),
+	c(-0.1,0.3),
+	lwd = 4,
+	col = "mediumspringgreen",
+	type="l",
+	lty = 2)
+
+points(c(0.6280609,0.6280609),
+	c(-0.1,0.3),
+	lwd = 4,
+	col = "mediumspringgreen",
+	type="l",
+	lty = 2)
+legend("topright",
+       legend = c("Class 0", "Class 1"),
+       col = c("navy","deeppink3"),
+       lwd = 4,
+       text.col = "black",
+       horiz = FALSE)
+```
+
+The Bayes boundaries founded divide the graph into 3 parts.
+If the observed data have x value less than 0.6280609, the probability of this data point falling into class 0 is higher than that falling into class 1, so it is more likely to be classified as class 0.
+If x is in the range from 0.6280609 to 3.371939, the probability of this data point falling into class 1 is higher than that falling into class 0, so it is more likely to be classified as class 1.
+If the observed data have x value is more than 3.371939, the probability of this data point falling into class 0 is higher than that falling into class 1, even when those probabilities are extremely close to 0, so it will be more likely to be classified as class 0.
+
+#c classify the observation X = 2.5
+
+Because the observation at which X = 2.5 falls into the range from 0.6280609 to 3.371939, so we can make prediction that the observation X is belong to class 1.
+
+#d Calculate the probability of the observation with X = 1 being classified as class 1:
+P(Y = 1 | X = 1) = [π_1 * f_1(1)]/[π_0 * f_0(1) + π_1 * f_1(1)] = 0.6085 
+
+```{R}
+prob_3 = (0.4 * 1/sqrt(2 * pi * 0.5) * exp(-1/(2 * 0.5) * (1 - 1)^2))/((0.4 * 1 / sqrt(2* pi * 0.5) * exp(-1/(2 * 0.5) * (1 - 1)^2)) + 0.6 * 1 / sqrt(2 * pi * 1) * exp(-1/(2 * 1) * ((1 - 0)^2)))
+prob_3
+```
+
+As the result from R calculation, probability of the observation with X = 1 being classified as class 1 is 0.6085231 which is 60.85%
+
+##Question 4: 
+
+#(a) Perform kNN regression with k = 2, 4, 8, 16, 32, 64 and 128, (learning from the training data) and compute the training and testing MSE for each value of k.
+
+Create code for KNN regression:
+
+```{r setup, include=FALSE, echo=FALSE}
+require("knitr")
+opts_knit$set(root.dir = "~/Desktop/STAT462_Assignment1")
+
+#setting Work Directory:
+#setwd('~/Desktop/STAT462_Assignment1')
+#getwd()
+
+#Read the AutoTrain.csv and AutoTest.csv files:
+
+auto_train = read.csv('AutoTrain.csv', header = TRUE, na.strings = "?")
+auto_test = read.csv('AutoTest.csv', header = TRUE, na.strings = "?")
+
+
+##Create kNN regression function:
+
+kNN <- function(k,x.train,y.train,x.pred) {
+# 
+## This is kNN regression function for problems with
+## 1 predictor
+#
+## INPUTS
+#
+# k       = number of observations in neighborhood 
+# x.train = vector of training predictor values
+# y.train = vector of training response values
+# x.pred  = vector of predictor inputs with unknown
+#           response values 
+#
+## OUTPUT
+#
+# y.pred  = predicted response values for x.pred
+
+## Initialize:
+  
+n.pred <- length(x.pred);		y.pred <- numeric(n.pred)
+
+## Main Loop
+
+for (i in 1:n.pred){
+  d <- abs(x.train - x.pred[i])
+  dstar = d[order(d)[k]]
+  y.pred[i] <- mean(y.train[d <= dstar])		
+}
+## Return the vector of predictions
+
+invisible(y.pred)
+}
+
+##Create MSE computing function:
+
+MSE <- function(y,y.pred){
+  mse = mean((y - y.pred)^2)
+  return(mse)
+}
+
+```
+
+k = 2, 4, 8, 16, 32, 64 and 128, training MSE value are computed as below:
+
+```{r}
+k = c(2,4,8,16,32,64,128);
+train.error = numeric(7);
+
+for (i in 1:7){
+  pred = kNN(k[i], auto_train$horsepower, auto_train$mpg, auto_train$horsepower)
+  train.error[i] = MSE(auto_train$mpg, pred)
+  print(train.error[i])
+}
+```
+
+According to the result above, we have:
+k = 2, training error rate = 11.67317
+k = 4, training error rate = 14.38946
+k = 8, training error rate = 16.93815
+k = 16, training error rate = 17.23661
+k = 32, training error rate = 18.99822
+k = 64, training error rate = 19.9677
+k = 128, training error rate = 34.63221
+
+k = 2, 4, 8, 16, 32, 64 and 128, testing MSE value are computed as below:
+
+```{r}
+k = c(2,4,8,16,32,64,128);
+test.error = numeric(7);
+
+for (i in 1:7){
+  pred = kNN(k[i], auto_train$horsepower, auto_train$mpg, auto_test$horsepower)
+  test.error[i] = MSE(auto_test$mpg, pred)
+  print(test.error[i])
+}
+```
+
+According to the result above, we have:
+k = 2, test error rate = 22.86349
+k = 4, test error rate = 18.99679
+k = 8, test error rate = 18.6596
+k = 16, test error rate = 17.81426
+k = 32, test error rate = 18.40115
+k = 64, test error rate = 19.75976
+k = 128, test error rate = 33.22871
+
+plot the training and test error rate:
+
+```{r}
+plot(1/k,
+     train.error,
+     pch=19,
+     col="navy",
+     cex=0.6,
+     lwd = 3,
+     type="b",
+     xlab = "1/k",
+     ylab = "Error rate",
+     main = "The KNN error rate")
+
+points(1/k,
+       test.error,
+       pch=19,
+       col="deeppink3",
+       cex=0.6,
+       lwd = 3,
+       type="b")
+
+legend("topright",
+       legend = c("Training errors", "Testing errors"),
+       col = c("navy","deeppink3"),
+       lwd = 4,
+       text.col = "black",
+       horiz = FALSE)
+```
+
+#(b) Which value of k performed the best?
+
+k performs best at which its test error rate value is lowest. We create the code to calculate the lowest test error rate, and the respective k value:
+
+```{r}
+kNN.error = min(test.error)
+print('The minimum test error is:')
+kNN.error
+best_performed_k = k[which.min(test.error)]
+print('The value of KNN which performs the best is:')
+best_performed_k
+
+```
+
+As the result of R calculation, K = 16 performs the best, at which the model has the lowest test value which is equal to 17.81426.
+
+#(c)  Plot the training data, testing data and the best kNN model in the same figure. Include your name somewhere in the plot.
+
+Create code to plot the training data, testing data and the best KNN model as below:
+
+```{r}
+
+plot(auto_train$horsepower,
+     auto_train$mpg,
+     pch=19,
+     col="navy",
+     cex=0.6,
+     lwd = 2,
+     type="p",
+     xlab = "horse power",
+     ylab = "mpg",
+     main = "K Nearest Neighbor Model Plot with K = 16")
+
+points(auto_test$horsepower,
+     auto_test$mpg,
+       pch=19,
+       col="mediumspringgreen",
+       cex=0.6,
+       lwd = 2,
+       type="p")
+
+all_x= append(auto_test$horsepower, auto_train$horsepower)
+
+points(all_x,
+     kNN(16,auto_train$horsepower,auto_train$mpg,all_x),
+       pch=19,
+       col="deeppink3",
+       cex=0.6,
+       lwd = 2,
+       type="p")
+
+legend("topright",
+       legend = c("Training Set", "Testing Set","kNN model"),
+       col = c("navy","mediumspringgreen","deeppink3"),
+       pch = c(19, 19, 19),
+       text.col = "black"
+       )
+
+```
+
+#(d) Describe the bias-variance trade-off for kNN regression and how it is influenced by the choice of k.
+
+As we take a look at the KNN error rate plot above (a), when k is high and starts decreasing (1/k starts increasing), kNN creates less and less error for training data. However, for the test data, when k starts decreasing (1/k starts increasing), the test error rate starts decreasing, and reached the bottom (at K = 16), before bouncing up.
+
+It shows that when K is high (for example, K = 128), the model is more restricted, the bias is high and the variance is low. When K is low (for example, K = 2), the model is more flexible, the bias is low and the variance is high.
+
+We should make a choice of k at which the test error rate is at minimum. By looking at the kNN error rate plot, the best 1/k we should choose is 1/16, which means the best k is equal to 16, at which test error rate reach minimum which is equal to 17.81426.
+
+##Question 5: 
+
+#(a) Perform multiple logistic regression using the training data. Comment on the model obtained:
+
+We input the datasets BankTest.csv and BankTrain.csv and perform multiple logistic regression model using the training data as the code below:
+
+```{r}
+
+#read csv files
+
+bank_train = read.csv('BankTrain.csv', header = TRUE, na.strings = "?")
+bank_test = read.csv('BankTest.csv', header = TRUE, na.strings = "?")
+
+#fit logistic regression model
+
+glm.fit = glm( y ~ x1 + x3, data = bank_train, family = binomial)
+
+#summary the glm.fit model:
+
+summary(glm.fit)
+```
+
+As we can see from the model obtained:
+
+Coefficients: coefficients for x1 and x2 are negative which are -1.31489 and -0.21738 respectively. It indicates that an increase in x1 or x3 is associated with a decrease in probability of the banknote being equal to 1.
+
+Standard Errors for both x1 and x2 are small, which indicate that the model quality is quite good.
+
+z-values for both x1 and x2 are large.
+
+p values for x1 and x3 are extremely close to 0 which are both tagged with ***, which means both predictors x1 and x3 are highly statistical significant to dependent variable y.
+
+#(b) 
+
+f(x) = forged banknote if Pr(Y = 1 | X = x) > θ
+f(x) = genuine banknote otherwise
+
+#i.Plot the training data and the decision boundary for θ = 0.5 on the same figure:
+
+As the logistic regression log odds formula:
+
+log(P(X)/(1 - P(X)) = β_0 + β_1 * x1 + β_2 * x3
+<=> log(0.5/(1-0.5)) = β_0 + β_1 * x1 + β_2 * x3
+<=> β_0 + β_1 * x1 + β_2 * x3 = 0
+x3 = (-β_0/ β_2) + (- β_1/ β_2) * x1
+
+The decision boundary is a linear which its intercept is equal to (-β_0/ β_2) and its coefficient is equal to (- β_1/ β_2).
+The data points below the decision boundary are likely to be classified as forged banknotes while the data points above the decision boundary are likely to be classified as genuine banknotes. We use ggplot2 to plot the training data and the decision boundary for θ = 0.5.
+
+```{r}
+# Plot logistic regression
+
+#install and call the package ggplot2
+
+#install.packages('ggplot2')
+library(ggplot2)
+
+#intercept2 = - β_1/β_2 
+#slope2 = -β_0/β_1
+
+decision_boundary_intercept = -coef(glm.fit)[1]/coef(glm.fit)[3]
+decision_boundary_coef = -coef(glm.fit)[2]/coef(glm.fit)[3]
+glm.data <- ifelse(bank_train$y == 1, "Forged", "Genuine")
+ggplot(glm.fit) + 
+  geom_point(aes(x=bank_train$x1,
+                 y=bank_train$x3,color=glm.data,shape=glm.data),size=2) +
+  ggtitle("The Decision Boundary") +
+  xlab("x1") +
+  ylab("x3") + 
+  labs(colour = "Bank Notes") + 
+  labs(shape = "Bank Notes") + 
+  geom_abline(intercept =decision_boundary_intercept, slope = decision_boundary_coef, 
+              color="navy", size=1)
+
+```
+
+#ii. Using θ = 0.5, compute the confusion matrix for the testing set and comment on your output.
+
+```{r}
+
+theta = .5
+glm.probs = predict(glm.fit, bank_test , type="response")
+glm.pred = rep(0,412)
+glm.pred[glm.probs > theta] = 1
+table(glm.pred ,bank_test$y)
+mean(glm.pred == bank_test$y)
+
+```
+
+The confusion matrix shows how well the glm.fit performs. With threshold θ = 0.5:
+Accuracy = (204 + 152)/412 = 0.8641
+Testing error = 1 - Accuracy = 0.1359
+Sensitivity (true positive rate) = 152/(152 + 24) = 0.8636
+Specificity (true negative rate) = 204/(204 + 32) = 0.8644
+Precision = 152/(32 + 152) = 0.8261
+
+The result is quite good with the accuracy is high (86.41%), test error is low (13.59%), Sensitivity (true positive rate) is high (86.36%), Specificity (true negative rate) is high ( 86.44%), precision is high (82.61%).
+
+#ii. Compute confusion matrices for the testing set using θ = 0.6 and compare it with the one for θ = 0.5.
+
+```{r}
+
+theta_2 = .6
+glm.probs = predict(glm.fit, bank_test , type="response")
+glm.pred = rep(0,412)
+glm.pred[glm.probs > theta_2] = 1
+table(glm.pred ,bank_test$y)
+mean(glm.pred == bank_test$y)
+
+```
+
+With threshold θ = 0.6:
+
+Accuracy = (210 + 141)/412 = 0.8519
+Testing error = 1 - Accuracy = 0.1481
+Sensitivity (true positive rate) = 141/(141 + 35) = 0.8011
+Specificity (true negative rate) = 210/(210 + 26) = 0.8898
+Precision = 141/(26 + 141) = 0.8443
+
+The result is quite good with the accuracy is high (85.19%), test error is low (14.81%), Sensitivity (true positive rate) is high (80.11%), Specificity (true negative rate) is high ( 88.98%), precision is high (84.43%).
+
+In general, the accuracy of model with θ = 0.6 is slightly less than the model with θ = 0.5. Additionally, the sensitivity (true positive rate) of model with θ = 0.5 is higher than that of θ = 0.6.  So, in general or when forged banknote is the class of interest, the model performs better when θ = 0.5. 
+However, if we change our interest to the genuine banknote and make it as the main class, we will prefer to look at the specificity (true negative rate). As we can see, the specificity when θ = 0.6 is 88.98% which is higher than that when θ = 0.5 which is 86.44%. Therefore, θ = 0.6 is preferred when we want to minimize the false of negative rate, which means we want to minimize the false of classifying the true genuine banknote as the forged one.

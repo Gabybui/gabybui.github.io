@@ -1,0 +1,1004 @@
+---
+title: "Assignment2_BigData"
+author: "Giang Bui - Student ID: 37306207"
+date: "2023-04-05"
+output:
+  word_document: default
+  html_document: default
+---
+```{r}
+# load the neccessary packages:
+library(ggplot2)
+library(MASS)
+library(glmnet)
+library(tibble)
+library(caret)
+
+```
+
+# Question 1
+
+## (a) Explore with appropriate graphical tools the correlation between the variables.
+
+First, we explore the dimension, variables and missing values of the Residen dataset.
+
+```{r}
+setwd("~/Dropbox/MADS/STAT448/assignment2")
+load('Residen.RData')
+dim(Residen)
+names(Residen)
+cat(paste("> number of missing values in dataset is: ",sum(is.na(Residen))))
+```
+
+The Residen dataset comprises 372 observations and 109 variables, and there are no missing values within the dataset.
+
+```{r }
+# Plot the whole dataset
+
+library("corrgram")
+data <- Residen[,-c(1:4)]
+corrgram(as.matrix(data), order = "OLO", abs = FALSE,cor.method = "pearson",
+         text.panel = panel.txt, main = "Correlation of Residen Dataset")
+```
+
+By examining the corrgram plot, we can divide the variables into groups which are highly correlated to each other:
+Group 1: V9,	V28,	V47,	V88,	V85,	V66,	V69,	V50,	V31,	V12
+Group 2: V92,	V16,	V102,	V26
+Group 3: V94,	V75,	V56,	V37,	V18
+Group 4: V2, V3, V4
+Group 5: V35, V45
+Group 6: V54, V64, V73, V83
+Group 7: V62,	V81,	V100,	V99,	V80,	V61,	V42,	V87,	V23,	V43,	V24,	V68, V49,	V30,	V11,	V48,	V29,	V10, V20,	V39,	V89,	V70,	V51,	V32,	V13,	V27, V84,	V103,	V46,	V65,	V57,	V86,	V67,	V19,	V38,	V95,	V76, V96,	V77,	V58, V91,	V72,	V53,	V34,	V15,	V33,	V14,	V52,	V71,	V90,	V74,	V55,	V36, V93, V17,	V98, V79,	V60,	V41,	V22,	V25,	V44,	V63,	V82,	V101,	V97,	V78,	V59, V40,	V21,	V5,	V105,	V8,	V104
+
+```{r}
+# Plot correlation for each group
+
+data_group1 <- Residen[,c("V9", "V28", "V47", "V88", "V85",	"V66", "V69", "V50", "V31", "V12")]
+corrgram(as.matrix(data_group1), order = "OLO", abs = FALSE,
+         cor.method = "pearson", text.panel = panel.txt,
+         main = "Correlation of group 1" )
+
+data_group2 <- Residen[,c("V92", "V16",	"V102",	"V26")]
+corrgram(as.matrix(data_group2), order = "OLO", abs = FALSE,
+         cor.method = "pearson", text.panel = panel.txt,
+         main = "Correlation of numericgroup 2" )
+
+data_group3 <- Residen[,c("V94", "V75",	"V56",	"V37",	"V18")]
+corrgram(as.matrix(data_group3), order = "OLO", abs = FALSE,
+         cor.method = "pearson", text.panel = panel.txt,
+         main = "Correlation of group 3")
+
+data_group4 <- Residen[, c("V2", "V3", "V4")]
+corrgram(as.matrix(data_group4), order = "OLO", abs = FALSE,
+         cor.method = "pearson", text.panel = panel.txt,
+         main = "Correlation of group 4" )
+
+data_group5 <- Residen[, c("V35", "V45")]
+corrgram(as.matrix(data_group5), order = "OLO", abs = FALSE,
+         cor.method = "pearson", text.panel = panel.txt,
+         main = "Correlation of group 5")
+
+data_group6 <- Residen[, c("V54", "V64", "V73", "V83")]
+corrgram(as.matrix(data_group6), order = "OLO", abs = FALSE,
+         cor.method = "pearson", text.panel = panel.txt,
+         main = "Correlation of group 6")
+
+data_group7 <- Residen[,c("V62", "V81",	"V100",	"V99",	"V80",	"V61",	"V42",	"V87", "V23", "V43",	"V24", "V68",	"V49",	"V30",	"V11",	"V48",	"V29", "V103",	"V46",	"V65",	"V57",	"V86",	"V67",	"V19",	"V38",	"V95", "V33",	"V14",	"V52",	"V71",	"V90",	"V74",	"V55",	"V36",	"V93", "V17",	"V98",	"V79",	"V60",	"V41",	"V22",	"V25",	"V44",	"V63", "V82",	"V101",	"V97",	"V78",	"V59",	"V40",	"V21",	"V5",	"V105", "V8",	"V104")]
+corrgram(as.matrix(data_group7), order = "OLO", abs = FALSE,
+         cor.method = "pearson", text.panel = panel.txt,
+         main = "Correlation of group 7" )
+```
+
+## (b) Please fit a linear regression model to explain the ”actual sales price” (V104) in terms of the of the other variables excluding the variable ”actual construction costs” (V105). Explain the output provided by the summary function
+
+First, we remove variable "START YEAR", "START QUARTER", "COMPLETION YEAR", "COMPLETION QUARTER" and "V105" (Actual construction costs), and then split the Residen data into training set (70%) and test set (30%).
+
+```{r}
+# Set seed for reproducible results
+set.seed(123123)
+# Remove the first 4 columns and V105
+dat <- Residen[,-c(1:4, 109)]
+# Sample the dataset. Returns a list of row indices. 70:30 split.
+row.number <- sample(1:nrow(dat), 0.7*nrow(dat))
+# create the train and test datasets.
+train <- dat[row.number,]
+test <- dat[-row.number,]
+# show dimensions of the train and test sets.
+dim(train)
+dim(test)
+```
+
+Now, we have 2 new datasets, "train" data with 260 observations and "test" with 112 observations.
+
+Then, we train the linear regression model with response variable "V104" using remaining variables:
+
+```{r}
+# Train the default model
+model1 <- lm(formula = V104 ~ ., data = train)
+# Model summary:
+summary(model1)
+# Calculate Test MSE for test dataset
+pred_model1 <- predict(model1, newdata = test)
+MSE1 <- mean((pred_model1 - test$V104)^2)
+cat(paste("The MSE for test dataset is ", round(MSE1,2)))
+```
+
+From the model summary, we can inform that:
+- The model uses 66 variables form V1 to V66 to train the model, while the remaining 37 variables from V67 to V103 coefficients are not defined dues to the perfect multicollinearity or singularities phenomenon.
+- The three variables "V7", "V8", "V3" are highly significant with p-value < 0.001, then, variables "V2" are significant with the p-value in the range (0.001,0.01), then the variables "V1" and "V5" are marginally significant with p-value in the range (0.01,0.05). The remaining variable is not significant with p-value in the range (0.1,1).
+- The Adjusted R-squared value is 0.9825, which is close to 1, indicates that the training data is fitting the model well.
+The test MSE of this model is 106908.39
+
+## (c) backwards selection and stepwise selection
+
+### Backward selection
+
+To perform backward selection, we utilized the stepAIC() function in R with the direction set to "backward" and the linear model (model 1) mentioned above. We perform using two methods: hold-out and Cross Validation with k = 10.
+
+#### Holdout backward selection
+
+```{r results='hide'}
+# Backward selection
+start_time_backward <- Sys.time()
+model_backward <- stepAIC(model1, direction="backward")
+end_time_backward <- Sys.time()
+```
+
+```{r}
+# Backward model summary
+summary(model_backward)
+# Computational time:
+time_backward <- end_time_backward - start_time_backward
+print(paste("computational time for stepwise selection is ", time_backward, " s"))
+# Calculate Holdout MSE for test dataset
+pred_model_backward <- predict(model_backward, newdata = test)
+MSE_backward <- mean((pred_model_backward - test$V104)^2)
+cat(paste("The test MSE for backward model using test dataset is ", round(MSE_backward,2)))
+```
+
+The hold-out backward stepwise model using 23 variables for fitting model, the computational time is around 10.2598011493683 seconds, and test MSE is 23684.34
+
+#### Cross Validation backward selection with k = 10:
+
+```{r results='hide'}
+set.seed(123123)
+k <- 10
+folds <- sample(1:k, size = nrow(dat), replace = TRUE)
+MSE_cv_backward = rep(NA, 10)
+for(i in 1:k){
+  model_i <- lm(V104 ~.,data = dat[folds != i,])
+  model_backward_cv <- stepAIC(model_i,direction = "backward")
+  pred_cv_backward <- predict(model_backward_cv,dat[folds == i,])
+  MSE_cv_backward[i] = mean((pred_cv_backward - dat$V104[folds == i])^2)
+}
+```
+
+We calculate the mean of test MSE of 10-fold cross validation backward selection model
+
+```{r}
+# calculate the mean CV MSE.
+MSE_cv_backward
+MSE_cv_backward_mean <- mean(MSE_cv_backward)
+
+cat(paste("The 10-fold CV MSE for backward model using test dataset is ", round(MSE_cv_backward_mean,2)))
+```
+
+Now we perform backward selection with the least MSE:
+
+```{r results='hide'}
+# find fit with least MSE
+best <- which.min(MSE_cv_backward)
+best_model1 <- lm(V104 ~., data = dat[folds != best,])
+best_model_backward <- stepAIC(best_model1,direction = "backward")
+```
+
+```{r}
+MSE_cv_backward_best <- MSE_cv_backward[best]
+summary(best_model_backward)
+cat(paste("The cross-validation MSE backward model using test dataset is ", round(MSE_cv_backward_best,2)))
+```
+
+The cross-validation backward selection best model using 15 variables with test MSE is approximately 11465.69
+
+### Stepwise selection
+
+To perform stepwise selection, we utilized the stepAIC() function in R with the direction set to "both" and the linear model 0 (starting with only intercept and no variables included). We perform using two methods: hold-out and Cross Validation with k = 10.
+
+#### Holdout stepwise selection
+
+```{r results='hide'}
+start_time_step <- Sys.time()
+model0 <- lm(V104 ~ 1, data = train)
+model_step <- stepAIC(model0, direction = "both", scope = list(upper = model1, lower = model0))
+end_time_step <- Sys.time()
+```
+
+```{r}
+# Summary model
+summary(model_step)
+# Computational time:
+time_step <- end_time_step - start_time_step
+print(paste("computational time for stepwise selection is ", time_step, " s"))
+# Calculate Holdout MSE for stepwise model:
+pred_step <- predict(model_step, newdata = test)
+MSE_step <- mean((pred_step - test$V104)^2)
+cat(paste("The Holdout MSE for stepwise model using test dataset is ", round(MSE_step,2)))
+```
+
+The stepwise selection model utilized hold-out method used 14 variables to fit the train dataset, and the computational time about 3.8782 seconds. Test MSE of the model is 18744.51
+
+#### Cross-validaiton stepwise selection
+
+```{r results='hide'}
+MSE_cv_step = rep(NA, 10)
+for(i in 1:k){
+  model_0_i <- lm(V104~1, data = dat[folds!=i,])
+  model_step_cv <- stepAIC(model_0_i, direction = "both",
+                        scope = list(upper = model1, lower = model_0_i))
+  pred_step_cv <- predict(model_step_cv, newdata = dat[folds == i,])
+  MSE_cv_step[i] <- mean((pred_step_cv - dat$V104[folds == i])^2)
+}
+
+```
+
+We calculate the mean of test MSE of 10-fold cross validation backward selection model
+
+```{r}
+# calculate the mean CV MSE.
+MSE_cv_step
+MSE_cv_step_mean <- mean(MSE_cv_step)
+
+cat(paste("The 10-fold CV MSE for stepwise model using test dataset is ", round(MSE_cv_step_mean,2)))
+```
+
+Now we perform stepwise selection with the least MSE:
+
+```{r results='hide'}
+# find fit with least MSE
+best <- which.min(MSE_cv_step)
+best_model0 <- lm(V104 ~1, data = dat[folds != best,])
+best_model_step <- stepAIC(best_model0, direction = "both",
+                             scope = list(upper = model1,
+                                          lower = best_model0))
+```
+
+```{r}
+MSE_cv_step_best <- MSE_cv_step[best]
+summary(best_model_step)
+cat(paste("The cross-validation MSE for stepwise model using
+          test dataset is ", round(MSE_cv_step_best,2)))
+```
+number of variables = 13, Test MSE = 10387.90
+
+The cross-validation backward selection best model using 13 variables with test MSE is approximately 10387.90
+
+#### Comparision between backward and stepwise selection model:
+
+```{r}
+# Create a table for comparision between backward and stepwise models
+model.name <- c("Backward", "Best Backward (CV)",
+                "Stepwise", "Best Stepwise (CV)")
+variables.used <- c(23, 15, 14, 13)
+computational.time <- c(as.numeric(time_backward), NA,
+                        as.numeric(time_step), NA)
+test.MSE <- c(MSE_backward, MSE_cv_backward_best,
+                     MSE_step, MSE_cv_step_best)
+comparision_table <- data.frame(model.name, variables.used,
+                                computational.time, test.MSE)
+
+new_names <- c("Model", "Number of Variables Used",
+               "Computational Time", "MSE")
+colnames(comparision_table) <- new_names
+comparision_table <- as_tibble(comparision_table)
+comparision_table
+```
+
+Comments about Backward and Stepwises Selection models:
+- The number of predictors used in Backward Selection is more than Stepwise Selection due to the algorithms and search strategies differences between these two methods even though both of them are subset selection method.
+- Time proceeding of Backward model is 10.25s - which is much slower compared to 3.95s of Stepwise model.
+- Holdout test MSE is larger than cross-validation test MSE for both 'backward' and 'stepwise' methods. It is because, for the cross-valilation MSE, we choose the smallest CV MSE among 10 CV test sets, which means the backward/stepwise cross-validation models perform bestest in the best split of data. However, it is noticed that the mean of 10-folds CV MSE for backward and stepwise are 36354.25 and 35640.82 respectively. As we know that the minimim cross-validation test MSE can be highly variable and dependent on the particular split of the data into the training and validation sets. If we choose the model based on the minimum MSE, the result may be overfitting and do not generalize well to new data. So, using mean of cross-validatoin test MSE is a more reliable and robust way to select a model with good performance on unseen data.
+
+## (d) Ridge regression and LASSO regression.
+
+First we prepare the predictor matrix X and response vector y with the train and test dataset in part (b)
+
+```{r}
+#Prepare data set for Ridge and Lasso Regression
+# transform predictor datasets to matrixes and subseted to exclude the intercept
+X_train <- model.matrix(V104~., train)[,-1]
+X_test <- model.matrix(V104~., test)[,-1]
+# Transform responsed dataset to vectors
+y_train <- train$V104
+y_test <- test$V104
+```
+
+### Ridge regression
+We perform CV Ridge regression to choose the best lambda value
+```{r}
+# Choose lambda using cross validation for ridge model
+
+cv_rig = cv.glmnet(X_train, y_train, alpha = 0)
+bestlambda_rig = cv_rig$lambda.min
+cat(paste("best lambda for ridge model is: ", bestlambda_rig))
+```
+
+The best lambda for ridge model is approximately 123.4705
+
+#### Holdout Ridge regression:
+
+Now we train the Ridge model with the best lambda = 123.4705
+
+```{r}
+#Train Ridge model with best lamda
+start_time_rid <- Sys.time()
+model_ridge = glmnet(X_train, y_train, alpha=0, lambda = bestlambda_rig)
+end_time_rid <- Sys.time()
+model_ridge
+```
+
+```{r}
+#coefficient estimates
+ridge_coefs = predict(model_ridge ,type = "coefficients",
+                     s = bestlambda_rig)[1:104,]
+ridge_coefs
+```
+
+```{r}
+# Computational time:
+time_rid <- end_time_rid - start_time_rid
+print(paste("computational time for Ridge Regression is ", time_rid, " s"))
+```
+
+```{r}
+#Test MSE (Hold-out MSE)
+pred_rid = predict(model_ridge, s = bestlambda_rig, newx = X_test)
+MSE_rid <- mean((y_test - pred_rid)^2)
+cat(paste("Test MSE for ridge model using hold-out method is ", MSE_rid))
+```
+
+The Ridge model using all 103 variables to fit the model, the test MSE is 41264.09, and processing time is 0.0231 seconds.
+
+#### 10-fold Cross Validation for Ridge regression:
+
+```{r}
+MSE_cv_rid <- rep(NA,10)
+
+for(i in 1:k){
+
+X.train <- model.matrix(V104~., dat[folds!=i,])[,-1]
+X.test <- model.matrix(V104~., dat[folds==i,])[,-1]
+y.train <- dat$V104[folds!=i]
+y.test <- dat$V104[folds==i]
+model.rid = glmnet(X.train, y.train, alpha=0, lambda = bestlambda_rig)
+pred.rid = predict(model.rid, s = bestlambda_rig, newx = X.test)
+MSE_cv_rid[i] <- mean( (y.test - pred.rid)^2)
+}
+```
+
+We calculate the mean of test MSE of 10-fold cross validation Ridge model:
+
+```{r}
+# calculate the mean CV MSE.
+MSE_cv_rid
+MSE_cv_rid_mean <- mean(MSE_cv_rid)
+
+cat(paste("The 10-fold CV MSE for Ridge model using test dataset is ", round(MSE_cv_rid_mean,2)))
+```
+
+The 10-fold CV test MSE for Ridge model is around 69814.63.
+
+Now we fit the model with the splitting resulting the least MSE:
+
+```{r}
+#Best Ridge Regression model with least MSE
+best <- which.min(MSE_cv_rid)
+MSE_rid_best <- MSE_cv_rid[best]
+X.train.r1 <- model.matrix(V104~., dat[folds!=best,])[,-1]
+y.train.r1 <- dat$V104[folds!=best]
+best_model_rid = glmnet(X.train.r1, y.train.r1, alpha=0,
+                        lambda = bestlambda_rig)
+best_model_rid
+cat(paste("Cross-validation MSE for best Ridge model is: ", MSE_rid_best))
+```
+
+```{r}
+#coefficient estimates
+ridge_coef_best = predict(best_model_rid ,type = "coefficients",
+                       s= bestlambda_rig) [1:104,]
+ridge_coef_best
+```
+
+Ridge Regression model using all 103 predictors to predict V104 and its best cross-validation MSE is 20806.13.
+By looking at the coefficients, we can see that a lot of coefficients were shrunk towards 0.
+
+### Lasso regression
+
+#### Holdout LASSO model:
+
+We perform CV LASSO regression to choose the best lambda value
+
+```{r}
+set.seed(123123)
+#Choose lambda using cross validation
+cv_lass = cv.glmnet(X_train, y_train, alpha = 1)
+bestlambda_lass = cv_lass$lambda.min
+cat(paste("Best lambda for LASSO model is: ", bestlambda_lass))
+```
+
+The best lambda for LASSO model is 2.9194
+
+Now we fit LASSO model with the best lambda
+```{r}
+#Train Lasso model with best lamda
+start_time_lass <- Sys.time()
+model_lasso = glmnet(X_train, y_train, alpha=1, lambda = bestlambda_lass)
+end_time_lass <- Sys.time()
+model_lasso
+```
+Then, we examine the coefficients estimated, computational time and test MSE:
+
+```{r}
+#coefficient estimates
+lasso_coef = predict(model_lasso ,type = "coefficients",
+                     s= bestlambda_lass) [1:104,]
+#Selected features
+lasso_coef[lasso_coef!=0]
+```
+```{r}
+# Computational time:
+time_lass <- end_time_lass - start_time_lass
+print(paste("computational time for LASSO Regression is ", time_lass, " s"))
+```
+
+```{r}
+#Test MSE
+pred_lass = predict(model_lasso, s = bestlambda_lass, newx = X_test)
+MSE_lass <- mean((y_test - pred_lass)^2)
+cat(paste("Holdout MSE for LASSO model is ", MSE_lass))
+```
+
+The hold-out LASSO model using 24 variables to fit the model, the test MSE is 14777.92, and processing time is 0.0230 seconds.
+
+#### 10-fold Cross Validation for LASSO regression:
+
+```{r}
+set.seed(123123)
+MSE_cv_lass <- rep(NA,10)
+for(i in 1:k){
+  X.train <- model.matrix(V104~., dat[folds!=i,])[,-1]
+  X.test <- model.matrix(V104~., dat[folds==i,])[,-1]
+  y.train <- dat$V104[folds!=i]
+  y.test <- dat$V104[folds==i]
+  model.lass = glmnet(X.train, y.train, alpha=1, lambda = bestlambda_lass)
+  pred.lass = predict(model.lass, s = bestlambda_lass, newx = X.test)
+  MSE_cv_lass[i] <- mean( (y.test - pred.lass)^2)
+}
+```
+
+We calculate the mean of test MSE of 10-fold cross validation Ridge model:
+
+```{r}
+# calculate the mean CV MSE.
+MSE_cv_lass
+MSE_cv_lass_mean <- mean(MSE_cv_lass)
+
+cat(paste("The 10-fold CV MSE for Ridge model using test dataset is ", round(MSE_cv_lass_mean,2)))
+```
+
+The 10-fold CV test MSE for LASSO model is around 33567.56
+
+Now we fit the model with the splitting resulting the least MSE:
+
+```{r}
+best <- which.min(MSE_cv_lass)
+MSE_lass_best <- MSE_cv_lass[best]
+#Best Lasso Regression model with k = 8
+X.train.l1 <- model.matrix(V104~., dat[folds!=best,])[,-1]
+y.train.l1 <- dat$V104[folds!=best]
+best_model_lasso = glmnet(X.train.l1, y.train.l1, alpha=1,
+                          lambda = bestlambda_lass)
+best_model_lasso
+cat(paste("Cross-validation MSE for LASSO model is: ", MSE_lass_best))
+```
+
+```{r}
+#coefficient estimates
+lasso_coefs_best = predict(best_model_lasso ,type = "coefficients",
+                        s= bestlambda_lass)[1:104,]
+#Selected features
+lasso_coefs_best[lasso_coefs_best!=0]
+```
+The CV LASSO Regression model using 25 predictors to predict V104 and its cross-validation MSE is 13733.55.
+
+### compare between Ridge and Lasso and other subset selection methods from (c)
+
+#### Comparation between models using holdout method:
+
+```{r}
+# table of holdout methods:
+model.name <- c("Backward", "Stepwise", "Ridge", "Lasso")
+variables.used <- c(23, 14, 103, 24)
+computational.time <- c(as.numeric(time_backward),as.numeric(time_step),
+                        as.numeric(time_rid),as.numeric(time_lass))
+test.MSE <- c(MSE_backward, MSE_step, MSE_rid, MSE_lass)
+holdout_table <- data.frame(model.name, variables.used,
+                                computational.time, test.MSE)
+
+new_names <- c("Model", "Number of Variables Used",
+               "Computational Time", "Holdout MSE")
+colnames(holdout_table) <- new_names
+holdout_table <- as_tibble(holdout_table)
+holdout_table
+```
+
+#### Comparation between models using Cross-validation method:
+```{r}
+# table of CV methods:
+model.name <- c("CV Backward", "CV Stepwise", "CV Ridge", "CV Lasso")
+variables.used <- c(15, 13, 103, 25)
+CV.MSE_mean <- c(MSE_cv_backward_mean, MSE_cv_step_mean,
+              MSE_cv_rid_mean, MSE_cv_lass_mean)
+
+CV.MSE_min <- c(MSE_cv_backward_best, MSE_cv_step_best,
+              MSE_rid_best, MSE_lass_best)
+
+CV_table <- data.frame(model.name, variables.used,CV.MSE_mean, CV.MSE_min)
+
+new_names <- c("Model", "Number of Variables Used", "CV Mean MSE", "CV Min MSE")
+colnames(CV_table) <- new_names
+CV_table <- as_tibble(CV_table)
+CV_table
+```
+
+Some comments after examining the "Holdout table" and "Cross Validation table":
+- While Backward selection, stepwise selection remove some irrelevant predictors from training process with different strategies, LASSO forces some irrelevant predictors' coefficients to 0, and Ridge model only shrunk coefficients close to 0 (not 0), and keep all 103 predictors for training the model.
+- About computational time, Ridge (0.0241s) and LASSO (0.0194s) outperform Stepwise (3.8782s) and Backward selection (10.3526s) - which is significantly slower.
+- In terms of mean squared error(for all Hold-out, cross-validation mean and min test MSE), Ridge has highest test MSE compared to LASSO, forward selection and stepwise selection.
+- In terms of the hold-out method, LASSO model had the best performance with smallest test MSE (14777.92)
+- In terms of the cross-validation method, LASSO model also perform the best with smallsest mean test MSE (33567.56	). If we examine the best splitting of cross-validation (according to min CV MSE), model Stepwise outperformed the remaining models with MSE value is 10387.90.
+- To choose the model which have good fit on test data, we examine the mean CV test MSE, and see that LASSO is the best fit for data, then, Stepwise, Backward selection. Ridge is not a good fit for Residen data. To choose the model which has highest interpretability, we should consider Stepwise, then Backward, and LASSO, while Ridge is not a good choice for interpretablity. To choose the model which save the computational time, LASSO and Ridge outperform stepwise and backward selection.
+- In this case, we should choose LASSO model because of it's fastest training speed and with lowest mean CV MSE and good interpretability.
+
+
+# Question 2
+
+First we explore the 'parkinsons' dataset dimensino and number of missing values:
+
+```{r}
+parkinsons <- read.csv("parkinsons.csv", header = TRUE)
+# remove the index column
+parkinsons <- subset(parkinsons, select = -X)
+dim(parkinsons)
+sum(is.na(parkinsons))
+```
+
+The Parkinsons dataset comprises 42 observations and 98 variables, and there are no missing values within the dataset.
+
+## (a) Confirm that a linear model can fit the training data exactly. Why is this model not going to be useful?
+
+```{r}
+# Set seed for reproducible results
+set.seed(321321)
+# Sample the dataset. Returns a list of row indices. 70:30 split.
+row.number2 <- sample(42, 30)
+# create the train and test datasets.
+train2 <- parkinsons[row.number2,]
+test2 <- parkinsons[-row.number2,]
+# show dimensions of the train and test sets.
+dim(train2)
+dim(test2)
+
+```
+
+```{r}
+model_lm <- lm(UPDRS~., train2)
+summary(model_lm)
+```
+As we can see that the number of observation is 42, which is less than number of predictors variables, which is 97. In addition, by looking at the model summary, we can see that all 30 Residuals have value of 0 and the R-squared value is 1. Based on this information, it is confirmed that a linear model can fit the training data exactly.
+
+However, this model is not going to useful because the multipication of tranpose of X and X is singular, so its inverse doesn't exist, so that the regression coefficients are not reliable.
+
+## (b) fit LASSO model to the training data, using leave-one- out cross-validation to find the tuning parameter λ. What is the optimal value of λ and what is the resulting test error?
+
+
+```{r}
+# transform predictor datasets to matrixes and subseted to exclude the intercept
+X_train2 <- model.matrix(UPDRS~., train2)[,-1]
+X_test2 <- model.matrix(UPDRS~., test2)[,-1]
+# Transform responsed dataset to vectors
+y_train2 <- train2$UPDRS
+y_test2 <- test2$UPDRS
+#Standardize training and test predictors:
+X_train2 <- scale(X_train2)
+X_test2 <- scale(X_test2)
+#set grid
+grid <- 10^seq(3, -1, length = 100)
+```
+
+Perform LASSO using leave-one-out cross-validation to find the tuning parameter λ
+
+First, we find the best lambda value for LASSO model:
+
+```{r}
+#Using LOOCV to find best lambda for Lasso
+set.seed(321321)
+cv_lass_2 <-cv.glmnet(X_train2, y_train2, nfolds = nrow(train2), alpha = 1, lambda = grid, thresh = 1e-10)
+best.lambda2 = cv_lass_2$lambda.min
+best.lambda2
+```
+
+As we can see, the best value of lambda is 1.3530
+
+Then, we plot the mean squared error when lambda value change:
+```{r}
+plot(cv_lass_2)
+```
+
+```{r}
+lasso_model2 = glmnet(X_train2, y_train2, alpha=1, lambda = best.lambda2)
+pred_lass2 <- predict(lasso_model2, newx=X_test2)
+MSE_lass2 <- mean((pred_lass2 - y_test2)^2)
+cat(paste("The test error MSE of the Lasso model is: ", MSE_lass2))
+```
+
+The test MSE for LASSO model is approximately 10.1412.
+
+## (c) State your final model for the UPDRS. How many features have been selected? What conclusions can you draw?
+
+```{r}
+#coefficient estimates
+lasso_coef2 = predict (lasso_model2 ,type = "coefficients") [1:98,]
+#Selected features (non-zero coefficients)
+lasso_coef2[lasso_coef2!=0]
+```
+
+Based on the Lasso model results provided, the final model can be expressed as:
+
+UPDRS = 26.1187222 + 0.2005469 x X83 + 9.0911210 x X97
+
+Where UPDRS is the dependent variable and X83 and X97 are the independent variables. The intercept of the model is 26.1187222. The coefficient of X83 is 0.2005469, indicating that for a one-unit increase in X83, y will increase by 0.2005469 units, all else being equal. Similarly, the coefficient of X97 is 9.0911210, indicating that for a one-unit increase in X97, y will increase by 9.0911210 units, all else being equal.
+
+As we can see that only 2 features X83 and X97 among 97 features have been selected. the value of each features indicates the strength and direction of the relationship between each predictor and the outcome UPDRS. To be more specific, X97 is an significant feature for fitting this LASSO model.
+
+## (d) Repeat your analysis with a different random split into training and test sets. Have the same features been selected in your final model?
+
+```{r}
+# Set seed for reproducible results
+set.seed(2023)
+# Sample the dataset. Returns a list of row indices. 70:30 split.
+row.number2d <- sample(42, 30)
+# create the train and test datasets.
+train2d <- parkinsons[row.number2d,]
+test2d <- parkinsons[-row.number2d,]
+# show dimensions of the train and test sets.
+dim(train2d)
+dim(test2d)
+
+# transform predictor datasets to matrixes and subseted to exclude the intercept
+X_train2d <- model.matrix(UPDRS~., train2d)[,-1]
+X_test2d <- model.matrix(UPDRS~., test2d)[,-1]
+# Transform responsed dataset to vectors
+y_train2d <- train2d$UPDRS
+y_test2d <- test2d$UPDRS
+#Standardize training and test predictors:
+X_train2d <- scale(X_train2d)
+X_test2d <- scale(X_test2d)
+#set grid
+grid <- 10^seq(3, -1, length = 100)
+
+#Using LOOCV to find best lambda for Lasso
+set.seed(2023)
+cv_lass_2d <-cv.glmnet(X_train2d, y_train2d, nfolds = nrow(train2d), alpha = 1, lambda = grid, thresh = 1e-10)
+best.lambda2d = cv_lass_2d$lambda.min
+best.lambda2d
+
+plot(cv_lass_2d)
+
+lasso_model2d = glmnet(X_train2d, y_train2d, alpha=1, lambda = best.lambda2d)
+pred_lass2d <- predict(lasso_model2d, newx=X_test2d)
+MSE_lass2d <- mean((pred_lass2d - y_test2d)^2)
+cat(paste("The test error MSE of the Lasso model is: ", MSE_lass2d))
+
+#coefficient estimates
+lasso_coef2d = predict(lasso_model2d ,type = "coefficients") [1:98,]
+#Selected features (non-zero coefficients)
+
+lasso_coef2d[lasso_coef2d!=0]
+
+```
+
+Conclusion: As we can see that we got different results when using a different random split into training and test sets. The LASSO model in question (2d) now has larger test MSE which is 15.62 compared to the model (2c) which is 10.14. In addition, the feature selection result also a bit different when only X97 is selected. It means that X97 is always an informative feature for fitting the model.
+
+# Question 3: 
+
+Explore the insurance dataset dimension and na value:
+```{r}
+# Set seed for reproducible results
+set.seed(12345)
+data3 <- read.csv("insurance.csv", header = TRUE, stringsAsFactors = TRUE)
+dim(data3)
+summary(data3)
+sum(is.na(data3))
+```
+The insurance dataset consists of 1338 observations and 7 variables. The variables include 'age', 'bmi', 'children', and 'charges', which are numeric, and 'sex', 'smoker', and 'region', which are categorical. The dataset does not contain any missing values.
+
+We discover the correlation between the variables:
+
+```{r}
+library(GGally)
+library(ggplot2)
+# show the correlation between variable, color by 'smoker'
+ggpairs(data3, mapping = aes(color = smoker))
+
+```
+
+Upon inspecting the plot, it appears that there is a correlation between 'charges', 'age', and 'bmi'. Specifically, 'charges' and 'age' exhibit a strong correlation, particularly among non-smokers. Additionally, among smokers, there is a significant correlation between 'charges' and 'bmi'.
+
+Now, we use hold-out method to divide the dataset into train and test set. Then, we convert the predictors into matrix X and response 'charges' into vector y.
+
+```{r}
+set.seed(123)
+# Sample the dataset. Returns a list of row indices. 70:30 split.
+row.number3 <- sample(1:nrow(data3), 0.7*nrow(data3))
+# create the train and test datasets.
+train3 <-data3[row.number3,]
+test3 <- data3[-row.number3,]
+# show dimensions of the train and test sets.
+dim(train3)
+dim(test3)
+# transform predictor datasets to matrixes and subseted to exclude the intercept
+X <- model.matrix(charges~.,data3)[,-1]
+X_train3 <- model.matrix(charges~., train3)[,-1] 
+X_test3 <- model.matrix(charges~., test3)[,-1] 
+# Transform responsed dataset to vectors
+y <- data3$charges
+y_train3 <- train3$charges
+y_test3 <- test3$charges
+```
+
+There are 936 observations in the training dataset and 402 observations in the test set.
+
+## (a) Elasticnet model:
+
+### Optimize values for alpha and lambda
+
+Train an ElasticNet model to predict insurance 'charges' using 10-fold cross-validation to optimize values for alpha and lambda:
+
+```{r}
+# Create training control for cross-validation
+
+grid <- expand.grid(.alpha=seq(0, 1, by=0.1),
+                    .lambda=10^seq(5, -2, length=100))
+ctrl <- trainControl(method = "cv", number = 10)
+
+enet.train <- train(x = X_train3, 
+                    y = y_train3,
+                    method = "glmnet",
+                    trControl = ctrl,
+                    tuneGrid = grid)
+enet.train$bestTune
+
+```
+
+The best tune results with alpha = 0.1 and lambda = 55.9081 were selected, which indicates that alpha = 0.1, which means model has a good balance between sparsity (L1 -Lasso) and smoothness (L2 - Ridge). This suggests that the model is not too heavily biased towards either Lasso or Ridge regularization, which can lead to robust and stable model performance. 
+In addition, lambda = 55.9081 is an optimal level of regularization, which prevents overfitting effectively without sarcrificing too much on model performance. 
+
+### Train model using hold-out method with optimal alpha and lambda above
+
+Now, we train the model with optimal alpha = 0.1 and lambda = 55.9081 for seed(12345)
+
+### train elasticnet model with 10-fold cross-validation:
+
+Now we train the Elasticnet model using the best alpha found previously and with a vector of lambda values:
+```{r}
+enet.train$bestTune$alpha
+```
+
+```{r}
+# define a vector of lambda values to try.
+.lambda <- 10^seq(5, -2, length = 100)
+# ElasticNet use CV on the training set with optimal alpha. 10-folds.
+enet.cv <- cv.glmnet(X_train3,
+                     y_train3,
+                     alpha=enet.train$bestTune$alpha,
+                     lambda = .lambda,
+                     nfolds=10,
+                     thresh=1e-12)
+# plot CV results.
+plot(enet.cv, 
+     main = "10-fold Cross-Validation ElasticNet Model",
+     sub = "Giang Bui - 37306207")
+
+```
+We can see that the plot is used to visualize the effect of regularization on the model's performance. As lambda increases, the model becomes more constrained and simpler (indicates by the number of predictors on top of the plot). If lambda is set too low, the model may become overfit the training data, result in extremely low train MSE (as the plot) but will result in much higher test error later. If lambda is set too high, the model may be overly simple which lead to underfitting (both train and test error will be higher)
+From the plot, the optimal value of lambda belong to model using 8 or 4 predictors, when the model performance is relatively stable and not overly sensitive to changes in lambda. 
+
+```{r}
+# optimal lambda value 
+cat(paste("optimal lambda value is: ", enet.cv$lambda.min, ". And,"))
+# value of lambda that gives the most regularised model such that
+# the CV error is within one standard error of the minimum.
+cat(paste("value of lambda that gives the most regularised model is: ", enet.cv$lambda.1se))
+```
+
+The optimal lambda value is 34.3046928631492 (lambda.min) and the value of lambda that gives the most regularised model is 1450.82877849594 (lambda.1se)
+
+### Using lambda.1se
+
+```{r}
+# show coefficients for this model.
+coef(enet.cv, s="lambda.1se")
+# make predictions using the less complex model "lambda.1se"
+enet.y.cv_lambda.1se <- predict(enet.cv,
+                     newx = X_test3,
+                     s ="lambda.1se")
+# calculate test MSE (compare with OLS, Ridge, LASSO)   MSE = 10214.73
+MSE_cv_enet_lambda.1se <- mean((enet.y.cv_lambda.1se - y_test3)^2)
+cat(paste("The test error MSE of the Elastic model using lambda.1se is: ", MSE_cv_enet_lambda.1se))
+```
+The elasticnet model using lambda.1se using 4 over 8 predictors "Age", "bmi", children, "smokeryes" and has test MSE = 40194584.7553441
+
+### Using lambda.min
+
+```{r}
+# show coefficients for this model.
+coef(enet.cv, s="lambda.min")
+
+# make predictions using the less complex model "lambda.1se"
+enet.y.cv_lambda.min <- predict(enet.cv,
+                     newx = X_test3,
+                     s ="lambda.min")
+# calculate test MSE (compare with OLS, Ridge, LASSO)   MSE = 10214.73
+MSE_cv_enet_lambda.min <- mean((enet.y.cv_lambda.min - y_test3)^2)
+cat(paste("The test error MSE of the Elastic model using lambda.min is: ", MSE_cv_enet_lambda.min))
+```
+The elasticnet model using lambda.min using 8 predictors 'age', 'sexmale','bmi', 'children', 'smokeryes', 'regionnorthwest', 'regionsoutheast', 'regionsouthwest' and has test MSE = 38150771.4574484
+
+As we can see the model using lambda.min takes into account 8 predictors gives us the smallest MSE (38150771.4574484) as we would expect, whereas the less complex model which uses only 4 predictors, results in a slightly larger MSE (40194584.7553441)
+
+## (b) Ridge model:
+
+### Find optimal lambda
+
+### Train Ridge with 10-fold cross-validation:
+```{r}
+grid3b = 10^seq(5, -2, length = 100)
+# Ridge use CV on the training set with k = 10-folds.
+rid3.cv <- cv.glmnet(X_train3,
+                     y_train3,
+                     alpha=0,
+                     lambda = grid3b,
+                     nfolds=10,
+                     thresh=1e-12)
+# plot CV results.
+plot(rid3.cv,
+     main = "10-fold Cross-Validation Ridge Model",
+     sub = "Giang Bui - 37306207")
+```
+The plot shows a curve with optimal value of lambda that results in the best Ridge model performance. Note that the Ridge model always uses all 8 predictors for fitting the data.
+
+```{r}
+# optimal lambda value 
+cat(paste("optimal lambda value is: ", rid3.cv$lambda.min, ". And,"))
+# value of lambda that gives the most regularised model such that
+# the CV error is within one standard error of the minimum.
+cat(paste("value of lambda that gives the most regularised model is: ", rid3.cv$lambda.1se))
+```
+
+optimal lambda value is:  65.7933224657568 . And,value of lambda that gives the most regularised model is:  2009.23300256505
+
+### Using Lambda.1se
+
+```{r}
+# show coefficients for this model.
+coef(rid3.cv, s="lambda.1se")
+# make predictions using the less complex model "lambda.1se"
+rid3.cv.1se.y <- predict(rid3.cv,
+                     newx = X_test3,
+                     s = "lambda.1se")
+# calculate test MSE 
+MSE_rid3.cv.1se  <- mean((rid3.cv.1se.y  - y_test3)^2)
+cat(paste("The test error MSE of the Ridge model using lambda.1se is: ", MSE_rid3.cv.1se))
+```
+### Using lambda.min
+
+```{r}
+# show coefficients for this model.
+coef(rid3.cv, s="lambda.min")
+# make predictions using the less complex model "lambda.1se"
+rid3.cv.min.y <- predict(rid3.cv,
+                     newx = X_test3,
+                     s = "lambda.min")
+# calculate test MSE 
+MSE_rid3.cv.min <- mean((rid3.cv.min.y  - y_test3)^2)
+cat(paste("The test error MSE of the Ridge using lambda.1se is: ", MSE_rid3.cv.min))
+```
+As we can see both Ridge models use lambda.min and lambda.1se use absolutely 8 predictors. Ridge model using lambda.min has test MSE = 38154783.7812635 which is smaller than Ridge model using lambda.1se with test MSE = 40880748.7300301
+
+## (c) Lasso model:
+
+### Finding optimal lambda:
+
+```{r}
+# Create training control for cross-validation
+
+ctrl <- trainControl(method = "cv", number = 10)
+
+lasso3.cv <- cv.glmnet(X_train3,
+                    y_train3,
+                    alpha=1,
+                    lambda=grid3b,
+                    nfolds=10,
+                    thresh=1e-12)
+# plot CV results.
+plot(lasso3.cv,
+     main = "10-fold Cross-Validation LASSO Model",
+     sub = "Giang Bui - 37306207")
+
+# optimal lambda value 
+cat(paste("optimal lambda value is: ", lasso3.cv$lambda.min, ". And,"))
+# value of lambda that gives the most regularised model such that
+# the CV error is within one standard error of the minimum.
+cat(paste("value of lambda that gives the most regularised model is: ", lasso3.cv$lambda.1se))
+```
+
+optimal lambda value is:  205.651230834865 And,value of lambda that gives the most regularised model is:  1047.61575278967 for seed(12345)
+
+### Train LASSO model with lambda.1se
+```{r}
+# show coefficients for this model.
+coef(lasso3.cv, s="lambda.1se")
+# make predictions using the less complex model "lambda.1se"
+lasso3.cv.1se.y <- predict(lasso3.cv,
+                     newx = X_test3,
+                     s ="lambda.1se")
+# calculate test MSE 
+MSE_lasso3.cv.1se  <- mean((lasso3.cv.1se.y  - y_test3)^2)
+cat(paste("The test error MSE of the LASSO model using lambda.1se is: ", MSE_lasso3.cv.1se))
+```
+The LASSO model using lambda.1se only uses 3 predictors "age", "bmi" and "smokeryes", which has MSE =  42412714.5513528
+
+### Train LASSO model with lambda.min
+
+```{r}
+# show coefficients for this model.
+coef(lasso3.cv, s="lambda.min")
+# make predictions using the less complex model "lambda.1se"
+lasso3.cv.min.y <- predict(lasso3.cv,
+                     newx = X_test3,
+                     s ="lambda.min")
+# calculate test MSE 
+MSE_lasso3.cv.min  <- mean((lasso3.cv.min.y  - y_test3)^2)
+cat(paste("The test error MSE of the LASSO model using lambda.1se is: ", MSE_lasso3.cv.min))
+```
+
+The LASSO model using lambda.min uses 4 predictors "age", "bmi", children" and "smokeryes", which has MSE = 38731404.3522708
+
+## Make comparision between models:
+
+```{r}
+# Create a table for making comparision between Elasticnet, Ridge and LASSO models:
+model.name3 <- c("CV Ridge (lambda.min)", "CV Ridge (lambda.1se)",
+                "CV Elasticnet (lambda.min)", "CV Elasticnet (lambda.1se)", 
+                "CV LASSO (lambda.min)", "CV LASSO (lambda.1se)")
+Alpha <- c(0, 0, 0.1, 0.1, 1, 1)
+Lambda <- c(rid3.cv$lambda.min, rid3.cv$lambda.1se, 
+            enet.cv$lambda.min, enet.cv$lambda.1se, 
+            lasso3.cv$lambda.min, lasso3.cv$lambda.1se)
+MSE3 <- c(MSE_rid3.cv.min, MSE_rid3.cv.1se,
+         MSE_cv_enet_lambda.min, MSE_cv_enet_lambda.1se,
+         MSE_lasso3.cv.min, MSE_lasso3.cv.1se)
+Predictor_number <- c(8,8,8,4,4,3)
+
+table_3 <- data.frame(model.name3, Alpha,
+                                Lambda, MSE3, Predictor_number)
+
+new_names3 <- c("Model", "Alpha", "Lambda", "Test MSE", "Predictor number")
+colnames(table_3) <- new_names3
+table3 <- as_tibble(table_3)
+table_3 
+```
+
+As we can see from the table above, model performs the best with lowest test MSE (38136923) is Elasticnet with alpha = 0.1 and using lambda.min 1.830738 with the seed(12345). Model has best interpretability is LASSO with Lambda.1se = 838.64938	with only 3 predictors involved, having CV test MSE = 40798372.
+By using 10-fold CV method, we ensure that the model is generalised well across the entire dataset to avoild overfitting, over-optimized hyperparameters, and obtain statistically meaningful results.
+Therefore, the CV LASSO using lambda.1se = 838.64938 is recommended for predicting charges using this Insurance dataset which give the test CV MSE = 40798372 and only be explained by 3 predictors "age", "mbi" and "smoker" (high interpretability).
