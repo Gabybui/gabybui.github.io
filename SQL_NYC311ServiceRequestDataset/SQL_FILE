@@ -1,0 +1,407 @@
+USE ROLE gbu43_SCHEMAROLE;
+USE SCHEMA NYC311.gbu43_MBIS623;
+
+//QUESTION 1: IMPROVE THE REQUEST COVERAGE IN FACT TABLE
+
+//examine the coverage of the FACT_SERVICE_QUALITY table on the 32M dataset:
+SELECT 
+    (SELECT count(*) FROM FACT_SERVICE_QUALITY) AS "# Fact Rows",
+    (SELECT sum("total_count") FROM FACT_SERVICE_QUALITY) AS "# Complaints Covered",
+    (SELECT count(*) FROM NYC311.SERVICE_REQUEST_32M) AS "# Total Complaints",
+    (SELECT count(*) FROM NYC311.SERVICE_REQUEST_32M
+        WHERE "Complaint_Type" NOT IN (SELECT "type" FROM COMPLAINT_TYPE_REFERENCE_26)
+        OR "Incident_Zip" NOT IN (SELECT ZIP FROM ZIP_NYC_BOROUGH)) AS "#Complaints not covered";
+-- # Fact Rows: 1,754,436; # Complaints Covered: 14,343,594 / 32,543,452 (44,08% of SR_32M)
+
+----------------------------------------||
+// COMPLAINT_TYPE and ZIP NORMALISATION ||
+----------------------------------------||
+
+//Fact Service Quality after strategy 1: sanitising Complaint Type and ZIP
+-- Create Fact Service Quality table
+CREATE OR REPLACE TABLE FACT_SERVICE_QUALITY_SANITISED_1
+(
+    "agency_id" INTEGER,
+    "ZIP" VARCHAR(5),
+    "type_id" INTEGER,
+    "year_week" INTEGER,
+    "total_count" INTEGER,
+    "average_days" NUMBER,
+    "stddev_days" NUMBER,
+    "range_days" NUMBER,
+    PRIMARY KEY ("agency_id", "ZIP", "type_id", "year_week"),
+    FOREIGN KEY ("agency_id") REFERENCES DIMENSION_AGENCY ("agency_id"),
+    FOREIGN KEY ("ZIP") REFERENCES DIMENSION_ZIP ("ZIP"),
+    FOREIGN KEY ("type_id") REFERENCES DIMENSION_COMPLAINT_TYPE ("type_id"),
+    FOREIGN KEY ("year_week") REFERENCES DIMENSION_YEAR_WEEK ("year_week")
+);
+
+-- Populate the table
+INSERT INTO FACT_SERVICE_QUALITY_SANITISED_1
+SELECT DA."agency_id", DZ.ZIP, DC."type_id", DT."year_week",
+    count(*) AS "total_count",
+    round(avg(datediff(SECOND, "Created_Date", "Closed_Date")) / (60 * 60 * 24), 2) AS "average_days",
+    round(stddev(datediff(SECOND, "Created_Date", "Closed_Date")) / (60 * 60 * 24), 2) AS "stddev days",
+    round(max(datediff(SECOND, "Created_Date", "Closed_Date")) / (60 * 60 * 23), 2) AS "range_days"
+FROM NYC311.SERVICE_REQUEST_32M SR
+JOIN DIMENSION_AGENCY DA ON SR."Agency" = DA."agency_name"
+JOIN DIMENSION_ZIP DZ ON left(trim(SR."Incident_Zip"),5) = DZ.ZIP -- sanitise ZIP
+JOIN DIMENSION_COMPLAINT_TYPE DC ON UPPER(regexp_replace(SR."Complaint_Type", '[^[:alnum:]]+', '')) =
+upper(regexp_replace(DC."type", '[^[:alnum:]]+', '')) -- sanitise Complaint_Type
+JOIN DIMENSION_YEAR_WEEK DT ON yearofweek(SR."Created_Date") * 100 + week(SR."Created_Date") = DT."year_week"
+GROUP BY DA."agency_id", DZ.ZIP, DC."type_id", DT."year_week";
+
+//examine the coverage of the FACT_SERVICE_QUALITY_SANITISED_1 table on the 32M dataset:
+SELECT 
+    (SELECT count(*) FROM FACT_SERVICE_QUALITY_SANITISED_1) AS "# Fact Rows",
+    (SELECT sum("total_count") FROM FACT_SERVICE_QUALITY_SANITISED_1) AS "# Complaints Covered",
+    (SELECT count(*) FROM NYC311.SERVICE_REQUEST_32M) AS "# Total Complaints";
+    
+-- As we can see, # Fact Rows: 2,087,992; # Complaints Covered: 18,066,594 / 32,543,452 (55.52% of SR_32M - increase 11.44%);
+
+
+----------------------------------------------------------||
+// CHECKING THE TOTAL COMPLAINTS FOR EACH COMPLAINT TYPE  ||
+----------------------------------------------------------||
+
+SELECT UPPER(regexp_replace("Complaint_Type", '[^[:alnum:]]+', '')) AS "Complaint_Type_Sanitised", 
+       COUNT("Complaint_Type_Sanitised") AS "Total_Requests" FROM NYC311.SERVICE_REQUEST_32M
+WHERE "Complaint_Type_Sanitised" NOT IN
+            (SELECT UPPER(regexp_replace("type", '[^[:alnum:]]+', '')) FROM DIMENSION_COMPLAINT_TYPE)
+GROUP BY "Complaint_Type_Sanitised"
+ORDER BY "Total_Requests" DESC
+LIMIT 23;
+
+
+-------------------------------------------||
+// INCREASE COMPLAINT TYPE REFERENCE to 40 ||
+-------------------------------------------||
+
+-- Create a new COMPLAINT_TYPE_REFERENCE table with 14 updated complaint types:
+create or replace TABLE NYC311.GBU43_MBIS623.COMPLAINT_TYPE_REFERENCE_40 (
+	"type_id" NUMBER(38,0) NOT NULL,
+	"type" VARCHAR(35),
+	primary key ("type_id")
+);
+-- Populate the table COMPLAINT_TYPE_REFERENCE_40
+---- Select all the complaint types from COMPLAINT_TYPE_REFERENCE_26
+INSERT INTO COMPLAINT_TYPE_REFERENCE_40 SELECT * FROM COMPLAINT_TYPE_REFERENCE_26;
+---- Add 14 new complaint types
+INSERT INTO COMPLAINT_TYPE_REFERENCE_40 ("type_id", "type") 
+VALUES (70026, 'HEAT/HOT WATER'),
+       (70027, 'Request Large Bulky Item Collection'),
+       (70028, 'Missed Collection (All Materials)'),
+       (70029, 'Derelict Vehicles'),
+       (70030, 'Literature Request'),
+       (70031, 'Consumer Complaint'),
+       (70032, 'Homeless Person Assistance'),
+       (70033, 'New Tree Request'),
+       (70034, 'Graffiti'),
+       (70035, 'Non-Emergency Police Matter'),
+       (70036, 'Taxi Complaint'),
+       (70037, 'Maintenance or Facility'),
+       (70038, 'Appliance'),
+       (70039, 'Elevator');
+-- Validate the COMPLAINT_TYPE_REFERENCE_40
+SELECT * FROM COMPLAINT_TYPE_REFERENCE_40;
+
+//Create DIMENSION_COMPLAINT_TYPE_40
+CREATE OR REPLACE TABLE DIMENSION_COMPLAINT_TYPE_40 ("type_id" INTEGER PRIMARY KEY, "type" VARCHAR(35));
+//Populate the table -- 40 rows were added
+INSERT INTO DIMENSION_COMPLAINT_TYPE_40 SELECT * FROM COMPLAINT_TYPE_REFERENCE_40;
+//Verify the table
+SELECT * FROM DIMENSION_COMPLAINT_TYPE_40;
+
+
+//Create COMPLAINT_TYPE_REFERENCE_40_SANITISED
+create or replace TABLE NYC311.GBU43_MBIS623.COMPLAINT_TYPE_REFERENCE_40_SANITISED (
+	"type_id" NUMBER(38,0) NOT NULL,
+	"type" VARCHAR(35),
+	primary key ("type_id")
+);
+//Populate COMPLAINT_TYPE_REFERENCE_40_SANITISED
+INSERT INTO COMPLAINT_TYPE_REFERENCE_40_SANITISED 
+SELECT "type_id", UPPER(regexp_replace("type", '[^[:alnum:]]+', '')) FROM COMPLAINT_TYPE_REFERENCE_40;
+
+-------------------------------------------||
+// CHECKING THE LEFT-OUT POPULAR ZIP CODE  ||
+-------------------------------------------||
+
+-- Examine the popular invalid ZIP that should be included in the ZIP_NYC_Borough table
+SELECT left(trim("Incident_Zip"),5) AS "Sanitised_Incident_Zip", "Borough", count(*) as "Count"
+FROM NYC311.SERVICE_REQUEST_32M
+WHERE "Sanitised_Incident_Zip" not in (SELECT ZIP FROM ZIP_NYC_BOROUGH)
+GROUP BY "Sanitised_Incident_Zip", "Borough"
+ORDER BY "Count" DESC
+LIMIT 8;
+
+-------------------------------------------------||
+// INCREASE NYC_ZIP_BOROUGH REFERENCE to 246     ||
+-------------------------------------------------||
+
+//Create a new ZIP_NYC_BOROUGH_V1 table with new 6 validated ZIP codes:
+create or replace TABLE NYC311.GBU43_MBIS623.ZIP_NYC_BOROUGH_V1 (
+	ZIP VARCHAR(5) NOT NULL,
+	"borough" VARCHAR(13),
+	primary key (ZIP)
+);
+//Populate the ZIP_NYC_BOROUGH_V1 table
+INSERT INTO ZIP_NYC_BOROUGH_V1 SELECT * FROM ZIP_NYC_BOROUGH;
+INSERT INTO ZIP_NYC_BOROUGH_V1 ("ZIP", "borough") 
+VALUES (10065, 'Manhattan'),
+       (10075, 'Manhattan'),
+       (11001, 'Queens'),
+       (11040, 'Queens'),
+       (10000, 'Queens'),
+       (11005, 'Queens');
+       
+SELECT * FROM ZIP_NYC_BOROUGH_V1;
+
+// Create the dimension zip table
+CREATE OR REPLACE TABLE DIMENSION_ZIP_V1 (ZIP VARCHAR(5) PRIMARY KEY);
+// Populate the table
+INSERT INTO DIMENSION_ZIP_V1 SELECT DISTINCT ZIP FROM ZIP_NYC_BOROUGH_V1;
+// Verify the table contents
+SELECT * FROM DIMENSION_ZIP_V1;
+
+---------------------------------------------||
+// CREATE A VIEW SERVICE_REQUEST_SANITISED   ||
+---------------------------------------------||
+
+//create a MODIFIED_TABLE FROM SERVICE_QUALITY_MODIFIED
+CREATE OR REPLACE VIEW SERVICE_REQUEST_SANITISED AS
+SELECT 
+"Unique_Key",
+"Created_Date",
+"Closed_Date",
+"Agency",
+"Agency_Name",
+"Complaint_Type",
+UPPER(regexp_replace(CASE
+        WHEN "Complaint_Type" IN ('DEADDYINGTREE', 'DEADTREE') THEN 'DAMAGEDTREE'
+        WHEN "Complaint_Type" IN ('ABANDONEDBIKE', 'ABANDONEDVEHICLE', 'DERELICTBICYCLE', 'DERELICTVEHICLE') THEN 'DERELICTVEHICLES'
+        WHEN "Complaint_Type" IN ('NOISECOMMERCIAL', 'NOISEVEHICLE','NOISEHOUSEOFWORSHIP', 'NOISEPARK') THEN 'NOISERESIDENTIAL'
+        WHEN "Complaint_Type" IN ('GENERAL', 'DOORWINDOW', 'FLOORINGSTAIRS') THEN 'GENERALCONSTRUCTION'
+        WHEN "Complaint_Type" IN ('WATERCONSERVATION', 'WATERQUALITY') THEN 'WATERSYSTEM'
+        WHEN "Complaint_Type" = 'DIRTYCONDITION' THEN 'DIRTYCONDITIONS'
+        WHEN "Complaint_Type" = 'CONSTRUCTION' THEN 'GENERALCONSTRUCTION'
+        WHEN "Complaint_Type" = 'MISSEDCOLLECTION' THEN 'MISSEDCOLLECTIONALLMATERIALS'
+        WHEN "Complaint_Type" = 'WATERLEAK' THEN 'PLUMBING'
+        WHEN "Complaint_Type" = 'UNSANITARYCONDITION' THEN 'SANITATIONCONDITION'
+        WHEN "Complaint_Type" = 'TRAFFICILLEGALPARKING' THEN 'ILLEGALPARKING'
+        ELSE "Complaint_Type" END,
+        '[^[:alnum:]]+', '')) AS "Complaint_Type_Sanitised",
+"Descriptor",
+"Location_Type",
+"Incident_Zip",
+left(trim("Incident_Zip"),5) AS "Incident_Zip_Sanitised",
+"Incident_Address",
+"City",
+"Status",
+"Due_Date",
+"Resolution_Description",
+"Resolution_Action_Updated_Date",
+"Community_Board",
+BBL,
+"Borough",
+"X_Coordinate_(State Plane)",
+"Y_Coordinate_(State Plane)",
+"Open_Data_Channel_Type",
+"Location"
+FROM NYC311.SERVICE_REQUEST_32M;
+//Verify the table:
+select * from SERVICE_REQUEST_SANITISED;
+
+----------------------------------------------||
+// CREATE FACT_SERVICE_QUALITY_SANITISED_2    ||
+----------------------------------------------||
+//Create FACT_SERVICE_QUALITY_SANITISED_2 using View SERVICE_REQUEST_SANITISED Joining DIMENSION_COMPLAINT_TYPE_40 AND DIMENSION_ZIP_V1
+
+CREATE OR REPLACE TABLE FACT_SERVICE_QUALITY_SANITISED_2
+(
+    "agency_id" INTEGER,
+    "ZIP" VARCHAR(5),
+    "type_id" INTEGER,
+    "year_week" INTEGER,
+    "total_count" INTEGER,
+    "average_days" NUMBER,
+    "stddev_days" NUMBER,
+    "range_days" NUMBER,
+    PRIMARY KEY ("agency_id", "ZIP", "type_id", "year_week"),
+    FOREIGN KEY ("agency_id") REFERENCES DIMENSION_AGENCY ("agency_id"),
+    FOREIGN KEY ("ZIP") REFERENCES DIMENSION_ZIP_V1 ("ZIP"),
+    FOREIGN KEY ("type_id") REFERENCES DIMENSION_COMPLAINT_TYPE_40 ("type_id"),
+    FOREIGN KEY ("year_week") REFERENCES DIMENSION_YEAR_WEEK ("year_week")
+);
+//Populate the table -- 2,970,753 inserted
+INSERT INTO FACT_SERVICE_QUALITY_SANITISED_2
+SELECT DA."agency_id", DZ.ZIP, DC."type_id", DT."year_week",
+    count(*) AS "total_count",
+    round(avg(datediff(SECOND, "Created_Date", "Closed_Date")) / (60 * 60 * 24), 2)
+        AS "average_days",
+    round(stddev(datediff(SECOND, "Created_Date", "Closed_Date")) / (60 * 60 * 24), 2)
+        AS "stddev days",
+    round(max(datediff(SECOND, "Created_Date", "Closed_Date")) / (60 * 60 * 23), 2)
+        AS "range_days"
+FROM SERVICE_REQUEST_SANITISED SR
+JOIN DIMENSION_AGENCY DA ON SR."Agency" = DA."agency_name"
+JOIN DIMENSION_ZIP_V1 DZ ON "Incident_Zip_Sanitised" = DZ.ZIP
+JOIN DIMENSION_COMPLAINT_TYPE_40 DC 
+    ON SR."Complaint_Type_Sanitised" = UPPER(regexp_replace(DC."type", '[^[:alnum:]]+', ''))
+JOIN DIMENSION_YEAR_WEEK DT
+    ON yearofweek(SR."Created_Date") * 100 + week(SR."Created_Date") = DT."year_week"
+GROUP BY DA."agency_id", DZ.ZIP, DC."type_id", DT."year_week";
+//Verify table
+SELECT * FROM FACT_SERVICE_QUALITY_SANITISED_2;
+
+----------------------------------------------------------------------------------------||
+// EXAMINE COVERAGE OF FACT_SERVICE_QUALITY_SANITISED_2 ON SERVICE REQUEST 32M DATASET  ||
+----------------------------------------------------------------------------------------||
+
+SELECT 
+    (SELECT count(*) FROM FACT_SERVICE_QUALITY_SANITISED_2) AS "# Fact Rows",
+    (SELECT sum("total_count") FROM FACT_SERVICE_QUALITY_SANITISED_2) AS "# Complaints Covered",
+    (SELECT count(*) FROM NYC311.SERVICE_REQUEST_32M) AS "# Total Complaints",
+    (SELECT count(*) FROM SERVICE_REQUEST_SANITISED 
+        WHERE "Incident_Zip_Sanitised" NOT IN (SELECT ZIP FROM ZIP_NYC_BOROUGH_V1) 
+        OR "Complaint_Type_Sanitised" NOT IN (SELECT "type" FROM COMPLAINT_TYPE_REFERENCE_40_SANITISED)) AS "#Complaints not covered";
+-- # Fact Rows: 2,990,205; # Complaints Covered: 24,061,209 / 32,543,452 (73.94% of SR_32M);
+
+
+----------------||
+// QUESTION 2   ||
+----------------||
+-- Examine the complaint types which were handled by more than one agency.
+SELECT UPPER(regexp_replace("Complaint_Type", '[^[:alnum:]]+', '')) AS "Complaint_Type_Sanitised", 
+       COUNT(DISTINCT "Agency") AS "#Agencies",
+       listagg(DISTINCT "Agency", ', ') AS "Agency_List"
+FROM NYC311.SERVICE_REQUEST_32M
+GROUP BY "Complaint_Type_Sanitised"
+HAVING "#Agencies" > 1
+ORDER BY "#Agencies" DESC;
+
+----------------||
+// QUESTION 3   ||
+----------------||
+
+// CHECK HOW MANY ROWS GOT UNLOGICAL
+SELECT count(*) FROM NYC311.SERVICE_REQUEST_32M
+WHERE "Created_Date" > "Closed_Date" OR "Closed_Date" >= '2023-05-01 00:00:00.000';
+-- There are 278,917 rows that got unlogical information when created day is after the closed day or closed date is unrealistic
+-- We will remove those rows when creating fact table
+
+-------------------------||
+// DIMENSIONT_YEARMONTH  ||
+-------------------------||
+
+// YEAR-MONTH dimension
+// First, an example of extracting date components from a timestamp
+SELECT min("Created_Date") FROM NYC311.SERVICE_REQUEST_32M; 
+SELECT '2010-01-01 00:00:00.000'::TIMESTAMP AS t_stamp,
+       month(t_stamp) AS "MONTH",
+       month(t_stamp) as "YEAR OF MONTH";
+
+// Create the table
+CREATE OR REPLACE TABLE DIMENSION_YEAR_MONTH ("year_month" INTEGER PRIMARY KEY);
+// How many year_month values in the dimension table? Note: this is a variable
+SET month_count = (SELECT datediff(MONTH, min("Created_Date"), max("Created_Date")) AS month_count FROM NYC311.service_request_32m);
+SELECT $month_count;
+// What is the starting year month? Note: this is a variable
+SET start_date = (SELECT min("Created_Date") AS sd FROM NYC311.service_request_32m);
+SELECT $start_date;
+//Populate the table
+INSERT INTO DIMENSION_YEAR_MONTH
+WITH date_range AS (SELECT dateadd(MONTH,SEQ4(), $start_date) AS date_value FROM table(generator(rowcount => $month_count)))
+SELECT year(date_value) * 100 + month(date_value) FROM date_range;
+// Verify the table contents
+SELECT * FROM DIMENSION_YEAR_MONTH;
+
+-------------------------------------------------||
+// CREATE A FACTABLE WHICH REMOVES UNLOGICAL DATE||
+-------------------------------------------------||
+
+
+CREATE OR REPLACE TABLE FACT_SERVICE_QUALITY_SANITISED_3
+(
+    "agency_id" INTEGER,
+    "ZIP" VARCHAR(5),
+    "type_id" INTEGER,
+    "year_month" INTEGER,
+    "total_count" INTEGER,
+    "average_days" NUMBER,
+    "stddev_days" NUMBER,
+    "range_days" NUMBER,
+    PRIMARY KEY ("agency_id", "ZIP", "type_id", "year_month"),
+    FOREIGN KEY ("agency_id") REFERENCES DIMENSION_AGENCY ("agency_id"),
+    FOREIGN KEY ("ZIP") REFERENCES DIMENSION_ZIP_V1 ("ZIP"),
+    FOREIGN KEY ("type_id") REFERENCES DIMENSION_COMPLAINT_TYPE_40 ("type_id"),
+    FOREIGN KEY ("year_month") REFERENCES DIMENSION_YEAR_MONTH ("year_month")
+);
+//Populate the table --
+INSERT INTO FACT_SERVICE_QUALITY_SANITISED_3
+SELECT DA."agency_id", DZ.ZIP, DC."type_id", DT."year_month",
+    count(*) AS "total_count",
+    round(avg(datediff(SECOND, "Created_Date", "Closed_Date")) / (60 * 60 * 24), 2)
+        AS "average_days",
+    round(stddev(datediff(SECOND, "Created_Date", "Closed_Date")) / (60 * 60 * 24), 2)
+        AS "stddev days",
+    round(max(datediff(SECOND, "Created_Date", "Closed_Date")) / (60 * 60 * 23), 2)
+        AS "range_days"
+FROM SERVICE_REQUEST_SANITISED SR
+JOIN DIMENSION_AGENCY DA ON SR."Agency" = DA."agency_name"
+JOIN DIMENSION_ZIP_V1 DZ ON "Incident_Zip_Sanitised" = DZ.ZIP
+JOIN DIMENSION_COMPLAINT_TYPE_40 DC 
+    ON "Complaint_Type_Sanitised" = UPPER(regexp_replace(DC."type", '[^[:alnum:]]+', ''))
+JOIN DIMENSION_YEAR_MONTH DT
+    ON year(SR."Created_Date") * 100 + month(SR."Created_Date") = DT."year_month"
+WHERE SR."Created_Date" < SR."Closed_Date" AND SR."Closed_Date" < '2023-05-01 00:00:00.000' AND datediff(SECOND, SR."Created_Date", SR."Closed_Date") / (60 * 60 * 24) <1000
+GROUP BY DA."agency_id", DZ.ZIP, DC."type_id", DT."year_month";
+
+-- There are 887,373 rows were added into the fact table
+
+SELECT * FROM FACT_SERVICE_QUALITY_SANITISED_3;
+
+
+-- Service Quality is considered improved when the time handling a case is getting faster through the time.
+-- now we will check the busiest agency
+SELECT "agency_id",count("agency_id") as "#rows" FROM FACT_SERVICE_QUALITY_SANITISED_3
+group by "agency_id"
+order by "#rows" DESC; --we have 14 agency in total
+
+//Plot agency efficiency trend over time in the same plot
+WITH tmp AS 
+(
+SELECT 
+  DATE_TRUNC('MONTH', to_date(CONCAT(SUBSTRING("year_month", 1, 4), '-', SUBSTRING("year_month", 5, 2)), 'YYYY-MM')) AS "year_month", 
+  "agency_name", 
+  ROUND(SUM("average_days") / SUM("total_count"), 6) AS "Average_Time",
+  ROUND(AVG(SUM("average_days") / SUM("total_count")) OVER (PARTITION BY "agency_name"), 6) AS "mean_average_time",
+  ROUND(STDDEV(SUM("average_days") / SUM("total_count")) OVER (PARTITION BY "agency_name"), 6) AS "stddev_average_time"
+FROM FACT_SERVICE_QUALITY_SANITISED_3
+LEFT JOIN DIMENSION_AGENCY USING ("agency_id")
+WHERE "agency_id" IN (1000, 1022, 1031, 1013, 1021, 1029, 1024, 1030, 1008, 1018, 1009, 1027) -- remove DOITT 1007 and 3-1-1 1033
+GROUP BY "year_month", "agency_name"
+ORDER BY "year_month", "agency_name"
+)
+SELECT "year_month", "agency_name", 
+       CASE 
+            WHEN "agency_name" IN ('DOB', 'DEP', 'DPR') THEN round(("Average_Time" - "mean_average_time")/"stddev_average_time",6) -- Agencies work efficiently
+            WHEN "agency_name" IN ('DOT', 'HPD', 'NYC311-PRD', 'TLC') THEN round(("Average_Time" - "mean_average_time")/"stddev_average_time",6) +7
+            -- WHEN "agency_name" IN ('DOHMH', 'DHS','NYPD', 'DCA', 'DSNY') THEN round(("Average_Time" - "mean_average_time")/"stddev_average_time",6) + 13
+       ELSE round(("Average_Time" - "mean_average_time")/"stddev_average_time",6) + 13
+       END AS "Standardised_Average_Time"
+FROM tmp;
+
+----------------||
+// QUESTION 4   ||
+----------------||
+--1030, 1031,1024, 1008, 1021
+select distinct "borough" from zip_nyc_borough;
+//plot for 1000, 1009,1022, 1007, 1018,1029
+SELECT DATE_TRUNC('MONTH',to_date(CONCAT(SUBSTRING("year_month", 1, 4), '-', SUBSTRING("year_month", 5, 2)),'YYYY-MM')) AS "year_month", 
+        "borough", round(sum("average_days")/sum("total_count"),6) AS "Average_Time"
+FROM FACT_SERVICE_QUALITY_SANITISED_3
+LEFT JOIN ZIP_NYC_BOROUGH USING ("ZIP")
+WHERE "agency_id" in (1000, 1013, 1018, 1022, 1024, 1030)
+GROUP BY "year_month", "borough"
+ORDER BY "year_month", "borough";
