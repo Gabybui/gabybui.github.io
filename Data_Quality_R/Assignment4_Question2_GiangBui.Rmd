@@ -1,0 +1,180 @@
+---
+title: "Assignment4_Question2_GiangBui"
+author: "Giang Bui - Student ID: 37306207"
+date: "2023-05-30"
+output: html_document
+---
+
+```{r}
+library(lubridate)  
+library(ggplot2)
+library(dplyr)
+library(qicharts2)
+```
+
+## Data
+First, we load 'monitor.csv' file, fix the type of Timestamp column to date, create new variable 'day_of_year' representing the day of the year corresponding to each date in the 'Timestamp' column. And then, we explore the data information, and observe the result after running the code below:
+
+```{r cars}
+data = read.csv(file = "monitor.csv", header = TRUE)
+data$Timestamp <- as.Date(data$Timestamp)
+data$day_of_year <- yday(data$Timestamp)
+str(data)
+summary(data)
+```
+The data originally contains 4 variables and 16,069 observations. 'Timestamp' has the date type, ranging 4 months from 01/02/2021 to 01/06/2021, 'ProcessMemory', 'Prediction' and 'PredictionTimeMS' are numeric. The created 'day_of_year' variable represents day of the year in accordance with each day in the 'Timestamp' variable.
+
+## Grouping the data by day_of_year
+We perform grouping data by day_of_year, and count number of observations on each day. The result is visualised as the bar chart below:
+
+```{r}
+# We group the data by the date_of_year lues
+group <- data %>% group_by(day_of_year)
+group_counts <- summarise(group, count = n())
+
+#visualise the number of group:
+ggplot(group_counts, aes(x = factor(day_of_year), y = count)) +
+  geom_bar(stat = "identity", fill = "steelblue") +
+  labs(x = "Day of Year", y = "Member Count", title = "Day's Observation Count") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(size = 4, hjust = 1))
+```
+
+To analyse the model's performance, we plot control charts, specifically, the 'XBAR' and 'S Chart' to determine if the ProcessMemory, Prediction and PredictionTimeMS are in or out of conntrol. 'XBAR' chart access the process mean and determine if it is in control. The 'S chart' assess the process standard deviations to evaluate the process variability and determine if it is in control.
+The first 40 days is freezed to provides a stable reference period for establishing control limits, making the subsequent control chart analysis more effective in identifying any significant changes in the process. 
+
+## Quality control for ProcessMemory
+
+### XBAR of ProcessMemory
+
+```{r}
+xbar_ProcessMemory <- qicharts2::qic(x = day_of_year, y = ProcessMemory, data = group, chart = "xbar", freeze = 40)
+plot(xbar_ProcessMemory)
+```
+As we can see that there are some out-of-control points straying beyound is coloured red, which means the means of the set of consecutive points are out of control. It is confirmed one more time with the runs.signal >0 and sigma.signal > 0.
+
+```{r}
+summary(xbar_ProcessMemory)
+```
+### S Chart of ProcessMemory
+
+```{r}
+schart_ProcessMemory  <- qicharts2::qic(x = day_of_year, y = ProcessMemory, data = group, chart = "s", freeze = 40)
+plot(schart_ProcessMemory)
+```
+
+```{r}
+summary(schart_ProcessMemory)
+```
+
+As we can see that there is no out-of-control points straying beyound the grey background (no red points), which means the standard deviations of the set of consecutive points are in control. It is confirmed one more time with the runs.signal = 0 and sigma.signal = 0.
+
+
+## Quality control for Prediction
+
+### XBAR of Prediction
+
+```{r}
+xbar_Prediction <- qicharts2::qic(x = day_of_year, y = Prediction, data = group, chart = "xbar", freeze = 40)
+plot(xbar_Prediction)
+```
+
+
+```{r}
+summary(xbar_Prediction)
+```
+
+As we can see that there is no out-of-control points straying beyound the grey background (no red points). However, the run.signal is 1 which is invisible in the chart. Therefore, the means of the set of consecutive Prediction values are out-of-control.
+
+### S Chart of Prediction
+
+```{r}
+schart_Prediction  <- qicharts2::qic(x = day_of_year, y = Prediction, data = group, chart = "s", freeze = 40)
+plot(schart_Prediction)
+```
+
+
+```{r}
+summary(schart_Prediction)
+```
+
+As we can see that there is no out-of-control points straying beyound the grey background (no red points). However, when checking the summary of Schart, runs.signal = 1 , which means the standard deviations of the set of consecutive points are out-of-control. 
+
+## PredictionTimeMS
+
+### XBAR of PredictionTimeMS
+
+```{r}
+xbar_PredictionTimeMS <- qicharts2::qic(x = day_of_year, y = PredictionTimeMS, data = group, chart = "xbar", freeze = 40)
+plot(xbar_PredictionTimeMS)
+```
+
+```{r}
+summary(xbar_PredictionTimeMS)
+```
+
+It is visibly that the means of the consecutive set's values is out-of-control when there are points shown in red and the value of runs.signal and sigma.signal is more than zero.
+
+### S Chart of PredictionTimeMS
+
+```{r}
+schart_PredictionTimeMS  <- qicharts2::qic(x = day_of_year, y = PredictionTimeMS, data = group, chart = "s", freeze = 40)
+plot(schart_PredictionTimeMS)
+```
+
+```{r}
+summary(schart_PredictionTimeMS)
+```
+
+Similarity, standard deviations of the set of consecutive points of PredictionTimeMS are out-of-control as we can see it clearly from the Schart and the runs.signal and sigma.signal values are larger than 0.
+
+
+## QUALITY CONTROL TABLE
+
+```{r}
+#Turn summary result to data frame
+x_m <- as.data.frame(summary(xbar_ProcessMemory))
+x_p <- as.data.frame(summary(xbar_Prediction))
+x_t <- as.data.frame(summary(xbar_PredictionTimeMS))
+s_m <- as.data.frame(summary(schart_ProcessMemory))
+s_p <- as.data.frame(summary(schart_Prediction))
+s_t <- as.data.frame(summary(schart_PredictionTimeMS))
+
+#get the sigma.signal and run.signal from summary data
+Xbar_breaches <- c(x_m$sigma.signal,x_p$sigma.signal, x_t$sigma.signal)
+Xbar_runs_signal <- c(x_m$runs.signal,x_p$runs.signal, x_t$runs.signal)
+S_breaches <- c(s_m$sigma.signal,s_p$sigma.signal, s_t$sigma.signal)
+S_runs_signal <- c(s_m$runs.signal,s_p$runs.signal, s_t$runs.signal)
+
+#create quality control data frame
+qc <- data.frame(Mesurement = c("Memory","Prediction","Time"),
+                "Xbar breaches" = Xbar_breaches,
+                "Xbar runs signal" = Xbar_runs_signal,
+                "S breaches" = S_breaches,
+                "S runs signal" = S_runs_signal,
+                check.names = FALSE)
+
+#Create the Overall column based on values of run signal of Xbar and S. If all values xbar and s of the measurement equal 0, it is considered In Control. Otherwise it's Out of Control.
+qc <- qc %>% mutate(Overall = if_else("Xbar runs signal" == 0 & "Xbar breaches" == 0
+                                     &   "S runs signal" == 0 & "S runs signal" == 0,
+                                     "In Control", "Out of Control"))
+qc
+```
+
+As we can see that all three measurements 'Memory', 'Prediction' and 'PredictionTimeMS' are out-of-control.
+
+End of notebook.
+
+```{r include=FALSE}
+# Install required packages if not already installed
+if (!requireNamespace("rmarkdown", quietly = TRUE)) {
+  install.packages("rmarkdown")
+}
+
+# Load the rmarkdown package
+library(rmarkdown)
+
+# Knit the Rmd file to nb.html
+render("Assignment4_Question2_GiangBui.Rmd", "html_notebook")
+
+```
