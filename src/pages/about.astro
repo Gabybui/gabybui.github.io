@@ -1,13 +1,25 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-import { site, experience, skills } from '../data/site';
+import { url } from '../utils/url';
+import { site, experience, skills, education, certifications, awards, languages } from '../data/site';
 ---
-<BaseLayout title="About" description="About Gaby Bui, data professional.">
-  <h1>About me</h1>
-  <p class="lead">Placeholder: a one or two sentence summary of who you are and what drives you.</p>
+<BaseLayout title="About" description="About Gaby Bui, Senior Data Associate and BI Developer.">
+  <div class="intro">
+    <img class="avatar" src={url('/gaby-avatar.jpg')} alt={`Portrait of ${site.name}`} width="160" height="160" />
+    <div>
+      <h1>About me</h1>
+    </div>
+  </div>
+
   <p>
-    Placeholder bio. Write a few short paragraphs about your background, the kind of data problems you
-    enjoy solving, and what you're looking for next.
+    Data professional with hands-on experience across the analytics stack: GA4 and Google Tag Manager (client-side and
+    server-side), BigQuery, Dataform and Data Studio.
+  </p>
+  <p>
+    I design tracking architectures, build ELT pipelines, and work with stakeholders to turn messy, multi-platform data
+    into numbers people can trust. I hold an MSc in Applied Data Science (Distinction), and my background also includes
+    SQL- and Python-driven business analysis. I'm most interested in pipeline and data engineering work: owning the data
+    infrastructure, not just reporting on it.
   </p>
 
   <h2>Experience</h2>
@@ -15,15 +27,52 @@ import { site, experience, skills } from '../data/site';
     {experience.map((e) => (
       <li class="card">
         <h3>{e.role} · {e.company}</h3>
-        <p class="muted">{e.period}</p>
-        <p>{e.summary}</p>
+        <p class="muted">{e.location} · {e.period}</p>
+        {e.bullets.length > 0 && <ul>{e.bullets.map((b) => <li>{b}</li>)}</ul>}
+        {e.tools && <p><em>Tools:</em> {e.tools}</p>}
       </li>
     ))}
   </ul>
 
   <h2>Skills</h2>
-  <p>{skills.map((s) => <span class="tag">{s}</span>)}</p>
+  <dl class="skills">
+    {skills.map((s) => (<><dt>{s.area}</dt><dd>{s.items}</dd></>))}
+  </dl>
+
+  <h2>Education</h2>
+  <ul class="list">
+    {education.map((e) => (
+      <li class="card">
+        <h3>{e.degree}</h3>
+        <p>{e.school}</p>
+        <p class="muted">{e.period}</p>
+        {e.notes && <p>{e.notes}</p>}
+      </li>
+    ))}
+  </ul>
+
+  <h2>Certifications</h2>
+  <p>{certifications}</p>
+
+  <h2>Awards</h2>
+  <ul>{awards.map((a) => <li>{a}</li>)}</ul>
+
+  <h2>Languages</h2>
+  <p>{languages}</p>
 
   <h2>Get in touch</h2>
   <p><a class="btn" href={`mailto:${site.email}`}>Email me</a></p>
 </BaseLayout>
+
+<style>
+  .intro { display: flex; align-items: center; gap: 1.5rem; margin-bottom: 1.5rem; }
+  .intro h1 { margin: 0; }
+  .avatar { width: 160px; height: 160px; border-radius: 50%; object-fit: cover; flex-shrink: 0; }
+  .card ul { margin: 0.5rem 0; padding-left: 1.2rem; }
+  .card ul li { margin-bottom: 0.35rem; }
+  .skills dt { font-weight: 700; margin-top: 0.75rem; }
+  .skills dd { margin: 0; }
+  @media (max-width: 560px) {
+    .intro { flex-direction: column; align-items: flex-start; }
+  }
+</style>
