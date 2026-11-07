@@ -1,0 +1,23 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { site, socials } from '../data/site';
+---
+<BaseLayout>
+  <p class="eyebrow">{site.role}</p>
+  <h1>Hi, I'm {site.name}.</h1>
+  <p class="lead">{site.tagline}</p>
+  <p>
+    <a class="btn" href="/projects">See my work</a>
+    <a class="btn ghost" href="/about">About me</a>
+  </p>
+
+  <h2>Find me online</h2>
+  <ul class="inline">
+    {socials.map((s) => <li><a href={s.href} target="_blank" rel="noopener noreferrer">{s.label} ↗</a></li>)}
+  </ul>
+</BaseLayout>
+
+<style>
+  .btn { margin-right: 0.5rem; margin-top: 0.5rem; }
+  .inline { list-style: none; padding: 0; display: flex; gap: 1.25rem; flex-wrap: wrap; }
+</style>

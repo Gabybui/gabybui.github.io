@@ -1,0 +1,39 @@
+---
+const links = [
+  { href: '/', label: 'Home' },
+  { href: '/about', label: 'About' },
+  { href: '/projects', label: 'Projects' },
+  { href: '/blog', label: 'Blog' },
+];
+const path = Astro.url.pathname.replace(/\/$/, '') || '/';
+const isActive = (href: string) => (href === '/' ? path === '/' : path.startsWith(href));
+---
+<header>
+  <nav aria-label="Main">
+    <a class="brand" href="/">Gaby Bui</a>
+    <ul>
+      {links.map((l) => (
+        <li><a href={l.href} aria-current={isActive(l.href) ? 'page' : undefined}>{l.label}</a></li>
+      ))}
+    </ul>
+  </nav>
+</header>
+
+<style>
+  header { border-bottom: 1px solid var(--border); }
+  nav {
+    max-width: var(--width);
+    margin: 0 auto;
+    padding: 1rem 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+  .brand { font-weight: 700; color: var(--text); letter-spacing: -0.02em; }
+  ul { list-style: none; display: flex; gap: 1.25rem; margin: 0; padding: 0; }
+  ul a { color: var(--muted); font-size: 0.95rem; }
+  ul a:hover, ul a[aria-current='page'] { color: var(--text); text-decoration: none; }
+  ul a[aria-current='page'] { font-weight: 600; box-shadow: 0 2px 0 var(--accent); }
+</style>

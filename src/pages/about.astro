@@ -1,0 +1,29 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { site, experience, skills } from '../data/site';
+---
+<BaseLayout title="About" description="About Gaby Bui, data professional.">
+  <h1>About me</h1>
+  <p class="lead">Placeholder: a one or two sentence summary of who you are and what drives you.</p>
+  <p>
+    Placeholder bio. Write a few short paragraphs about your background, the kind of data problems you
+    enjoy solving, and what you're looking for next.
+  </p>
+
+  <h2>Experience</h2>
+  <ul class="list">
+    {experience.map((e) => (
+      <li class="card">
+        <h3>{e.role} · {e.company}</h3>
+        <p class="muted">{e.period}</p>
+        <p>{e.summary}</p>
+      </li>
+    ))}
+  </ul>
+
+  <h2>Skills</h2>
+  <p>{skills.map((s) => <span class="tag">{s}</span>)}</p>
+
+  <h2>Get in touch</h2>
+  <p><a class="btn" href={`mailto:${site.email}`}>Email me</a></p>
+</BaseLayout>

@@ -1,0 +1,27 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+
+const posts = (await getCollection('blog')).sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+const fmt = (d: Date) => d.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
+---
+<BaseLayout title="Blog" description="Writing on data by Gaby Bui.">
+  <h1>Blog</h1>
+  <p class="lead">Notes on data, analytics, and what I'm learning.</p>
+  <ul class="list">
+    {posts.map((p) => (
+      <li>
+        <a class="card" href={`/blog/${p.id}`}>
+          <h3>{p.data.title}</h3>
+          <p class="muted">{fmt(p.data.date)}</p>
+          <p>{p.data.summary}</p>
+        </a>
+      </li>
+    ))}
+  </ul>
+</BaseLayout>
+
+<style>
+  a.card { color: inherit; display: block; }
+  a.card:hover { text-decoration: none; }
+</style>

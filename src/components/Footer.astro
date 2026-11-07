@@ -1,0 +1,32 @@
+---
+import { socials } from '../data/site';
+---
+<footer>
+  <p>© {new Date().getFullYear()} Gaby Bui</p>
+  <ul>
+    {socials.map((s) => (
+      <li><a href={s.href} target="_blank" rel="noopener noreferrer">{s.label}</a></li>
+    ))}
+  </ul>
+</footer>
+
+<style>
+  footer {
+    border-top: 1px solid var(--border);
+    max-width: var(--width);
+    width: 100%;
+    margin: 0 auto;
+    padding: 1.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    color: var(--muted);
+    font-size: 0.9rem;
+  }
+  p { margin: 0; }
+  ul { list-style: none; display: flex; gap: 1.25rem; margin: 0; padding: 0; }
+  a { color: var(--muted); }
+  a:hover { color: var(--accent); }
+</style>
