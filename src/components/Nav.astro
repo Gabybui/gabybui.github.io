@@ -1,19 +1,20 @@
 ---
+import { url, stripBase } from '../utils/url';
 const links = [
   { href: '/', label: 'Home' },
   { href: '/about', label: 'About' },
   { href: '/projects', label: 'Projects' },
   { href: '/blog', label: 'Blog' },
 ];
-const path = Astro.url.pathname.replace(/\/$/, '') || '/';
+const path = stripBase(Astro.url.pathname).replace(/\/$/, '') || '/';
 const isActive = (href: string) => (href === '/' ? path === '/' : path.startsWith(href));
 ---
 <header>
   <nav aria-label="Main">
-    <a class="brand" href="/">Gaby Bui</a>
+    <a class="brand" href={url('/')}>Gaby Bui</a>
     <ul>
       {links.map((l) => (
-        <li><a href={l.href} aria-current={isActive(l.href) ? 'page' : undefined}>{l.label}</a></li>
+        <li><a href={url(l.href)} aria-current={isActive(l.href) ? 'page' : undefined}>{l.label}</a></li>
       ))}
     </ul>
   </nav>

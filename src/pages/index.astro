@@ -1,5 +1,6 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import { url } from '../utils/url';
 import { site, socials } from '../data/site';
 ---
 <BaseLayout>
@@ -7,8 +8,8 @@ import { site, socials } from '../data/site';
   <h1>Hi, I'm {site.name}.</h1>
   <p class="lead">{site.tagline}</p>
   <p>
-    <a class="btn" href="/projects">See my work</a>
-    <a class="btn ghost" href="/about">About me</a>
+    <a class="btn" href={url('/projects')}>See my work</a>
+    <a class="btn ghost" href={url('/about')}>About me</a>
   </p>
 
   <h2>Find me online</h2>

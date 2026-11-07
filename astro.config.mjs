@@ -1,7 +1,7 @@
 import { defineConfig } from 'astro/config';
 
-// GitHub Pages: if the repo is named <username>.github.io, no `base` is needed.
-// For any other repo name, add: base: '/<repo-name>'
+// Hosted on GitHub Pages as a project site: https://gabybui.github.io/portfolio-site/
 export default defineConfig({
   site: 'https://gabybui.github.io',
+  base: '/portfolio-site',
 });
