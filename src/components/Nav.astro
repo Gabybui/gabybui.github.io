@@ -25,16 +25,17 @@ const isActive = (href: string) => (href === '/' ? path === '/' : path.startsWit
   nav {
     max-width: var(--width);
     margin: 0 auto;
-    padding: 1rem 1.5rem;
+    padding: 0.9rem 1rem;
     display: flex;
-    align-items: center;
+    align-items: baseline;
     justify-content: space-between;
     gap: 1rem;
     flex-wrap: wrap;
   }
-  .brand { font-weight: 700; color: var(--text); letter-spacing: -0.02em; }
+  .brand, .brand:visited { font-size: 1.6rem; color: #424242; }
+  .brand:hover { color: var(--text); text-decoration: none; }
   ul { list-style: none; display: flex; gap: 1.25rem; margin: 0; padding: 0; }
-  ul a { color: var(--muted); font-size: 0.95rem; }
-  ul a:hover, ul a[aria-current='page'] { color: var(--text); text-decoration: none; }
-  ul a[aria-current='page'] { font-weight: 600; box-shadow: 0 2px 0 var(--accent); }
+  ul a, ul a:visited { color: var(--text); }
+  ul a:hover { text-decoration: underline; }
+  ul a[aria-current='page'] { text-decoration: underline; text-underline-offset: 4px; }
 </style>
